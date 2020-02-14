@@ -45,7 +45,7 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_PREFIX_PATH:PATH=../${{ steps.opengeode.outputs.path }} ../server
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_PREFIX_PATH:PATH=${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }} ../server
         cmake --build . -- -j2
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
@@ -80,7 +80,7 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake -G "Xcode" -DCMAKE_PREFIX_PATH:PATH=../${{ steps.opengeode.outputs.path }} ../server
+        cmake -G "Xcode" -DCMAKE_PREFIX_PATH:PATH=${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }} ../server
         cmake --build . --config ${{ matrix.config }}
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
@@ -115,7 +115,7 @@ jobs:
       run: |
         if(!(test-path build)) { mkdir build }
         cd build
-        cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_PREFIX_PATH:PATH=../${{ steps.opengeode.outputs.path }} ../server
+        cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_PREFIX_PATH:PATH=${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }} ../server
         cmake --build . --config ${{ matrix.config }}
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
