@@ -44,4 +44,4 @@ project(SuperBuild NONE)
 include(ExternalProject)
 
 include(${PROJECT_SOURCE_DIR}/cmake/ConfigureVtk.cmake)
-#include(${PROJECT_SOURCE_DIR}/cmake/ConfigureOpenGeode_geode.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/ConfigureOpenGeode_geode.cmake)
