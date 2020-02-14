@@ -25,5 +25,6 @@ add_geode_python_binding(
     DEPENDENCIES
         OpenGeode::mesh
         VTK::CommonDataModel
+        VTK::WrappingPythonCore
         ${PROJECT_NAME}::mesh
 )
