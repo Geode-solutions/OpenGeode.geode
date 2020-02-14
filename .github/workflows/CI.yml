@@ -138,11 +138,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}  
         
-  semantic-release:
-    runs-on: ubuntu-18.04
-    needs: [build-linux, build-node, build-mac-xcode, build-windows]
-    steps:
-    - uses: actions/checkout@v1
-    - run: npx semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
