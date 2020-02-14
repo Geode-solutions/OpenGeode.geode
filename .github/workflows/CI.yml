@@ -30,11 +30,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Cache Vtk
-      uses: actions/cache@v1.0.3
-      with:
-        path: build/third_party/vtk
-        key: vtk-${{ matrix.config.system }}-${{ matrix.config.build_type }}-${{ hashFiles('server/cmake/ConfigureVtk.cmake') }}
     - uses: Geode-solutions/actions/get-release@master
       id: opengeode
       with:
@@ -65,11 +60,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Cache Vtk
-      uses: actions/cache@v1.0.3
-      with:
-        path: build/third_party/vtk
-        key: vtk-darwin-${{ matrix.config }}-${{ hashFiles('server/cmake/ConfigureVtk.cmake') }}
     - uses: Geode-solutions/actions/get-release@master
       id: opengeode
       with:
@@ -100,11 +90,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Cache Vtk
-      uses: actions/cache@v1.0.3
-      with:
-        path: build/third_party/vtk
-        key: vtk-win64-${{ matrix.config }}-${{ hashFiles('server/cmake/ConfigureVtk.cmake') }}
     - uses: Geode-solutions/actions/get-release@master
       id: opengeode
       with:
@@ -115,7 +100,7 @@ jobs:
       run: |
         if(!(test-path build)) { mkdir build }
         cd build
-        cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_PREFIX_PATH:PATH="${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}" ../server
+        cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_PREFIX_PATH:PATH="${env:GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}" ../server
         cmake --build . --config ${{ matrix.config }}
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
