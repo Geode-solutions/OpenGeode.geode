@@ -28,8 +28,8 @@ if(PYTHONLIBS_FOUND)
 endif()
 ExternalProject_Add(vtk
     PREFIX ${VTK_PATH}
-    GIT_REPOSITORY https://github.com/Kitware/VTK
-    GIT_TAG fe9bf9762aa686ccb1a7a52c98e51c8d37ac7dad
+    GIT_REPOSITORY https://github.com/Geode-solutions/VTK
+    GIT_TAG 2153700107bd14ca065463b40e298f7aea3661bc
     GIT_PROGRESS ON
     CMAKE_GENERATOR ${CMAKE_GENERATOR}
     CMAKE_GENERATOR_PLATFORM ${CMAKE_GENERATOR_PLATFORM}
