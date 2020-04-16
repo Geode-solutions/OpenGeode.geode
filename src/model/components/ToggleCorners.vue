@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import LogoCorners from "@/assets/point_set.svg";
 import ContextualItem from "@/components/ContextualItem";
 
@@ -29,31 +28,13 @@ export default {
   props: {
     item: Object
   },
-  computed: {
-    ...mapState(["proxyManager"])
-  },
   mounted() {
     this.toggle = this.item.style.corners.visible;
     this.$on("toggle-change", value => {
-      this.$store.commit("setObjectStyle", {
+      this.$store.dispatch("model/style/setCornersVisibility", {
         id: this.item.id,
-        style: ["corners", "visible"],
         value
       });
-      this.$store.commit("ui/setContextualItemVisibility", {
-        name: "CornersSize",
-        value
-      });
-      this.$store.commit("ui/setContextualItemVisibility", {
-        name: "CornersColor",
-        value
-      });
-      this.item.source.corners.forEach(source =>
-        this.proxyManager
-          .getRepresentations()
-          .filter(r => r.getInput() === source)
-          .forEach(r => r.setVisibility(value))
-      );
       this.$emit("update");
     });
   }

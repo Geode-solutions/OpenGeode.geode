@@ -21,45 +21,35 @@
  *
  */
 
-#include <geode/opengeode/mesh/surface.h>
+#include <geode/opengeode/mesh/edged_curve.h>
 
 #include <vtkPolyData.h>
 
-#include <geode/mesh/core/polygonal_surface.h>
+#include <geode/mesh/core/edged_curve.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 
 namespace geode
 {
     template < index_t dimension >
-    void convert_surface_to_polydata(
-        PolygonalSurface< dimension > &mesh, vtkPolyData *polydata )
+    void convert_edged_curve_to_polydata(
+        EdgedCurve< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
 
-        vtkSmartPointer< vtkCellArray > Polygons = vtkCellArray::New();
-        index_t nb{ 0 };
-        for( const auto p : Range( mesh.nb_polygons() ) )
+        vtkSmartPointer< vtkCellArray > Edges = vtkCellArray::New();
+        Edges->AllocateExact( mesh.nb_edges(), mesh.nb_edges() * 2 );
+        for( const auto e : Range( mesh.nb_edges() ) )
         {
-            nb += mesh.nb_polygon_vertices( p );
+            Edges->InsertNextCell( { mesh.edge_vertex( { e, 0 } ),
+                mesh.edge_vertex( { e, 1 } ) } );
         }
-        Polygons->AllocateExact( mesh.nb_polygons(), nb );
-        for( const auto p : Range( mesh.nb_polygons() ) )
-        {
-            absl::FixedArray< vtkIdType > polygon(
-                mesh.nb_polygon_vertices( p ) );
-            for( const auto v : Range( mesh.nb_polygon_vertices( p ) ) )
-            {
-                polygon[v] = mesh.polygon_vertex( { p, v } );
-            }
-            Polygons->InsertNextCell( polygon.size(), polygon.data() );
-        }
-        polydata->SetPolys( Polygons );
+        polydata->SetLines( Edges );
     }
 
-    template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 2 > &, vtkPolyData * );
-    template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 3 > &, vtkPolyData * );
+    template void opengeode_geode_mesh_api convert_edged_curve_to_polydata(
+        EdgedCurve< 2 > &, vtkPolyData * );
+    template void opengeode_geode_mesh_api convert_edged_curve_to_polydata(
+        EdgedCurve< 3 > &, vtkPolyData * );
 
 } // namespace geode

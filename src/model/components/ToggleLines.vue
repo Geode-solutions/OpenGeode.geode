@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import LogoLines from "@/assets/edged_curve.svg";
 import ContextualItem from "@/components/ContextualItem";
 
@@ -27,27 +26,13 @@ export default {
   props: {
     item: Object
   },
-  computed: {
-    ...mapState(["proxyManager"])
-  },
   mounted() {
     this.toggle = this.item.style.lines.visible;
     this.$on("toggle-change", value => {
-      this.$store.commit("setObjectStyle", {
+      this.$store.dispatch("model/style/setLinesVisibility", {
         id: this.item.id,
-        style: ["lines", "visible"],
         value
       });
-      this.$store.commit("ui/setContextualItemVisibility", {
-        name: "LinesColor",
-        value
-      });
-      this.item.source.lines.forEach(source =>
-        this.proxyManager
-          .getRepresentations()
-          .filter(r => r.getInput() === source)
-          .forEach(r => r.setVisibility(value))
-      );
       this.$emit("update");
     });
   }

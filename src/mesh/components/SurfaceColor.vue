@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import LogoSurfaceColor from "@/assets/surface_color.svg";
 import ContextualItem from "@/components/ContextualItem";
 import vtkDataArray from "vtk.js/Sources/Common/Core/DataArray";
@@ -59,96 +59,69 @@ export default {
   },
   data: () => ({
     color: { r: 0, g: 0, b: 0 },
-    select: "Constant",
+    select: "",
     styles: ["Constant", "From vertex attribute", "From polygon attribute"],
     vertexAttributeName: "",
-    polygonAttributeName: ""
+    polygonAttributeName: "",
+    vertexAttributes: [],
+    polygonAttributes: []
   }),
   props: {
     item: Object
   },
   computed: {
-    ...mapState(["proxyManager"]),
-    vertexAttributes() {
-      const manager = this.item.cpp.vertex_attribute_manager();
-      return manager
-        .attribute_names()
-        .filter(name => manager[manager.attribute_type(name)]);
-    },
-    polygonAttributes() {
-      const manager = this.item.cpp.polygon_attribute_manager();
-      return manager
-        .attribute_names()
-        .filter(name => manager[manager.attribute_type(name)]);
+    ...mapState(["proxyManager"])
+  },
+  created() {
+    this.getAttributeNames();
+  },
+  methods: {
+    ...mapActions("network", ["call"]),
+    getAttributeNames() {
+      this.call({
+        command: "opengeode.attribute.vertex.names",
+        args: [this.item.id]
+      }).then(names => (this.vertexAttributes = names));
+      this.call({
+        command: "opengeode.attribute.polygon.names",
+        args: [this.item.id]
+      }).then(names => (this.polygonAttributes = names));
     }
   },
   watch: {
-    color: function(value) {
-      const newColor = [value.r / 255, value.g / 255, value.b / 255];
+    select: function(value) {
       this.$store.commit("setObjectStyle", {
         id: this.item.id,
-        style: ["color"],
-        value: newColor
+        style: ["color", "type"],
+        value
       });
-      this.proxyManager
-        .getRepresentations()
-        .filter(r => r.getInput() === this.item.source)
-        .forEach(r => r.setColor(newColor));
+    },
+    color: function(value) {
+      this.$store.dispatch("mesh/style/setColor", {
+        id: this.item.id,
+        color: [value.r / 255, value.g / 255, value.b / 255]
+      });
     },
     vertexAttributeName: function(value) {
       if (!value) return;
-      const manager = this.item.cpp.vertex_attribute_manager();
-      if (!manager.attribute_exists(value)) {
-        return;
-      }
-      const scalars = new Float32Array(this.item.cpp.nb_vertices());
-      const attribute = manager[manager.attribute_type(value)](value);
-      for (let i = 0; i < manager.nb_elements(); i++) {
-        const att_value = attribute.value(i);
-        if (att_value != 4294967295) scalars[i] = att_value;
-        else scalars[i] = NaN;
-      }
-      const data = vtkDataArray.newInstance({
-        name: value,
-        numberOfComponents: 1,
-        values: scalars
+      this.call({
+        command: "opengeode.attribute.vertex",
+        args: [this.item.id, value]
       });
-      this.item.vtk.getPointData().addArray(data);
-      this.proxyManager
-        .getRepresentations()
-        .filter(r => r.getInput() === this.item.source)
-        .forEach(r => r.setColorBy(value, "pointData"));
     },
     polygonAttributeName: function(value) {
       if (!value) return;
-      const manager = this.item.cpp.polygon_attribute_manager();
-      if (!manager.attribute_exists(value)) {
-        return;
-      }
-      const scalars = new Float32Array(
-        this.item.cpp.nb_vertices() + this.item.cpp.nb_polygons()
-      );
-      const attribute = manager[manager.attribute_type(value)](value);
-      for (let i = 0; i < manager.nb_elements(); i++) {
-        const att_value = attribute.value(i);
-        if (att_value != 4294967295)
-          scalars[this.item.cpp.nb_vertices() + i] = att_value;
-        else scalars[this.item.cpp.nb_vertices() + i] = NaN;
-      }
-      const data = vtkDataArray.newInstance({
-        name: value,
-        numberOfComponents: 1,
-        values: scalars
+      this.call({
+        command: "opengeode.attribute.polygon",
+        args: [this.item.id, value]
       });
-      this.item.vtk.getCellData().addArray(data);
-      this.proxyManager
-        .getRepresentations()
-        .filter(r => r.getInput() === this.item.source)
-        .forEach(r => r.setColorBy(value, "cellData"));
     }
   },
   mounted() {
-    const color = this.item.style.color;
+    this.select = this.item.style.color.type;
+    this.vertexAttributeName = this.item.style.color.vertexAttributeName;
+    this.polygonAttributeName = this.item.style.color.polygonAttributeName;
+    const color = this.item.style.color.value;
     this.color = {
       r: color[0] * 255,
       g: color[1] * 255,

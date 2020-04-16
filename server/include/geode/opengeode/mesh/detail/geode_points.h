@@ -21,6 +21,8 @@
  *
  */
 
+#include <vtkPoints.h>
+#include <vtkPolyData.h>
 #include <vtkType.h>
 
 #include <geode/geometry/point.h>
@@ -36,7 +38,7 @@ namespace geode
             GeodePoints( const Mesh< dimension > &mesh ) : mesh_( mesh )
             {
                 SetNumberOfComponents( 3 );
-                MaxId = mesh.nb_vertices() * 3 - 1;
+                MaxId = vtkIdType( mesh.nb_vertices() ) * 3 - 1;
             }
 
             vtkTypeBool Allocate(
@@ -126,7 +128,6 @@ namespace geode
             }
             void GetTuple( vtkIdType tupleIdx, double *tuple ) override
             {
-                throw OpenGeodeException{ "GetTuple2 not implemented" };
                 const auto &point = mesh_.point( tupleIdx );
                 tuple[0] = point.value( 0 );
                 tuple[1] = point.value( 1 );
@@ -141,9 +142,10 @@ namespace geode
             }
             double GetComponent( vtkIdType tupleIdx, int compIdx ) override
             {
-                if( compIdx < dimension )
+                index_t converted = compIdx;
+                if( converted < dimension )
                 {
-                    return mesh_.point( tupleIdx ).value( compIdx );
+                    return mesh_.point( tupleIdx ).value( converted );
                 }
                 return 0;
             }
@@ -178,5 +180,15 @@ namespace geode
         private:
             const Mesh< dimension > &mesh_;
         };
+
+        template < template < index_t > class Mesh, index_t dimension >
+        void set_geode_points(
+            const Mesh< dimension > &mesh, vtkPolyData *polydata )
+        {
+            auto *points = new detail::GeodePoints< Mesh, dimension >( mesh );
+            vtkSmartPointer< vtkPoints > Points = vtkPoints::New();
+            Points->SetData( points );
+            polydata->SetPoints( Points );
+        }
     } // namespace detail
 } // namespace geode

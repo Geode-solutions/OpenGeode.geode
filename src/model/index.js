@@ -37,90 +37,210 @@ const modelStore = {
   state: {},
   actions: {
     loadBRep({ state, dispatch }, filename) {
-      let brep = new state.lib.BRep();
-      state.lib.load_brep(brep, filename);
-
-      let vtk = {
-        corners: [],
-        lines: [],
-        surfaces: [],
-        blocks: []
-      };
-      let promises = [];
-      let corners = brep.corners();
-      for (let it = corners.begin(); it.different(corners.end()); it.next()) {
-        promises.push(
-          new Promise(resolve =>
-            dispatch(
-              "mesh/getVtkPoints",
-              { pointSet: it.get().mesh(), dimension: 3 },
-              { root: true }
-            ).then(dataset => {
-              vtk.corners.push(dataset);
-              resolve();
-            })
-          )
-        );
-      }
-      let lines = brep.lines();
-      for (let it = lines.begin(); it.different(lines.end()); it.next()) {
-        promises.push(
-          new Promise(resolve =>
-            dispatch(
-              "mesh/getVtkLines",
-              { curve: it.get().mesh(), dimension: 3 },
-              { root: true }
-            ).then(dataset => {
-              vtk.lines.push(dataset);
-              resolve();
-            })
-          )
-        );
-      }
-      let surfaces = brep.surfaces();
-      for (let it = surfaces.begin(); it.different(surfaces.end()); it.next()) {
-        promises.push(
-          new Promise(resolve =>
-            dispatch(
-              "mesh/getVtkSurface",
-              { surface: it.get().mesh(), dimension: 3 },
-              { root: true }
-            ).then(dataset => {
-              vtk.surfaces.push(dataset);
-              resolve();
-            })
-          )
-        );
-      }
-      /*
-          let blocks = brep.blocks();
-          for (let it = blocks.begin(); it.different( blocks.end() ); it.next() ) {
-              let dataset = vtkPolyData.newInstance();
-              getVtkPoints(dataset, it.get().mesh(), 3);
-              vtk.blocks.push(dataset);
+      dispatch("private/loadObject", {
+        command: "opengeode.load.brep",
+        filename
+      }).then(object => {
+        let brepStyle = {
+          style: {
+            corners: { visible: true, size: 1, color: [1, 1, 1] },
+            lines: { visible: true, color: [1, 1, 1] },
+            surfaces: {
+              visible: true,
+              color: [1, 1, 1],
+              mesh: { visible: false }
+            },
+            blocks: {}
           }
-          */
-
-      let style = {
-        corners: { visible: true, size: 1, color: [1, 1, 1] },
-        lines: { visible: true, color: [1, 1, 1] },
-        surfaces: { visible: true, color: [1, 1, 1], mesh: { visible: false } },
-        blocks: []
-      };
-
-      Promise.all(promises).then(() =>
-        dispatch(
-          "addObject",
-          {
-            type: "BRep",
-            name: filename.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, ""),
-            cpp: brep,
-            vtk,
-            style
-          },
-          { root: true }
-        )
-      );
+        };
+        dispatch("addObject", Object.assign(object, brepStyle), { root: true });
+      });
+    }
+  },
+  modules: {
+    private: {
+      namespaced: true,
+      actions: {
+        loadObject({ dispatch }, { command, filename }) {
+          return dispatch(
+            "network/call",
+            {
+              command,
+              args: [filename]
+            },
+            { root: true }
+          );
+        },
+        setModelComponentsVisibility(
+          { commit, dispatch },
+          { id, objectType, value }
+        ) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: [objectType, "mesh", "visible"],
+              value
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.model.components.visibility",
+              args: [id, objectType, value]
+            },
+            { root: true }
+          );
+        },
+        setModelComponentsColor(
+          { commit, dispatch },
+          { id, objectType, value }
+        ) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: [objectType, "color"],
+              value
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.model.components.color",
+              args: [id, objectType, value]
+            },
+            { root: true }
+          );
+        }
+      }
+    },
+    style: {
+      namespaced: true,
+      actions: {
+        setSurfacesMeshVisibility({ commit, dispatch }, { id, value }) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: ["surfaces", "mesh", "visible"],
+              value
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.model.mesh.visibility",
+              args: [id, "surfaces", value]
+            },
+            { root: true }
+          );
+        },
+        setCornersVisibility({ commit, dispatch }, { id, value }) {
+          dispatch(
+            "model/private/setModelComponentsVisibility",
+            { id, objectType: "corners", value },
+            { root: true }
+          );
+          commit(
+            "ui/setContextualItemVisibility",
+            {
+              name: "CornersSize",
+              value
+            },
+            { root: true }
+          );
+          commit(
+            "ui/setContextualItemVisibility",
+            {
+              name: "CornersColor",
+              value
+            },
+            { root: true }
+          );
+        },
+        setCornersColor({ dispatch }, { id, value }) {
+          dispatch(
+            "model/private/setModelComponentsColor",
+            { id, objectType: "corners", value },
+            { root: true }
+          );
+        },
+        setCornersSize({ commit, dispatch }, { id, value }) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: ["corners", "size"],
+              value
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.model.corners.size",
+              args: [id, value]
+            },
+            { root: true }
+          );
+        },
+        setLinesVisibility({ commit, dispatch }, { id, value }) {
+          dispatch(
+            "model/private/setModelComponentsVisibility",
+            { id, objectType: "lines", value },
+            { root: true }
+          );
+          commit(
+            "ui/setContextualItemVisibility",
+            {
+              name: "LinesColor",
+              value
+            },
+            { root: true }
+          );
+        },
+        setLinesColor({ dispatch }, { id, value }) {
+          dispatch(
+            "model/private/setModelComponentsColor",
+            { id, objectType: "lines", value },
+            { root: true }
+          );
+        },
+        setSurfacesVisibility({ commit, dispatch }, { id, value }) {
+          dispatch(
+            "model/private/setModelComponentsVisibility",
+            { id, objectType: "surfaces", value },
+            { root: true }
+          );
+          commit(
+            "ui/setContextualItemVisibility",
+            {
+              name: "SurfacesMesh",
+              value
+            },
+            { root: true }
+          );
+          commit(
+            "ui/setContextualItemVisibility",
+            {
+              name: "SurfacesColor",
+              value
+            },
+            { root: true }
+          );
+        },
+        setSurfacesColor({ dispatch }, { id, value }) {
+          dispatch(
+            "model/private/setModelComponentsColor",
+            { id, objectType: "surfaces", value },
+            { root: true }
+          );
+        }
+      }
     }
   }
 };

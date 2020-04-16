@@ -21,45 +21,34 @@
  *
  */
 
-#include <geode/opengeode/mesh/surface.h>
+#include <geode/opengeode/mesh/point_set.h>
 
 #include <vtkPolyData.h>
 
-#include <geode/mesh/core/polygonal_surface.h>
+#include <geode/mesh/core/point_set.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 
 namespace geode
 {
     template < index_t dimension >
-    void convert_surface_to_polydata(
-        PolygonalSurface< dimension > &mesh, vtkPolyData *polydata )
+    void convert_point_set_to_polydata(
+        PointSet< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
 
-        vtkSmartPointer< vtkCellArray > Polygons = vtkCellArray::New();
-        index_t nb{ 0 };
-        for( const auto p : Range( mesh.nb_polygons() ) )
+        vtkSmartPointer< vtkCellArray > Points = vtkCellArray::New();
+        Points->AllocateExact( mesh.nb_vertices(), mesh.nb_vertices() );
+        for( const auto v : Range( mesh.nb_vertices() ) )
         {
-            nb += mesh.nb_polygon_vertices( p );
+            Points->InsertNextCell( { v } );
         }
-        Polygons->AllocateExact( mesh.nb_polygons(), nb );
-        for( const auto p : Range( mesh.nb_polygons() ) )
-        {
-            absl::FixedArray< vtkIdType > polygon(
-                mesh.nb_polygon_vertices( p ) );
-            for( const auto v : Range( mesh.nb_polygon_vertices( p ) ) )
-            {
-                polygon[v] = mesh.polygon_vertex( { p, v } );
-            }
-            Polygons->InsertNextCell( polygon.size(), polygon.data() );
-        }
-        polydata->SetPolys( Polygons );
+        polydata->SetVerts( Points );
     }
 
-    template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 2 > &, vtkPolyData * );
-    template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 3 > &, vtkPolyData * );
+    template void opengeode_geode_mesh_api convert_point_set_to_polydata(
+        PointSet< 2 > &, vtkPolyData * );
+    template void opengeode_geode_mesh_api convert_point_set_to_polydata(
+        PointSet< 3 > &, vtkPolyData * );
 
 } // namespace geode

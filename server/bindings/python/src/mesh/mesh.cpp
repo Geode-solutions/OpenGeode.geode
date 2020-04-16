@@ -27,6 +27,9 @@
 #include <vtkPolyData.h>
 #include <vtkPythonArgs.h>
 
+#include "edged_curve.h"
+#include "point_set.h"
+#include "solid.h"
 #include "surface.h"
 
 namespace pybind11
@@ -59,8 +62,11 @@ namespace pybind11
     } // namespace detail
 } // namespace pybind11
 
-PYBIND11_MODULE( geode_py_mesh, module )
+PYBIND11_MODULE( opengeode_geode_py_mesh, module )
 {
     module.doc() = "OpenGeode Python binding for Geode mesh extension";
+    geode::define_point_set( module );
+    geode::define_edged_curve( module );
     geode::define_surface( module );
+    geode::define_solid( module );
 }

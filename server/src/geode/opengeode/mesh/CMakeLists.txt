@@ -23,17 +23,23 @@ add_geode_library(
     FOLDER "geode/opengeode/mesh"
     SOURCES
         "common.cpp"
+        "edged_curve.cpp"
+        "point_set.cpp"
+        "solid.cpp"
         "surface.cpp"
     ADVANCED_HEADERS
         "detail/geode_points.h"
     PUBLIC_HEADERS
         "common.h"
+        "edged_curve.h"
+        "point_set.h"
+        "solid.h"
         "surface.h"
     PUBLIC_DEPENDENCIES
         OpenGeode::basic
         OpenGeode::geometry
         VTK::CommonCore
+        VTK::CommonDataModel
     PRIVATE_DEPENDENCIES
         OpenGeode::mesh
-        VTK::CommonDataModel
 )

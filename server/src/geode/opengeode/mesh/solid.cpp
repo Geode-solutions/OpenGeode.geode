@@ -21,45 +21,44 @@
  *
  */
 
-#include <geode/opengeode/mesh/surface.h>
+#include <geode/opengeode/mesh/solid.h>
 
 #include <vtkPolyData.h>
+#include <vtkPolygon.h>
 
-#include <geode/mesh/core/polygonal_surface.h>
+#include <geode/mesh/core/polyhedral_solid.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 
 namespace geode
 {
     template < index_t dimension >
-    void convert_surface_to_polydata(
-        PolygonalSurface< dimension > &mesh, vtkPolyData *polydata )
+    void convert_solid_to_polydata(
+        PolyhedralSolid< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
 
-        vtkSmartPointer< vtkCellArray > Polygons = vtkCellArray::New();
+        vtkSmartPointer< vtkCellArray > Facets = vtkCellArray::New();
         index_t nb{ 0 };
-        for( const auto p : Range( mesh.nb_polygons() ) )
+        for( const auto f : Range( mesh.nb_facets() ) )
         {
-            nb += mesh.nb_polygon_vertices( p );
+            nb += mesh.facet_vertices( f ).size();
         }
-        Polygons->AllocateExact( mesh.nb_polygons(), nb );
-        for( const auto p : Range( mesh.nb_polygons() ) )
+        Facets->AllocateExact( mesh.nb_facets(), nb );
+        for( const auto f : Range( mesh.nb_facets() ) )
         {
-            absl::FixedArray< vtkIdType > polygon(
-                mesh.nb_polygon_vertices( p ) );
-            for( const auto v : Range( mesh.nb_polygon_vertices( p ) ) )
+            const auto &vertices = mesh.facet_vertices( f );
+            absl::FixedArray< vtkIdType > vtk_vertices( vertices.size() );
+            for( const auto v : Range( vertices.size() ) )
             {
-                polygon[v] = mesh.polygon_vertex( { p, v } );
+                vtk_vertices[v] = vertices[v];
             }
-            Polygons->InsertNextCell( polygon.size(), polygon.data() );
+            Facets->InsertNextCell( vtk_vertices.size(), vtk_vertices.data() );
         }
-        polydata->SetPolys( Polygons );
+        polydata->SetPolys( Facets );
     }
 
-    template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 2 > &, vtkPolyData * );
-    template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 3 > &, vtkPolyData * );
+    template void opengeode_geode_mesh_api convert_solid_to_polydata(
+        PolyhedralSolid< 3 > &, vtkPolyData * );
 
 } // namespace geode

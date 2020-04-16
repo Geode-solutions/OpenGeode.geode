@@ -113,7 +113,7 @@ function installGeodeDependencies(platform) {
 }
 
 export default function(store, platform) {
-  installGeodeDependencies(platform);
+  // installGeodeDependencies(platform);
   basic(store);
   mesh(store);
   model(store);

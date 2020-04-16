@@ -21,8 +21,6 @@
  *
  */
 
-import vtkDataArray from "vtk.js/Sources/Common/Core/DataArray";
-import vtkPolyData from "vtk.js/Sources/Common/DataModel/PolyData";
 import LogoMesh from "@/assets/mesh.svg";
 import LogoPointSet from "@/assets/point_set.svg";
 import LogoPointSet2D from "@/assets/point_set2d.svg";
@@ -44,228 +42,162 @@ import SurfaceColor from "./components/SurfaceColor";
 import SurfaceMesh from "./components/SurfaceMesh";
 import Clip from "./components/Clip";
 
-function getVerts(pointset) {
-  const nb = pointset.nb_vertices();
-  const verts = new Uint32Array(2 * nb);
-  let count = 0;
-  for (let p = 0; p < nb; p++) {
-    verts[count++] = 1;
-    verts[count++] = p;
+let surfaceStyle = {
+  style: {
+    mesh: { visible: true },
+    color: {
+      type: "Constant",
+      value: [1, 1, 1],
+      vertexAttributeName: "",
+      polygonAttributeName: ""
+    }
   }
-  return verts;
-}
-
-function createVtkPoints(pointSet, dimension, callback) {
-  let dataset = vtkPolyData.newInstance();
-  const points = callback(pointSet);
-  dataset.getPoints().setData(points, 3);
-  const verts = getVerts(pointSet);
-  dataset.getVerts().setData(verts);
-  return dataset;
-}
-
-let surfaceStyle = { mesh: { visible: true }, color: [1, 1, 1] };
+};
 
 const meshStore = {
   namespaced: true,
-  state: {},
   actions: {
-    getVtkPoints({ state }, { pointSet, dimension }) {
-      return createVtkPoints(
-        pointSet,
-        dimension,
-        state.lib["get_vtk_points" + dimension + "D"]
-      );
+    loadPointSet2D({ dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.point_set2d",
+        filename
+      }).then(object => {
+        dispatch("addObject", object, { root: true });
+      });
     },
-    getVtkLines({ state }, { curve, dimension }) {
-      let dataset = createVtkPoints(
-        curve,
-        dimension,
-        state.lib["get_vtk_line_points" + dimension + "D"]
-      );
-      const edges = state.lib["get_vtk_edges" + dimension + "D"](curve);
-      dataset.getLines().setData(edges);
-      return dataset;
+    loadPointSet3D({ dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.point_set3d",
+        filename
+      }).then(object => {
+        dispatch("addObject", object, { root: true });
+      });
     },
-    getVtkSurface({ state }, { surface, dimension }) {
-      let dataset = createVtkPoints(
-        surface,
-        dimension,
-        state.lib["get_vtk_surface_points" + dimension + "D"]
-      );
-      const polygons = state.lib["get_vtk_polygons" + dimension + "D"](surface);
-      dataset.getPolys().setData(polygons);
-      //if (dimension === 3) {
-      //  const normal_data = state.lib.get_vtk_normals(surface);
-      //  const normals = vtkDataArray.newInstance({
-      //    numberOfComponents: 3,
-      //    values: normal_data,
-      //    name: "Normals"
-      //  });
-      //  dataset.getPointData().setNormals(normals);
-      //}
-      return dataset;
+    loadEdgedCurve2D({ dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.edged_curve2d",
+        filename
+      }).then(object => {
+        dispatch("addObject", object, { root: true });
+      });
     },
-    getVtkSolid({ state }, solid) {
-      let dataset = createVtkPoints(solid, 3, state.lib.get_vtk_solid_points);
-      const facets = state.lib.get_vtk_facets(solid);
-      dataset.getPolys().setData(facets);
-      return dataset;
+    loadEdgedCurve3D({ dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.edged_curve3d",
+        filename
+      }).then(object => {
+        dispatch("addObject", object, { root: true });
+      });
     },
-    storeObject(
-      { dispatch, rootState },
-      { type, cpp, dataset, filename, representation, style }
-    ) {
-      dispatch(
-        "addObject",
-        {
-          type,
-          name: filename.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, ""),
-          cpp,
-          vtk: dataset,
-          style
+    loadPolygonalSurface2D({ dispatch }, filename) {
+      dispatch("private/loadSurface", {
+        command: "opengeode.load.surface.polygonal2d",
+        filename
+      });
+    },
+    loadPolygonalSurface3D({ dispatch }, filename) {
+      dispatch("private/loadSurface", {
+        command: "opengeode.load.surface.polygonal3d",
+        filename
+      });
+    },
+    loadTriangulatedSurface2D({ dispatch }, filename) {
+      dispatch("private/loadSurface", {
+        command: "opengeode.load.surface.triangulated2d",
+        filename
+      });
+    },
+    loadTriangulatedSurface3D({ dispatch }, filename) {
+      dispatch("private/loadSurface", {
+        command: "opengeode.load.surface.triangulated3d",
+        filename
+      });
+    },
+    loadPolyhedralSolid({ dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.solid.polyhedral3d",
+        filename
+      }).then(object => {
+        dispatch("addObject", object, { root: true });
+      });
+    },
+    loadTetrahedralSolid({ dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.solid.tetrahedral3d",
+        filename
+      }).then(object => {
+        dispatch("addObject", object, { root: true });
+      });
+    }
+  },
+  modules: {
+    private: {
+      namespaced: true,
+      actions: {
+        loadObject({ dispatch }, { command, filename }) {
+          return dispatch(
+            "network/call",
+            {
+              command,
+              args: [filename]
+            },
+            { root: true }
+          );
         },
-        { root: true }
-      ).then(source =>
-        rootState.proxyManager
-          .getRepresentations()
-          .filter(r => r.getInput() === source)
-          .forEach(r => r.setRepresentation(representation))
-      );
+        loadSurface({ dispatch }, { command, filename }) {
+          dispatch("loadObject", {
+            command,
+            filename
+          }).then(object => {
+            dispatch("addObject", Object.assign(object, surfaceStyle), {
+              root: true
+            });
+          });
+        }
+      }
     },
-    loadPointSet2D({ state, dispatch }, filename) {
-      let pointSet = new state.lib.PointSet2D.create();
-      state.lib.load_point_set2D(pointSet, filename);
-      dispatch("getVtkPoints", { pointSet, dimension: 2 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "PointSet2D",
-          representation: "Points",
-          cpp: pointSet,
-          dataset,
-          filename
-        });
-      });
-    },
-    loadPointSet3D({ state, dispatch }, filename) {
-      let pointSet = new state.lib.PointSet3D.create();
-      state.lib.load_point_set3D(pointSet, filename);
-      dispatch("getVtkPoints", { pointSet, dimension: 3 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "PointSet3D",
-          representation: "Points",
-          cpp: pointSet,
-          dataset,
-          filename
-        });
-      });
-    },
-    loadEdgedCurve2D({ state, dispatch }, filename) {
-      let curve = new state.lib.EdgedCurve2D.create();
-      state.lib.load_edged_curve2D(curve, filename);
-      dispatch("getVtkLines", { curve, dimension: 2 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "EdgedCurve2D",
-          representation: "Wireframe",
-          cpp: curve,
-          dataset,
-          filename
-        });
-      });
-    },
-    loadEdgedCurve3D({ state, dispatch }, filename) {
-      let curve = new state.lib.EdgedCurve3D.create();
-      state.lib.load_edged_curve3D(curve, filename);
-      dispatch("getVtkLines", { curve, dimension: 3 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "EdgedCurve3D",
-          representation: "Wireframe",
-          cpp: curve,
-          dataset,
-          filename
-        });
-      });
-    },
-    loadPolygonalSurface2D({ state, dispatch }, filename) {
-      let surface = new state.lib.PolygonalSurface2D.create();
-      state.lib.load_polygonal_surface2D(surface, filename);
-      dispatch("getVtkSurface", { surface, dimension: 2 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "PolygonalSurface2D",
-          representation: "Surface with edges",
-          cpp: surface,
-          dataset,
-          filename,
-          style: { ...surfaceStyle }
-        });
-      });
-    },
-    loadPolygonalSurface3D({ state, dispatch }, filename) {
-      let surface = new state.lib.PolygonalSurface3D.create();
-      state.lib.load_polygonal_surface3D(surface, filename);
-      dispatch("getVtkSurface", { surface, dimension: 3 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "PolygonalSurface3D",
-          representation: "Surface with edges",
-          cpp: surface,
-          dataset,
-          filename,
-          style: { ...surfaceStyle }
-        });
-      });
-    },
-    loadTriangulatedSurface2D({ state, dispatch }, filename) {
-      let surface = new state.lib.TriangulatedSurface2D.create();
-      state.lib.load_triangulated_surface2D(surface, filename);
-      dispatch("getVtkSurface", { surface, dimension: 2 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "TriangulatedSurface2D",
-          representation: "Surface with edges",
-          cpp: surface,
-          dataset,
-          filename,
-          style: { ...surfaceStyle }
-        });
-      });
-    },
-    loadTriangulatedSurface3D({ state, dispatch }, filename) {
-      let surface = new state.lib.TriangulatedSurface3D.create();
-      state.lib.load_triangulated_surface3D(surface, filename);
-      dispatch("getVtkSurface", { surface, dimension: 3 }).then(dataset => {
-        dispatch("storeObject", {
-          type: "TriangulatedSurface3D",
-          representation: "Surface with edges",
-          cpp: surface,
-          dataset,
-          filename,
-          style: { ...surfaceStyle }
-        });
-      });
-    },
-    loadPolyhedralSolid({ state, dispatch }, filename) {
-      let solid = new state.lib.PolyhedralSolid3D.create();
-      state.lib.load_polyhedral_solid3D(solid, filename);
-      dispatch("getVtkSolid", solid).then(dataset => {
-        dispatch("storeObject", {
-          type: "PolyhedralSolid",
-          representation: "Surface with edges",
-          cpp: solid,
-          dataset,
-          filename
-        });
-      });
-    },
-    loadTetrahedralSolid({ state, dispatch }, filename) {
-      let solid = new state.lib.TetrahedralSolid3D.create();
-      state.lib.load_tetrahedral_solid3D(solid, filename);
-      dispatch("getVtkSolid", solid).then(dataset => {
-        dispatch("storeObject", {
-          type: "TetrahedralSolid",
-          representation: "Surface with edges",
-          cpp: solid,
-          dataset,
-          filename
-        });
-      });
+    style: {
+      namespaced: true,
+      actions: {
+        setEdgeVisibility({ commit, dispatch }, { id, value }) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: ["mesh", "visible"],
+              value
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.edge.visibility",
+              args: [id, value]
+            },
+            { root: true }
+          );
+        },
+        setColor({ commit, dispatch }, { id, color }) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: ["color", "value"],
+              color
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.color",
+              args: [id, color]
+            },
+            { root: true }
+          );
+        }
+      }
     }
   }
 };

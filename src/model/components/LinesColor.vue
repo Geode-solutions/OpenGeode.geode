@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import LogoLinesColor from "@/assets/edged_curve_color.svg";
 import ContextualItem from "@/components/ContextualItem";
 
@@ -39,23 +38,13 @@ export default {
   props: {
     item: Object
   },
-  computed: {
-    ...mapState(["proxyManager"])
-  },
   watch: {
     color: function(value) {
       const newColor = [value.r / 255, value.g / 255, value.b / 255];
-      this.$store.commit("setObjectStyle", {
+      this.$store.dispatch("model/style/setLinesColor", {
         id: this.item.id,
-        style: ["lines", "color"],
         value: newColor
       });
-      this.item.source.lines.forEach(source =>
-        this.proxyManager
-          .getRepresentations()
-          .filter(r => r.getInput() === source)
-          .forEach(r => r.setColor(newColor))
-      );
     }
   },
   mounted() {

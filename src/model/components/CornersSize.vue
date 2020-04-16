@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import LogoCornersSize from "@/assets/point_set_size.svg";
 import ContextualItem from "@/components/ContextualItem";
 
@@ -44,22 +43,12 @@ export default {
   props: {
     item: Object
   },
-  computed: {
-    ...mapState(["proxyManager"])
-  },
   watch: {
     size: function(value) {
-      this.$store.commit("setObjectStyle", {
+      this.$store.dispatch("model/style/setCornersSize", {
         id: this.item.id,
-        style: ["corners", "size"],
         value
       });
-      this.item.source.corners.forEach(source =>
-        this.proxyManager
-          .getRepresentations()
-          .filter(r => r.getInput() === source)
-          .forEach(r => r.setPointSize(value))
-      );
     }
   },
   mounted() {
