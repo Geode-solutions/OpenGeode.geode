@@ -51,4 +51,9 @@ class OpenGeodeUI(OpenGeodeProtocol):
 
         return str(self.getGlobalId(view))
 
+    @exportRpc("opengeode.reset")
+    def reset(self):
+        self.getDataBase().clear()
+        self.getRenderer().RemoveAllViewProps()
+
 protocols = [OpenGeodeUI]
