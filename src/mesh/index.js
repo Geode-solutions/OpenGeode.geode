@@ -38,9 +38,22 @@ import LogoPolygonalSurface3D from "@/assets/polygonal_surface3d.svg";
 import LogoSolid from "@/assets/block.svg";
 import LogoTetrahedralSolid from "@/assets/tetrahedral_solid.svg";
 import LogoPolyhedralSolid from "@/assets/polyhedral_solid.svg";
+import PointsColor from "./components/PointSetColor";
+import PointsSize from "./components/PointSetSize";
 import SurfaceColor from "./components/SurfaceColor";
 import SurfaceMesh from "./components/SurfaceMesh";
 import Clip from "./components/Clip";
+
+let pointSetStyle = {
+  style: {
+    size: 1,
+    color: {
+      type: "Constant",
+      value: [1, 1, 1],
+      vertexAttributeName: ""
+    }
+  }
+};
 
 let surfaceStyle = {
   style: {
@@ -58,19 +71,15 @@ const meshStore = {
   namespaced: true,
   actions: {
     loadPointSet2D({ dispatch }, filename) {
-      dispatch("private/loadObject", {
+      dispatch("private/loadPointSet", {
         command: "opengeode.load.point_set2d",
         filename
-      }).then(object => {
-        dispatch("addObject", object, { root: true });
       });
     },
     loadPointSet3D({ dispatch }, filename) {
-      dispatch("private/loadObject", {
+      dispatch("private/loadPointSet", {
         command: "opengeode.load.point_set3d",
         filename
-      }).then(object => {
-        dispatch("addObject", object, { root: true });
       });
     },
     loadEdgedCurve2D({ dispatch }, filename) {
@@ -144,6 +153,16 @@ const meshStore = {
             { root: true }
           );
         },
+        loadPointSet({ dispatch }, { command, filename }) {
+          dispatch("loadObject", {
+            command,
+            filename
+          }).then(object => {
+            dispatch("addObject", Object.assign(object, pointSetStyle), {
+              root: true
+            });
+          });
+        },
         loadSurface({ dispatch }, { command, filename }) {
           dispatch("loadObject", {
             command,
@@ -159,6 +178,25 @@ const meshStore = {
     style: {
       namespaced: true,
       actions: {
+        setPointsSize({ commit, dispatch }, { id, value }) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: ["size"],
+              value
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.points.size",
+              args: [id, value]
+            },
+            { root: true }
+          );
+        },
         setEdgeVisibility({ commit, dispatch }, { id, value }) {
           commit(
             "setObjectStyle",
@@ -179,12 +217,13 @@ const meshStore = {
           );
         },
         setColor({ commit, dispatch }, { id, color }) {
+          console.log("set color", color)
           commit(
             "setObjectStyle",
             {
               id,
               style: ["color", "value"],
-              color
+              value: color
             },
             { root: true }
           );
@@ -325,6 +364,22 @@ export default function(store) {
     component: LogoPolyhedralSolid,
     tooltip: "Import polyhedral solid",
     action: "mesh/loadPolyhedralSolid"
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "PointSet2D",
+    component: PointsSize
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "PointSet3D",
+    component: PointsSize
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "PointSet2D",
+    component: PointsColor
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "PointSet3D",
+    component: PointsColor
   });
   store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface2D",

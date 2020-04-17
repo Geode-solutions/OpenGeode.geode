@@ -108,6 +108,12 @@ class OpenGeodeIOMesh(OpenGeodeProtocol):
         actor.GetProperty().SetEdgeVisibility(visibility)
         self.render()
 
+    @exportRpc("opengeode.points.size")
+    def setEdgeVisibility(self, id, size):
+        actor = self.getObject(id)["actor"]
+        actor.GetProperty().SetPointSize(size)
+        self.render()
+
     def clearColors(self, id):
         store = self.getObject(id)
         vtk = store["vtk"]
