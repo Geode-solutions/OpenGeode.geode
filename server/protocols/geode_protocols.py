@@ -65,7 +65,7 @@ class OpenGeodeProtocol(vtkWebProtocol):
                     mapper[key][id] = object_mapper
                     actor[key][id] = object_actor
         else:
-            mapper, actor, bbox = self.addVTKObject(vtk_object)
+            mapper, actor = self.addVTKObject(vtk_object)
             bbox = self.bbox(actor)
         id = str(uuid())
         print(id)
