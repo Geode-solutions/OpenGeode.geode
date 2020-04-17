@@ -109,7 +109,7 @@ class OpenGeodeIOMesh(OpenGeodeProtocol):
         self.render()
 
     @exportRpc("opengeode.points.size")
-    def setEdgeVisibility(self, id, size):
+    def setPointsSize(self, id, size):
         actor = self.getObject(id)["actor"]
         actor.GetProperty().SetPointSize(size)
         self.render()
@@ -141,8 +141,6 @@ class OpenGeodeIOMesh(OpenGeodeProtocol):
         print(manager.nb_elements())
         for i in range(manager.nb_elements()):
             data.SetValue(i,attribute.generic_value(i))
-            if data.GetValue(i) == 0:
-                data.SetValue(i,50)
         return data
 
 
