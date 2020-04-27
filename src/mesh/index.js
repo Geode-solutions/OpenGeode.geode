@@ -251,8 +251,8 @@ export default function(store) {
   store.dispatch("registerObjectType", "PolygonalSurface3D");
   store.dispatch("registerObjectType", "TriangulatedSurface2D");
   store.dispatch("registerObjectType", "TriangulatedSurface3D");
-  store.dispatch("registerObjectType", "PolyhedralSolid");
-  store.dispatch("registerObjectType", "TetrahedralSolid");
+  store.dispatch("registerObjectType", "PolyhedralSolid3D");
+  store.dispatch("registerObjectType", "TetrahedralSolid3D");
   store.commit("ui/registerInputItem", {
     parent: "import",
     name: "mesh",

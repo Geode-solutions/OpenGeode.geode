@@ -18,5 +18,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_subdirectory(mesh)
-add_subdirectory(model)
+add_geode_library(
+    NAME model
+    FOLDER "geode/opengeode/model"
+    SOURCES
+        "common.cpp"
+        "brep.cpp"
+    PUBLIC_HEADERS
+        "common.h"
+        "brep.h"
+    PUBLIC_DEPENDENCIES
+        OpenGeode::basic
+    PRIVATE_DEPENDENCIES
+        OpenGeode::geometry
+        OpenGeode::mesh
+        OpenGeode::model
+        VTK::CommonCore
+        VTK::CommonDataModel
+        VTK::IOXML
+)

@@ -3,7 +3,7 @@
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/server/include",
         "${workspaceFolder}/build/opengeode_geode",
-        "${workspaceFolder}/build/third_party/vtk/install/include",
+        "${workspaceFolder}/build/third_party/vtk/install/include/vtk-8.90",
         "${workspaceFolder:OpenGeode}/build/opengeode/install/include"
     ],
     "files.watcherExclude": {

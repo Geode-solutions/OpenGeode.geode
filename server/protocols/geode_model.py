@@ -6,6 +6,7 @@ import opengeode_py_mesh as mesh
 import opengeode_py_model as model
 
 import opengeode_geode_py_mesh as py_mesh
+import opengeode_geode_py_model as py_model
 
 from geode_protocols import OpenGeodeProtocol
 import geode_mesh 
@@ -51,7 +52,8 @@ class OpenGeodeIOModel(OpenGeodeProtocol):
             "surfaces": surfacesToPolydata(brep.surfaces(), 3),
             "blocks": blocksToPolydata(brep.blocks(), 3)
         }
-        return self.registerObjectFromFile("BRep",filename, brep, vtk)
+        vtk_light = py_model.export_brep_lines(brep)
+        return self.registerObjectFromFile("BRep",filename, brep, vtk, vtk_light)
 
     @exportRpc("opengeode.model.mesh.visibility")
     def setModelMeshVisibility(self, id, object_type, visibility):
