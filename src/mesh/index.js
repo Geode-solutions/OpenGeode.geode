@@ -70,6 +70,20 @@ let surfaceStyle = {
 const meshStore = {
   namespaced: true,
   actions: {
+    createPoint({ dispatch }, point) {
+      dispatch(
+        "network/call",
+        {
+          command: "opengeode.create.point",
+          args: [point.name, point.x, point.y, point.z]
+        },
+        { root: true }
+      ).then(object => {
+        dispatch("addObject", Object.assign(object, pointSetStyle), {
+          root: true
+        });
+      });
+    },
     loadPointSet2D({ dispatch }, filename) {
       dispatch("private/loadPointSet", {
         command: "opengeode.load.point_set2d",
