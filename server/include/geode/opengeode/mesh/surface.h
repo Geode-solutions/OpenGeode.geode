@@ -35,4 +35,8 @@ namespace geode
     template < index_t dimension >
     void opengeode_geode_mesh_api convert_surface_to_polydata(
         PolygonalSurface< dimension > &mesh, vtkPolyData *polydata );
+
+    template < index_t dimension >
+    std::string opengeode_geode_mesh_api extract_surface_wireframe(
+        PolygonalSurface< dimension > &mesh );
 } // namespace geode

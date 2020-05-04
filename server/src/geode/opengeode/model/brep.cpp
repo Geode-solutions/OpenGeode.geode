@@ -23,61 +23,14 @@
 
 #include <geode/opengeode/model/brep.h>
 
-#include <vtkPolyData.h>
-#include <vtkXMLPolyDataWriter.h>
-
-#include <geode/geometry/point.h>
-
-#include <geode/mesh/core/edged_curve.h>
-
-#include <geode/model/mixin/core/line.h>
 #include <geode/model/representation/core/brep.h>
+
+#include <geode/opengeode/model/private/extract_lines.h>
 
 namespace geode
 {
     std::string export_brep_lines( const BRep &brep )
     {
-        index_t nb_points{ 0 };
-        index_t nb_edges{ 0 };
-        for( const auto &line : brep.lines() )
-        {
-            const auto &mesh = line.mesh();
-            nb_points += mesh.nb_vertices();
-            nb_edges += mesh.nb_edges();
-        }
-
-        vtkSmartPointer< vtkPoints > points = vtkPoints::New();
-        points->Allocate( nb_points );
-        vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
-        edges->AllocateExact( nb_edges, nb_edges * 2 );
-        for( const auto &line : brep.lines() )
-        {
-            const auto offset = points->GetNumberOfPoints();
-            const auto &mesh = line.mesh();
-            for( const auto v : Range{ mesh.nb_vertices() } )
-            {
-                const auto &point = mesh.point( v );
-                points->InsertNextPoint(
-                    point.value( 0 ), point.value( 1 ), point.value( 2 ) );
-            }
-            for( const auto e : Range( mesh.nb_edges() ) )
-            {
-                edges->InsertNextCell( { offset + mesh.edge_vertex( { e, 0 } ),
-                    offset + mesh.edge_vertex( { e, 1 } ) } );
-            }
-        }
-
-        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
-        polydata->SetPoints( points );
-        polydata->SetLines( edges );
-
-        vtkSmartPointer< vtkXMLPolyDataWriter > writer =
-            vtkXMLPolyDataWriter::New();
-        writer->SetInputData( polydata );
-        writer->WriteToOutputStringOn();
-        writer->SetDataModeToBinary();
-        writer->SetCompressorTypeToZLib();
-        writer->Write();
-        return writer->GetOutputString();
+        return detail::export_model_lines< 3 >( brep );
     }
 } // namespace geode

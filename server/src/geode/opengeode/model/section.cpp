@@ -21,27 +21,16 @@
  *
  */
 
-#include <geode/opengeode/mesh/surface.h>
+#include <geode/opengeode/model/section.h>
 
-#include <vtkPolyData.h>
+#include <geode/model/representation/core/section.h>
 
-#include <geode/mesh/core/polygonal_surface.h>
-
-#define PYTHON_SURFACE( dimension )                                            \
-    const auto convert##dimension =                                            \
-        "convert_surface_to_polydata" + std::to_string( dimension ) + "D";     \
-    module.def( convert##dimension.c_str(),                                    \
-        &convert_surface_to_polydata< dimension > );                           \
-    const auto extract##dimension =                                            \
-        "extract_surface_wireframe" + std::to_string( dimension ) + "D";       \
-    module.def(                                                                \
-        extract##dimension.c_str(), &extract_surface_wireframe< dimension > )
+#include <geode/opengeode/model/private/extract_lines.h>
 
 namespace geode
 {
-    void define_surface( pybind11::module& module )
+    std::string export_section_lines( const Section &section )
     {
-        PYTHON_SURFACE( 2 );
-        PYTHON_SURFACE( 3 );
+        return detail::export_model_lines< 2 >( section );
     }
 } // namespace geode

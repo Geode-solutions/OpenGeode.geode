@@ -29,6 +29,7 @@ add_geode_library(
         "surface.cpp"
     ADVANCED_HEADERS
         "detail/geode_points.h"
+        "detail/vtk_xml.h"
     PUBLIC_HEADERS
         "common.h"
         "edged_curve.h"
@@ -42,4 +43,5 @@ add_geode_library(
         VTK::CommonDataModel
     PRIVATE_DEPENDENCIES
         OpenGeode::mesh
+        VTK::IOXML
 )

@@ -28,6 +28,24 @@
 #include <geode/mesh/core/point_set.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
+#include <geode/opengeode/mesh/detail/vtk_xml.h>
+
+namespace
+{
+    template < geode::index_t dimension >
+    void extract_vertices(
+        geode::PointSet< dimension > &mesh, vtkPolyData *polydata )
+    {
+        vtkSmartPointer< vtkCellArray > Points = vtkCellArray::New();
+        const auto nb_vertices = mesh.nb_vertices();
+        Points->AllocateExact( nb_vertices, nb_vertices );
+        for( const auto v : geode::Range{ nb_vertices } )
+        {
+            Points->InsertNextCell( { v } );
+        }
+        polydata->SetVerts( Points );
+    }
+} // namespace
 
 namespace geode
 {
@@ -36,15 +54,22 @@ namespace geode
         PointSet< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
-
-        vtkSmartPointer< vtkCellArray > Points = vtkCellArray::New();
-        Points->AllocateExact( mesh.nb_vertices(), mesh.nb_vertices() );
-        for( const auto v : Range( mesh.nb_vertices() ) )
-        {
-            Points->InsertNextCell( { v } );
-        }
-        polydata->SetVerts( Points );
+        extract_vertices( mesh, polydata );
     }
+
+    template < index_t dimension >
+    std::string extract_point_set_points( PointSet< dimension > &mesh )
+    {
+        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+        detail::set_geode_points( mesh, polydata );
+        extract_vertices( mesh, polydata );
+        return detail::export_xml( polydata );
+    }
+
+    template std::string opengeode_geode_mesh_api extract_point_set_points(
+        PointSet< 2 > & );
+    template std::string opengeode_geode_mesh_api extract_point_set_points(
+        PointSet< 3 > & );
 
     template void opengeode_geode_mesh_api convert_point_set_to_polydata(
         PointSet< 2 > &, vtkPolyData * );

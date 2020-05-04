@@ -24,9 +24,11 @@ add_geode_library(
     SOURCES
         "common.cpp"
         "brep.cpp"
+        "section.cpp"
     PUBLIC_HEADERS
         "common.h"
         "brep.h"
+        "section.h"
     PUBLIC_DEPENDENCIES
         OpenGeode::basic
     PRIVATE_DEPENDENCIES

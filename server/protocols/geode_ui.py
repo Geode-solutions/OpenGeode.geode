@@ -57,6 +57,24 @@ class OpenGeodeUI(OpenGeodeProtocol):
         camera.SetClippingRange(clipping_range)
         self.render()
 
+    @exportRpc("opengeode.marker.geometry")
+    def setMarkerGeometry(self, content):
+        reader = vtk.vtkXMLPolyDataReader()
+        reader.ReadFromInputStringOn()
+        reader.SetInputString(content)
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(reader.GetOutputPort())
+        actor = vtk.vtkActor()
+        actor.SetMapper(mapper)
+        widget = self.getSharedObject("marker")
+        widget.SetOrientationMarker( actor )
+        widget.EnabledOn()
+
+    @exportRpc("opengeode.marker.viewport")
+    def setMarkerViewport(self, viewport):
+        widget = self.getSharedObject("marker")
+        widget.SetViewport( viewport )
+
     @exportRpc("opengeode.reset")
     def reset(self):
         self.getDataBase().clear()
