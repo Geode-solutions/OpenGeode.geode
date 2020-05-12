@@ -8,7 +8,7 @@ import opengeode_py_model as model
 import opengeode_geode_py_mesh as py_mesh
 import opengeode_geode_py_model as py_model
 
-from geode_protocols import OpenGeodeProtocol
+from geode_protocols import GeodeProtocol
 import geode_mesh 
 
 from wslink import register as exportRpc
@@ -41,7 +41,7 @@ def blocksToPolydata(blocks, dimension):
         vtk[block.id().string()] = geode_mesh.SolidToPolydata(block.mesh(), dimension)
     return vtk
 
-class OpenGeodeIOModel(OpenGeodeProtocol):
+class OpenGeodeIOModel(GeodeProtocol):
     @exportRpc("opengeode.load.brep")
     def loadBRep(self, filename):
         brep = model.BRep()

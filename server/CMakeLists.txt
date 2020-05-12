@@ -18,22 +18,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.13)
 
-#-------------------------------------------------------------------------------
-# Project options
+# Define the project
+project(OpenGeode_geode CXX)
 
-# Internal options
-option(USE_SUPERBUILD "Whether or not a superbuild should be invoked" ON)
-mark_as_advanced(USE_SUPERBUILD)
+# Get OpenGeode_geode dependencies
+find_package(OpenGeode REQUIRED)
+find_package(VTK REQUIRED CONFIG NO_DEFAULT_PATH PATHS "../node_modules/@geode/geode-tools/build/vtk/install")
 
-#-------------------------------------------------------------------------------
-# When CMake is called, a main project (super build project) is generated.
-# This main project is responsible to create third party cmake projects including
-# the one of OpenGeode_geode. This is done during compilation, i.e., OpenGeode_geode.cmake is
-# called (USE_SUPERBUILD = OFF) when the super build project is compiled.
-if(USE_SUPERBUILD)
-    include(cmake/SuperBuild.cmake)
+#------------------------------------------------------------------------------------------------
+# Configure the OpenGeode_geode libraries
+add_subdirectory(src/geode)
+
+#------------------------------------------------------------------------------------------------
+# Configure the OpenGeode_geode bindings
+add_subdirectory(bindings/python)
+
+#------------------------------------------------------------------------------------------------
+# Configure CPack
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP")
 else()
-    include(cmake/OpenGeode_geode.cmake)
+    set(CPACK_GENERATOR "TGZ")
 endif()
+
+# This must always be last!
+include(CPack)

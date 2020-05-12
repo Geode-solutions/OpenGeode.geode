@@ -10,38 +10,30 @@
     "dist/opengeode.umd.min.js"
   ],
   "scripts": {
-    "build": "vue-cli-service build --target lib --no-clean ./src/main.js",
+    "build:vtk": "npm explore @geode/geode-tools -- npm run build:vtk",
+    "build:cmake": "cmake-js compile -d server -O build",
+    "build:vue": "vue-cli-service build --target lib --no-clean ./src/main.js",
     "lint": "vue-cli-service lint"
   },
-  "geode": {
-    "opengeode": "1.5.16"
-  },
-  "cmake-js": {
-    "runtime": "electron",
-    "runtimeVersion": "6.0.12",
-    "arch": "x64"
-  },
-  "dependencies": {
-    "@octokit/rest": "^16.43.1",
-    "vtk.js": "^13.7.1",
-    "vuex": "^3.1.2"
-  },
   "devDependencies": {
+    "@geode/geode-tools": "^1.0.3",
     "@vue/cli-plugin-babel": "^4.2.2",
     "@vue/cli-plugin-eslint": "^4.2.2",
     "@vue/cli-service": "^4.2.2",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.0.3",
+    "cmake-js": "^6.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.2",
-    "node-loader": "^0.6.0",
     "sass": "^1.25.0",
     "sass-loader": "^8.0.2",
+    "vtk.js": "^13.7.1",
     "vue": "^2.6.11",
     "vue-cli-plugin-vuetify": "^2.0.5",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.6.11",
-    "vuetify": "^2.2.12"
+    "vuetify": "^2.2.12",
+    "vuex": "^3.1.2"
   }
 }
