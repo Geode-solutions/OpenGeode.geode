@@ -45,6 +45,9 @@ class OpenGeodeProtocol(vtkWebProtocol):
         actor = vtk.vtkActor()
         mapper.SetInputData(vtk_object)
         mapper.SetColorModeToMapScalars()
+        mapper.SetResolveCoincidentTopologyLineOffsetParameters(1,-0.1)
+        mapper.SetResolveCoincidentTopologyPolygonOffsetParameters(2,0)
+        mapper.SetResolveCoincidentTopologyPointOffsetParameter(-2)
         actor.SetMapper(mapper)
         self.getRenderer().AddActor(actor)
         return mapper, actor

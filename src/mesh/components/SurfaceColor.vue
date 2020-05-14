@@ -69,7 +69,10 @@ export default {
     item: Object
   },
   created() {
+    console.log("GET ATTRIBUTES NAMES");
     this.getAttributeNames();
+    console.log(this.vertexAttributes);
+    console.log(this.polygonAttributes);
   },
   methods: {
     ...mapActions("network", ["call"]),
