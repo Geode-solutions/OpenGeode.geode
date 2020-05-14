@@ -1,7 +1,7 @@
 import vtk
 
 import opengeode_py_basic as basic
-import opengeode_py_geometry
+import opengeode_py_geometry as geom
 import opengeode_py_mesh as mesh
 
 import opengeode_geode_py_mesh as geode_mesh
