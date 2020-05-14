@@ -32,6 +32,15 @@ def SolidToPolydata(solid, dimension):
 
 class OpenGeodeIOMesh(OpenGeodeProtocol):
 
+    @exportRpc("opengeode.create.point")
+    def createPoint(self, name, x, y, z):
+        point_set = mesh.PointSet3D.create()
+        builder = mesh.PointSetBuilder3D.create( point_set )
+        builder.create_point(geom.Point3D([x, y, z]))
+        vtk = PointSetToPolydata(point_set, 3)
+        vtk_light = geode_mesh.extract_point_set_points3D(point_set)
+        return self.registerObject("PointSet3D", name, point_set, vtk, vtk_light)
+
     @exportRpc("opengeode.load.point_set2d")
     def loadPointSet2D(self, filename):
         point_set = mesh.PointSet2D.create()
