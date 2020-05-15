@@ -28,6 +28,7 @@
 #include <geode/mesh/core/polygonal_surface.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
+#include <geode/opengeode/mesh/detail/vtk_xml.h>
 
 namespace geode
 {
@@ -56,6 +57,29 @@ namespace geode
         }
         polydata->SetPolys( Polygons );
     }
+
+    template < index_t dimension >
+    std::string extract_surface_wireframe( PolygonalSurface< dimension > &mesh )
+    {
+        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+        detail::set_geode_points( mesh, polydata );
+
+        vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
+        const auto nb_edges = mesh.nb_edges();
+        edges->AllocateExact( nb_edges, nb_edges * 2 );
+        for( const auto e : Range{ nb_edges } )
+        {
+            const auto &vertices = mesh.edge_vertices( e );
+            edges->InsertNextCell( { vertices[0], vertices[1] } );
+        }
+        polydata->SetLines( edges );
+        return detail::export_xml( polydata );
+    }
+
+    template std::string opengeode_geode_mesh_api extract_surface_wireframe(
+        PolygonalSurface< 2 > & );
+    template std::string opengeode_geode_mesh_api extract_surface_wireframe(
+        PolygonalSurface< 3 > & );
 
     template void opengeode_geode_mesh_api convert_surface_to_polydata(
         PolygonalSurface< 2 > &, vtkPolyData * );

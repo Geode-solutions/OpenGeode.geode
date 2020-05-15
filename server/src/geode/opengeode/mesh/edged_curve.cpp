@@ -28,6 +28,25 @@
 #include <geode/mesh/core/edged_curve.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
+#include <geode/opengeode/mesh/detail/vtk_xml.h>
+
+namespace
+{
+    template < geode::index_t dimension >
+    void extract_edges(
+        const geode::EdgedCurve< dimension > &mesh, vtkPolyData *polydata )
+    {
+        vtkSmartPointer< vtkCellArray > Edges = vtkCellArray::New();
+        const auto nb_edges = mesh.nb_edges();
+        Edges->AllocateExact( nb_edges, nb_edges * 2 );
+        for( const auto e : geode::Range{ nb_edges } )
+        {
+            Edges->InsertNextCell( { mesh.edge_vertex( { e, 0 } ),
+                mesh.edge_vertex( { e, 1 } ) } );
+        }
+        polydata->SetLines( Edges );
+    }
+} // namespace
 
 namespace geode
 {
@@ -36,16 +55,22 @@ namespace geode
         EdgedCurve< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
-
-        vtkSmartPointer< vtkCellArray > Edges = vtkCellArray::New();
-        Edges->AllocateExact( mesh.nb_edges(), mesh.nb_edges() * 2 );
-        for( const auto e : Range( mesh.nb_edges() ) )
-        {
-            Edges->InsertNextCell( { mesh.edge_vertex( { e, 0 } ),
-                mesh.edge_vertex( { e, 1 } ) } );
-        }
-        polydata->SetLines( Edges );
+        extract_edges( mesh, polydata );
     }
+
+    template < index_t dimension >
+    std::string extract_edged_curve_edges( EdgedCurve< dimension > &mesh )
+    {
+        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+        detail::set_geode_points( mesh, polydata );
+        extract_edges( mesh, polydata );
+        return detail::export_xml( polydata );
+    }
+
+    template std::string opengeode_geode_mesh_api extract_edged_curve_edges(
+        EdgedCurve< 2 > & );
+    template std::string opengeode_geode_mesh_api extract_edged_curve_edges(
+        EdgedCurve< 3 > & );
 
     template void opengeode_geode_mesh_api convert_edged_curve_to_polydata(
         EdgedCurve< 2 > &, vtkPolyData * );

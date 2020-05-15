@@ -41,15 +41,39 @@ class OpenGeodeUI(OpenGeodeProtocol):
         self.render()
 
     @exportRpc("opengeode.camera.reset")
-    def resetCamera(self, viewId):
-        """
-        RPC callback to reset camera.
-        """
+    def fastResetCamera(self, viewId):
         view = self.getView(viewId)
         view.GetRenderers().GetFirstRenderer().ResetCamera()
         self.render()
 
-        return str(self.getGlobalId(view))
+    @exportRpc("opengeode.camera.update")
+    def fastUpdateCamera(self, view_id, focal_point, view_up, position, view_angle, clipping_range):
+        view = self.getView(view_id)
+        camera = view.GetRenderers().GetFirstRenderer().GetActiveCamera()
+        camera.SetFocalPoint(focal_point)
+        camera.SetViewUp(view_up)
+        camera.SetPosition(position)
+        camera.SetViewAngle(view_angle)
+        camera.SetClippingRange(clipping_range)
+        self.render()
+
+    @exportRpc("opengeode.marker.geometry")
+    def setMarkerGeometry(self, content):
+        reader = vtk.vtkXMLPolyDataReader()
+        reader.ReadFromInputStringOn()
+        reader.SetInputString(content)
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(reader.GetOutputPort())
+        actor = vtk.vtkActor()
+        actor.SetMapper(mapper)
+        widget = self.getSharedObject("marker")
+        widget.SetOrientationMarker( actor )
+        widget.EnabledOn()
+
+    @exportRpc("opengeode.marker.viewport")
+    def setMarkerViewport(self, viewport):
+        widget = self.getSharedObject("marker")
+        widget.SetViewport( viewport )
 
     @exportRpc("opengeode.reset")
     def reset(self):

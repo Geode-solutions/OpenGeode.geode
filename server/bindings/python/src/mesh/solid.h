@@ -28,10 +28,14 @@
 #include <geode/mesh/core/polyhedral_solid.h>
 
 #define PYTHON_SOLID( dimension )                                              \
-    const auto name##dimension =                                               \
+    const auto convert##dimension =                                            \
         "convert_solid_to_polydata" + std::to_string( dimension ) + "D";       \
     module.def(                                                                \
-        name##dimension.c_str(), &convert_solid_to_polydata< dimension > )
+        convert##dimension.c_str(), &convert_solid_to_polydata< dimension > ); \
+    const auto extract##dimension =                                            \
+        "extract_solid_wireframe" + std::to_string( dimension ) + "D";         \
+    module.def(                                                                \
+        extract##dimension.c_str(), &extract_solid_wireframe< dimension > )
 
 namespace geode
 {

@@ -18,30 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_geode_library(
-    NAME mesh
-    FOLDER "geode/opengeode/mesh"
+add_geode_python_binding(
+    NAME "py_model"
     SOURCES
-        "common.cpp"
-        "edged_curve.cpp"
-        "point_set.cpp"
-        "solid.cpp"
-        "surface.cpp"
-    ADVANCED_HEADERS
-        "detail/geode_points.h"
-        "detail/vtk_xml.h"
-    PUBLIC_HEADERS
-        "common.h"
-        "edged_curve.h"
-        "point_set.h"
-        "solid.h"
-        "surface.h"
-    PUBLIC_DEPENDENCIES
-        OpenGeode::basic
-        OpenGeode::geometry
-        VTK::CommonCore
+        "model.cpp"
+    DEPENDENCIES
+        OpenGeode::model
         VTK::CommonDataModel
-    PRIVATE_DEPENDENCIES
-        OpenGeode::mesh
-        VTK::IOXML
+        VTK::WrappingPythonCore
+        ${PROJECT_NAME}::model
 )

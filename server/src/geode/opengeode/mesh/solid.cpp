@@ -29,6 +29,7 @@
 #include <geode/mesh/core/polyhedral_solid.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
+#include <geode/opengeode/mesh/detail/vtk_xml.h>
 
 namespace geode
 {
@@ -57,6 +58,71 @@ namespace geode
         }
         polydata->SetPolys( Facets );
     }
+
+    template < index_t dimension >
+    std::string opengeode_geode_mesh_api extract_solid_wireframe(
+        PolyhedralSolid< dimension > &mesh )
+    {
+        std::vector< bool > exported_vertex( mesh.nb_vertices(), false );
+        std::vector< bool > exported_edge( mesh.nb_edges(), false );
+        for( const auto p : Range{ mesh.nb_polyhedra() } )
+        {
+            for( const auto f : Range{ mesh.nb_polyhedron_facets( p ) } )
+            {
+                const PolyhedronFacet facet{ p, f };
+                if( mesh.is_polyhedron_facet_on_border( facet ) )
+                {
+                    for( const auto v :
+                        Range{ mesh.nb_polyhedron_facet_vertices( facet ) } )
+                    {
+                        exported_vertex[mesh.polyhedron_facet_vertex(
+                            { facet, v } )] = true;
+                        exported_edge[mesh.polyhedron_facet_edge(
+                            { facet, v } )] = true;
+                    }
+                }
+            }
+        }
+        const auto nb_points = absl::c_count( exported_vertex, true );
+        const auto nb_edges = absl::c_count( exported_edge, true );
+
+        vtkSmartPointer< vtkPoints > points = vtkPoints::New();
+        points->Allocate( nb_points );
+        vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
+        edges->AllocateExact( nb_edges, nb_edges * 2 );
+
+        absl::flat_hash_map< index_t, index_t > vertices;
+        vertices.reserve( nb_points );
+        for( const auto v : Range{ mesh.nb_vertices() } )
+        {
+            if( exported_vertex[v] )
+            {
+                const auto &point = mesh.point( v );
+                points->InsertNextPoint(
+                    point.value( 0 ), point.value( 1 ), point.value( 2 ) );
+                vertices.emplace( v, vertices.size() );
+            }
+        }
+
+        for( const auto e : Range{ mesh.nb_edges() } )
+        {
+            if( exported_edge[e] )
+            {
+                const auto &edge_vertices = mesh.edge_vertices( e );
+                edges->InsertNextCell( { vertices[edge_vertices[0]],
+                    vertices[edge_vertices[1]] } );
+            }
+        }
+
+        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+        polydata->SetPoints( points );
+        polydata->SetLines( edges );
+
+        return detail::export_xml( polydata );
+    }
+
+    template std::string opengeode_geode_mesh_api extract_solid_wireframe(
+        PolyhedralSolid< 3 > & );
 
     template void opengeode_geode_mesh_api convert_solid_to_polydata(
         PolyhedralSolid< 3 > &, vtkPolyData * );

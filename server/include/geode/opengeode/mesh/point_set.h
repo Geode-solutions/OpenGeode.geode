@@ -35,4 +35,8 @@ namespace geode
     template < index_t dimension >
     void opengeode_geode_mesh_api convert_point_set_to_polydata(
         PointSet< dimension > &mesh, vtkPolyData *polydata );
+
+    template < index_t dimension >
+    std::string opengeode_geode_mesh_api extract_point_set_points(
+        PointSet< dimension > &mesh );
 } // namespace geode

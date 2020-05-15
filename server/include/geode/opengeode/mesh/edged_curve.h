@@ -35,4 +35,8 @@ namespace geode
     template < index_t dimension >
     void opengeode_geode_mesh_api convert_edged_curve_to_polydata(
         EdgedCurve< dimension > &mesh, vtkPolyData *polydata );
+
+    template < index_t dimension >
+    std::string opengeode_geode_mesh_api extract_edged_curve_edges(
+        EdgedCurve< dimension > &mesh );
 } // namespace geode

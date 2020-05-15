@@ -21,27 +21,13 @@
  *
  */
 
-#include <geode/opengeode/mesh/surface.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
-#include <vtkPolyData.h>
+#include "brep.h"
 
-#include <geode/mesh/core/polygonal_surface.h>
-
-#define PYTHON_SURFACE( dimension )                                            \
-    const auto convert##dimension =                                            \
-        "convert_surface_to_polydata" + std::to_string( dimension ) + "D";     \
-    module.def( convert##dimension.c_str(),                                    \
-        &convert_surface_to_polydata< dimension > );                           \
-    const auto extract##dimension =                                            \
-        "extract_surface_wireframe" + std::to_string( dimension ) + "D";       \
-    module.def(                                                                \
-        extract##dimension.c_str(), &extract_surface_wireframe< dimension > )
-
-namespace geode
+PYBIND11_MODULE( opengeode_geode_py_model, module )
 {
-    void define_surface( pybind11::module& module )
-    {
-        PYTHON_SURFACE( 2 );
-        PYTHON_SURFACE( 3 );
-    }
-} // namespace geode
+    module.doc() = "OpenGeode Python binding for Geode model extension";
+    geode::define_brep( module );
+}

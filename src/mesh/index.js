@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Geode-solutions
+ * Copyright (c) 2019 - 2020 Geode-solutions
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -265,8 +265,8 @@ export default function(store) {
   store.dispatch("registerObjectType", "PolygonalSurface3D");
   store.dispatch("registerObjectType", "TriangulatedSurface2D");
   store.dispatch("registerObjectType", "TriangulatedSurface3D");
-  store.dispatch("registerObjectType", "PolyhedralSolid");
-  store.dispatch("registerObjectType", "TetrahedralSolid");
+  store.dispatch("registerObjectType", "PolyhedralSolid3D");
+  store.dispatch("registerObjectType", "TetrahedralSolid3D");
   store.commit("ui/registerInputItem", {
     parent: "import",
     name: "mesh",

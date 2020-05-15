@@ -28,10 +28,10 @@ class OpenGeodeProtocol(vtkWebProtocol):
     def render(self, view = -1):
         self.getProtocol("vtkWebPublishImageDelivery").imagePush({"view": view})
 
-    def registerObjectFromFile(self, type, filename, cpp, vtk_object):
+    def registerObjectFromFile(self, type, filename, cpp, vtk_object, vtk_light):
         print(filename)
         name = os.path.basename(filename)
-        return self.registerObject(type, name, cpp, vtk_object)
+        return self.registerObject(type, name, cpp, vtk_object, vtk_light)
 
     def bbox(self, actor):
         bounds = actor.GetBounds()
@@ -52,7 +52,7 @@ class OpenGeodeProtocol(vtkWebProtocol):
         self.getRenderer().AddActor(actor)
         return mapper, actor
 
-    def registerObject(self, object_type, name, cpp, vtk_object):
+    def registerObject(self, object_type, name, cpp, vtk_object, vtk_light):
         if type(vtk_object) is dict:
             mapper = {}
             actor = {}
@@ -81,5 +81,5 @@ class OpenGeodeProtocol(vtkWebProtocol):
             "actor": actor,
             "mapper": mapper
         }
-        return {"id": id, "name": name, "type": object_type}
+        return {"id": id, "name": name, "type": object_type, "data": vtk_light}
 

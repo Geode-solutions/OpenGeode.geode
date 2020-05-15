@@ -28,10 +28,14 @@
 #include <geode/mesh/core/edged_curve.h>
 
 #define PYTHON_EDGEDCURVE( dimension )                                         \
-    const auto name##dimension =                                               \
+    const auto convert##dimension =                                            \
         "convert_edged_curve_to_polydata" + std::to_string( dimension ) + "D"; \
-    module.def( name##dimension.c_str(),                                       \
-        &convert_edged_curve_to_polydata< dimension > )
+    module.def( convert##dimension.c_str(),                                    \
+        &convert_edged_curve_to_polydata< dimension > );                       \
+    const auto extract##dimension =                                            \
+        "extract_edged_curve_edges" + std::to_string( dimension ) + "D";       \
+    module.def(                                                                \
+        extract##dimension.c_str(), &extract_edged_curve_edges< dimension > )
 
 namespace geode
 {
