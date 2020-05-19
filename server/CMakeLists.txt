@@ -27,6 +27,8 @@ project(OpenGeode_geode CXX)
 find_package(OpenGeode REQUIRED)
 find_package(VTK REQUIRED CONFIG NO_DEFAULT_PATH PATHS "../node_modules/@geode/geode-tools/build/vtk/install")
 
+set(CMAKE_INSTALL_PREFIX install)
+
 #------------------------------------------------------------------------------------------------
 # Configure the OpenGeode_geode libraries
 add_subdirectory(src/geode)

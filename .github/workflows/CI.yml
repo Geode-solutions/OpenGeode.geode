@@ -1,0 +1,126 @@
+name: CI
+
+on: 
+  push:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-18.04
+    
+    steps:
+      - uses: actions/checkout@v1
+      - uses: Geode-solutions/actions/clang-format@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      
+  build-linux:
+    runs-on: ubuntu-18.04
+    container: ${{ matrix.config.container }}
+    needs: format
+    strategy:
+      matrix:
+        config:
+        - {container: "geodesolutions/ubuntu", system: ubuntu}
+        - {container: "geodesolutions/centos", system: rhel}
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Cache node modules
+      uses: actions/cache@v1.2.0
+      with:
+        path: node_modules
+        key: node-${{ matrix.config.system }}-${{ hashFiles('package-lock.json') }}
+    - uses: Geode-solutions/actions/get-release@master
+      id: opengeode
+      with:
+        repository: OpenGeode
+        file: '-${{ matrix.config.system }}.tar.gz'
+        token: ${{ secrets.TOKEN }}
+    - name: Compile
+      run: |
+        npm install
+        npm run build:vtk 
+        npm run build:cmake 
+        npm run build:vue
+    - name: Notify slack
+      if: failure() && github.ref == 'refs/heads/master'
+      uses: 8398a7/action-slack@v2
+      with:
+        status: failure
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
+
+  build-mac:
+    runs-on: macos-latest
+    needs: format
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Cache node modules
+      uses: actions/cache@v1.2.0
+      with:
+        path: node_modules
+        key: node-darwin-${{ hashFiles('package-lock.json') }}
+    - uses: Geode-solutions/actions/get-release@master
+      id: opengeode
+      with:
+        repository: OpenGeode
+        file: '-darwin.tar.gz'
+        token: ${{ secrets.TOKEN }}
+    - name: Compile
+      run: |
+        npm install
+        npm run build:vtk 
+        npm run build:cmake 
+        npm run build:vue
+    - name: Notify slack
+      if: failure() && github.ref == 'refs/heads/master'
+      uses: 8398a7/action-slack@v2
+      with:
+        status: failure
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  
+  build-windows:
+    runs-on: windows-2016
+    needs: format
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Cache node modules
+      uses: actions/cache@v1.2.0
+      with:
+        path: node_modules
+        key: node-win64-${{ hashFiles('package-lock.json') }}
+    - uses: Geode-solutions/actions/get-release@master
+      id: opengeode
+      with:
+        repository: OpenGeode
+        file: '-win64.zip'
+        token: ${{ secrets.TOKEN }}
+    - name: Compile
+      run: |
+        npm install
+        npm run build:vtk 
+        npm run build:cmake 
+        npm run build:vue
+    - name: Notify slack
+      if: failure() && github.ref == 'refs/heads/master'
+      uses: 8398a7/action-slack@v2
+      with:
+        status: failure
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+  semantic-release:
+    runs-on: ubuntu-18.04
+    needs: [build-linux, build-mac, build-windows]
+    steps:
+    - uses: actions/checkout@v1
+    - run: npx -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator -p @semantic-release/github -p @semantic-release/git -p semantic-release semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
