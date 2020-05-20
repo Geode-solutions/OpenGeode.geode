@@ -39,7 +39,7 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_DCMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         npm install
         npm run build:vtk 
         npm run build:cmake 
@@ -72,7 +72,7 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_DCMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         npm install
         npm run build:vtk 
         npm run build:cmake 
@@ -105,7 +105,7 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_DCMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         npm install
         npm run build:vtk 
         npm run build:cmake 

@@ -29,7 +29,7 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_DCMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/}"
         echo ::set-output name=version::$version
         npm install
@@ -67,7 +67,7 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_DCMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/}"
         echo ::set-output name=version::$version
         npm install
@@ -105,7 +105,7 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_DCMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/', ''
         echo "::set-output name=version::$version"
         npm install
