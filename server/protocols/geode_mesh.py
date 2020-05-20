@@ -6,7 +6,7 @@ import opengeode_py_mesh as mesh
 
 import opengeode_geode_py_mesh as geode_mesh
 
-from geode_protocols import OpenGeodeProtocol
+from geode_protocols import GeodeProtocol
 
 from wslink import register as exportRpc
 
@@ -30,7 +30,7 @@ def SolidToPolydata(solid, dimension):
     getattr(geode_mesh, 'convert_solid_to_polydata' + str(dimension) + 'D')(solid, polydata)
     return polydata
 
-class OpenGeodeIOMesh(OpenGeodeProtocol):
+class OpenGeodeIOMesh(GeodeProtocol):
 
     @exportRpc("opengeode.create.point")
     def createPoint(self, name, x, y, z):

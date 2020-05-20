@@ -231,7 +231,7 @@ const meshStore = {
           );
         },
         setColor({ commit, dispatch }, { id, color }) {
-          console.log("set color", color)
+          console.log("set color", color);
           commit(
             "setObjectStyle",
             {

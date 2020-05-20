@@ -1,7 +1,20 @@
 {
   "name": "opengeode",
   "version": "0.0.0-semantically-released",
+  "description": "OpenGeode extension for Geode application",
+  "author": {
+    "name": "Geode-solutions",
+    "email": "contact@geode-solutions.com",
+    "url": "https://geode-solutions.com/"
+  },
   "homepage": "https://github.com/Geode-solutions/OpenGeode.geode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Geode-solutions/OpenGeode.geode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Geode-solutions/OpenGeode.geode/issues"
+  },
   "license": "MIT",
   "main": "dist/opengeode.umd.js",
   "unpkg": "dist/opengeode.umd.min.js",
@@ -10,38 +23,33 @@
     "dist/opengeode.umd.min.js"
   ],
   "scripts": {
-    "build": "vue-cli-service build --target lib --no-clean ./src/main.js",
+    "build:vtk": "npm explore @geode/geode-tools -- npm run build:vtk",
+    "build:cmake": "cmake-js compile -T install -d server -O build",
+    "build:vue": "vue-cli-service build --target lib --no-clean ./src/main.js",
+    "build:package": "node package",
+    "package": "npm run build:vtk && npm run build:cmake && npm run build:vue && npm run build:package",
     "lint": "vue-cli-service lint"
   },
-  "geode": {
-    "opengeode": "1.5.16"
-  },
-  "cmake-js": {
-    "runtime": "electron",
-    "runtimeVersion": "6.0.12",
-    "arch": "x64"
-  },
-  "dependencies": {
-    "@octokit/rest": "^16.43.1",
-    "vtk.js": "^13.7.1",
-    "vuex": "^3.1.2"
-  },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.2.2",
-    "@vue/cli-plugin-eslint": "^4.2.2",
-    "@vue/cli-service": "^4.2.2",
+    "@geode/geode-tools": "^1.0.3",
+    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-eslint": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
     "@vue/eslint-config-prettier": "^6.0.0",
-    "babel-eslint": "^10.0.3",
+    "archiver": "^4.0.1",
+    "babel-eslint": "^10.1.0",
+    "cmake-js": "^6.1.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-vue": "^6.1.2",
-    "node-loader": "^0.6.0",
-    "sass": "^1.25.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "vtk.js": "^14.1.0",
     "vue": "^2.6.11",
     "vue-cli-plugin-vuetify": "^2.0.5",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.6.11",
-    "vuetify": "^2.2.12"
+    "vuetify": "^2.2.29",
+    "vuex": "^3.4.0"
   }
 }
