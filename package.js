@@ -56,6 +56,10 @@ archive.append(fs.createReadStream(frontFile), {
 archive.directory("server/protocols", path.join(dir, "server"));
 archive.directory("build/install", path.join(dir, "server"));
 
+for( let i = 4; i < process.argv.length; i++) {
+    archive.directory(process.argv[i], path.join(dir, "server"));
+}
+
 // finalize the archive (ie we are done appending files but streams have to finish yet)
 // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
 archive.finalize();

@@ -29,10 +29,11 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
+        npm config set cmake_DCMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/}"
         echo ::set-output name=version::$version
         npm install
-        npm run package -- $version ${{ matrix.config.system }}
+        npm run package -- $version ${{ matrix.config.system }} ${{ steps.opengeode.outputs.path }}
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
@@ -66,10 +67,11 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
+        npm config set cmake_DCMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/}"
         echo ::set-output name=version::$version
         npm install
-        npm run package -- $version darwin
+        npm run package -- $version darwin ${{ steps.opengeode.outputs.path }}
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
@@ -103,10 +105,11 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
+        npm config set cmake_DCMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/', ''
         echo "::set-output name=version::$version"
         npm install
-        npm run package -- $version win64
+        npm run package -- $version win64 ${{ steps.opengeode.outputs.path }}
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
