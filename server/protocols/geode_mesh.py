@@ -1,7 +1,7 @@
 import vtk
 
 import opengeode_py_basic as basic
-import opengeode_py_geometry
+import opengeode_py_geometry as geom
 import opengeode_py_mesh as mesh
 
 import opengeode_geode_py_mesh as geode_mesh
@@ -31,6 +31,15 @@ def SolidToPolydata(solid, dimension):
     return polydata
 
 class OpenGeodeIOMesh(GeodeProtocol):
+
+    @exportRpc("opengeode.create.point")
+    def createPoint(self, name, x, y, z):
+        point_set = mesh.PointSet3D.create()
+        builder = mesh.PointSetBuilder3D.create( point_set )
+        builder.create_point(geom.Point3D([x, y, z]))
+        vtk = PointSetToPolydata(point_set, 3)
+        vtk_light = geode_mesh.extract_point_set_points3D(point_set)
+        return self.registerObject("PointSet3D", name, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.point_set2d")
     def loadPointSet2D(self, filename):
