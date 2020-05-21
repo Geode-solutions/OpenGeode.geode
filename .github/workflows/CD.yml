@@ -27,7 +27,8 @@ jobs:
         repository: OpenGeode
         file: '-${{ matrix.config.system }}.tar.gz'
         token: ${{ secrets.TOKEN }}
-    - name: Compile
+    - name: Generate package
+      id: package
       run: |
         npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/}"
@@ -65,7 +66,8 @@ jobs:
         repository: OpenGeode
         file: '-darwin.tar.gz'
         token: ${{ secrets.TOKEN }}
-    - name: Compile
+    - name: Generate package
+      id: package
       run: |
         npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/}"
@@ -103,7 +105,8 @@ jobs:
         repository: OpenGeode
         file: '-win64.zip'
         token: ${{ secrets.TOKEN }}
-    - name: Compile
+    - name: Generate package
+      id: package
       run: |
         npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/', ''
