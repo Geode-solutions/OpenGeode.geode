@@ -34,7 +34,9 @@ const format = isWindows ? "zip" : "tar";
 const dir = pjson.name + "-v" + process.argv[2] + "-" + process.argv[3];
 
 // create a file to stream archive data to.
-var output = fs.createWriteStream(path.join(__dirname, dir + "." + format));
+const outputName = path.join(__dirname, dir + "." + format);
+console.log("Output: ", outputName);
+var output = fs.createWriteStream(outputName);
 var archive = archiver(format);
 
 // listen for all archive data to be written
