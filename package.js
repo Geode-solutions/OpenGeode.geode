@@ -31,7 +31,7 @@ const isWindows = process.platform === "win32";
 const isMac = process.platform === "darwin";
 
 const format = isWindows ? "zip" : "tar";
-const dir = pjson.name + "-v" + process.argv[2] + "-" + process.argv[3];
+const dir = pjson.name + "-" + process.argv[2] + "-" + process.argv[3];
 
 // create a file to stream archive data to.
 const outputName = path.join(__dirname, dir + "." + format);
