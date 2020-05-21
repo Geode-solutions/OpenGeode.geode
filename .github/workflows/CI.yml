@@ -124,6 +124,6 @@ jobs:
     needs: [build-linux, build-mac, build-windows]
     steps:
     - uses: actions/checkout@v1
-    - run: npx -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator -p @semantic-release/github -p @semantic-release/git -p semantic-release semantic-release
+    - run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
