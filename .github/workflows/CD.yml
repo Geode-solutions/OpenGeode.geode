@@ -38,7 +38,7 @@ jobs:
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
-        files: "opengeode-${{ steps.package.outputs.version }}-${{ matrix.config.system }}.tar"
+        files: "opengeode-${{ steps.package.outputs.version }}-${{ matrix.config.system }}.zip"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Notify slack
@@ -77,7 +77,7 @@ jobs:
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
-        files: "opengeode-${{ steps.package.outputs.version }}-darwin.tar"
+        files: "opengeode-${{ steps.package.outputs.version }}-darwin.zip"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Notify slack
