@@ -23,6 +23,7 @@
 
  // require modules
 var fs = require("fs");
+var process = require("process");
 var path = require("path");
 var archiver = require("archiver");
 var pjson = require("./package.json");
@@ -70,9 +71,11 @@ archive.on("error", function(err) {
 archive.pipe(output);
 
 var frontFile = path.join(__dirname, "dist", pjson.name + ".umd.min.js");
-archive.append(fs.createReadStream(frontFile), {
+archive.append(frontFile, {
   name: path.join(dir, "opengeode.js")
 });
+const configFile = process.platform === "win32" ? "config.win.json" : "config.unix.json";
+archive.append(configFile, {name: "config.json"});
 
 archive.directory("server/protocols", path.join(dir, "server"));
 archive.directory("build/install", path.join(dir, "server"));

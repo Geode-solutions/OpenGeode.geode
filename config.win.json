@@ -1,0 +1,6 @@
+{
+	"name": "opengeode",
+	"js": "opengeode.js",
+	"python": ["server","server/bin"],
+	"lib": ["server/bin"]
+}
