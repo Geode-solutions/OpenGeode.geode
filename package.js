@@ -75,7 +75,7 @@ archive.append(frontFile, {
   name: path.join(dir, "opengeode.js")
 });
 const configFile = process.platform === "win32" ? "config.win.json" : "config.unix.json";
-archive.append(configFile, {name: "config.json"});
+archive.append(fs.createReadStream(configFile), {name: path.join(dir,"config.json")});
 
 archive.directory("server/protocols", path.join(dir, "server"));
 archive.directory("build/install", path.join(dir, "server"));
