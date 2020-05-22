@@ -27,17 +27,13 @@ var path = require("path");
 var archiver = require("archiver");
 var pjson = require("./package.json");
 
-const isWindows = process.platform === "win32";
-const isMac = process.platform === "darwin";
-
-const format = isWindows ? "zip" : "tar";
 const dir = pjson.name + "-" + process.argv[2] + "-" + process.argv[3];
 
 // create a file to stream archive data to.
-const outputName = path.join(__dirname, dir + "." + format);
+const outputName = path.join(__dirname, dir + ".zip");
 console.log("Output: ", outputName);
 var output = fs.createWriteStream(outputName);
-var archive = archiver(format);
+var archive = archiver("zip");
 
 // listen for all archive data to be written
 // 'close' event is fired only when a file descriptor is involved
