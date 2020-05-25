@@ -22,19 +22,19 @@
  */
 
  // require modules
-var fs = require("fs");
-var process = require("process");
-var path = require("path");
-var archiver = require("archiver");
-var pjson = require("./package.json");
+const fs = require("fs");
+const process = require("process");
+const path = require("path");
+const archiver = require("archiver");
+const pjson = require("./package.json");
 
 const dir = pjson.name + "-" + process.argv[2] + "-" + process.argv[3];
 
 // create a file to stream archive data to.
 const outputName = path.join(__dirname, dir + ".zip");
 console.log("Output: ", outputName);
-var output = fs.createWriteStream(outputName);
-var archive = archiver("zip");
+const output = fs.createWriteStream(outputName);
+const archive = archiver("zip");
 
 // listen for all archive data to be written
 // 'close' event is fired only when a file descriptor is involved
@@ -70,9 +70,9 @@ archive.on("error", function(err) {
 // pipe archive data to the file
 archive.pipe(output);
 
-var frontFile = path.join(__dirname, "dist", pjson.name + ".umd.min.js");
-archive.append(frontFile, {
-  name: path.join(dir, "opengeode.js")
+const frontFile = path.join(__dirname, "dist", pjson.name + ".umd.min.js");
+archive.append(fs.createReadStream(frontFile), {
+  name: path.join(dir, "index.js")
 });
 const configFile = process.platform === "win32" ? "config.win.json" : "config.unix.json";
 archive.append(fs.createReadStream(configFile), {name: path.join(dir,"config.json")});
