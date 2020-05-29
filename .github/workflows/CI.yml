@@ -157,7 +157,7 @@ jobs:
     - name: Compile
       run: |
         npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH $env:GITHUB_WORKSPACE/${{ steps.opengeode.outputs.path }}
         npm install
         npm run package -- version win64
       env:
