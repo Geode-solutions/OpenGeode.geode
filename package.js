@@ -26,9 +26,8 @@ const fs = require("fs");
 const process = require("process");
 const path = require("path");
 const archiver = require("archiver");
-const pjson = require("./package.json");
 
-const dir = pjson.name + "-" + process.argv[2] + "-" + process.argv[3];
+const dir = "opengeode-" + process.argv[2] + "-" + process.argv[3];
 
 // create a file to stream archive data to.
 const outputName = path.join(__dirname, dir + ".zip");
@@ -70,7 +69,7 @@ archive.on("error", function(err) {
 // pipe archive data to the file
 archive.pipe(output);
 
-const frontFile = path.join(__dirname, "dist", pjson.name + ".umd.min.js");
+const frontFile = path.join(__dirname, "dist", "opengeode.umd.min.js");
 archive.append(fs.createReadStream(frontFile), {
   name: path.join(dir, "index.js")
 });

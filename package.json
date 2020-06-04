@@ -1,5 +1,5 @@
 {
-  "name": "opengeode",
+  "name": "@geode/opengeode",
   "version": "0.0.0-semantically-released",
   "description": "OpenGeode extension for Geode application",
   "author": {
@@ -20,7 +20,8 @@
   "unpkg": "dist/opengeode.umd.min.js",
   "files": [
     "dist/opengeode.umd.js",
-    "dist/opengeode.umd.min.js"
+    "dist/opengeode.umd.min.js",
+    "src/*"
   ],
   "scripts": {
     "build:vtk": "npm explore @geode/geode-tools -- npm run build:vtk",
@@ -51,5 +52,8 @@
     "vue-template-compiler": "^2.6.11",
     "vuetify": "^2.2.29",
     "vuex": "^3.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
