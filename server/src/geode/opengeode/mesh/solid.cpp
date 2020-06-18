@@ -78,7 +78,7 @@ namespace geode
                         exported_vertex[mesh.polyhedron_facet_vertex(
                             { facet, v } )] = true;
                         exported_edge[mesh.polyhedron_facet_edge(
-                            { facet, v } )] = true;
+                            { facet, v } ).value()] = true;
                     }
                 }
             }
