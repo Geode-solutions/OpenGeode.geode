@@ -34,6 +34,7 @@ class OpenGeodeIOMesh(GeodeProtocol):
 
     @exportRpc("opengeode.create.point")
     def createPoint(self, name, x, y, z):
+        print("POINT")
         point_set = mesh.PointSet3D.create()
         builder = mesh.PointSetBuilder3D.create( point_set )
         builder.create_point(geom.Point3D([x, y, z]))
@@ -99,6 +100,7 @@ class OpenGeodeIOMesh(GeodeProtocol):
 
     @exportRpc("opengeode.load.surface.triangulated3d")
     def loadTriangulatedSurface3D(self, filename):
+        print("TOTO")
         surface = mesh.TriangulatedSurface3D.create()
         mesh.load_triangulated_surface3D(surface,filename)
         vtk = SurfaceToPolydata(surface, 3)

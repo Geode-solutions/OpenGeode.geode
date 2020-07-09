@@ -21,7 +21,7 @@
  *
  */
 
- // require modules
+// require modules
 const fs = require("fs");
 const process = require("process");
 const path = require("path");
@@ -73,14 +73,17 @@ const frontFile = path.join(__dirname, "dist", "opengeode.umd.min.js");
 archive.append(fs.createReadStream(frontFile), {
   name: path.join(dir, "index.js")
 });
-const configFile = process.platform === "win32" ? "config.win.json" : "config.unix.json";
-archive.append(fs.createReadStream(configFile), {name: path.join(dir,"config.json")});
+const configFile =
+  process.platform === "win32" ? "config.win.json" : "config.unix.json";
+archive.append(fs.createReadStream(configFile), {
+  name: path.join(dir, "config.json")
+});
 
 archive.directory("server/protocols", path.join(dir, "server"));
 archive.directory("build/install", path.join(dir, "server"));
 
-for( let i = 4; i < process.argv.length; i++) {
-    archive.directory(process.argv[i], path.join(dir, "server"));
+for (let i = 4; i < process.argv.length; i++) {
+  archive.directory(process.argv[i], path.join(dir, "server"));
 }
 
 // finalize the archive (ie we are done appending files but streams have to finish yet)
