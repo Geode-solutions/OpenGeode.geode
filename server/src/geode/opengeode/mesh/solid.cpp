@@ -26,7 +26,7 @@
 #include <vtkPolyData.h>
 #include <vtkPolygon.h>
 
-#include <geode/mesh/core/polyhedral_solid.h>
+#include <geode/mesh/core/solid_mesh.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 #include <geode/opengeode/mesh/detail/vtk_xml.h>
@@ -35,7 +35,7 @@ namespace geode
 {
     template < index_t dimension >
     void convert_solid_to_polydata(
-        PolyhedralSolid< dimension > &mesh, vtkPolyData *polydata )
+        SolidMesh< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
 
@@ -61,7 +61,7 @@ namespace geode
 
     template < index_t dimension >
     std::string opengeode_geode_mesh_api extract_solid_wireframe(
-        PolyhedralSolid< dimension > &mesh )
+        SolidMesh< dimension > &mesh )
     {
         std::vector< bool > exported_vertex( mesh.nb_vertices(), false );
         std::vector< bool > exported_edge( mesh.nb_edges(), false );
@@ -122,9 +122,9 @@ namespace geode
     }
 
     template std::string opengeode_geode_mesh_api extract_solid_wireframe(
-        PolyhedralSolid< 3 > & );
+        SolidMesh< 3 > & );
 
     template void opengeode_geode_mesh_api convert_solid_to_polydata(
-        PolyhedralSolid< 3 > &, vtkPolyData * );
+        SolidMesh< 3 > &, vtkPolyData * );
 
 } // namespace geode

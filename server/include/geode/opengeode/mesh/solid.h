@@ -25,7 +25,7 @@
 
 namespace geode
 {
-    FORWARD_DECLARATION_DIMENSION_CLASS( PolyhedralSolid );
+    FORWARD_DECLARATION_DIMENSION_CLASS( SolidMesh );
 }
 
 class vtkPolyData;
@@ -34,9 +34,9 @@ namespace geode
 {
     template < index_t dimension >
     void opengeode_geode_mesh_api convert_solid_to_polydata(
-        PolyhedralSolid< dimension > &mesh, vtkPolyData *polydata );
+        SolidMesh< dimension > &mesh, vtkPolyData *polydata );
 
     template < index_t dimension >
     std::string opengeode_geode_mesh_api extract_solid_wireframe(
-        PolyhedralSolid< dimension > &mesh );
+        SolidMesh< dimension > &mesh );
 } // namespace geode

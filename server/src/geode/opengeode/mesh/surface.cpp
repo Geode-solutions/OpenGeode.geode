@@ -25,7 +25,7 @@
 
 #include <vtkPolyData.h>
 
-#include <geode/mesh/core/polygonal_surface.h>
+#include <geode/mesh/core/surface_mesh.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 #include <geode/opengeode/mesh/detail/vtk_xml.h>
@@ -34,7 +34,7 @@ namespace geode
 {
     template < index_t dimension >
     void convert_surface_to_polydata(
-        PolygonalSurface< dimension > &mesh, vtkPolyData *polydata )
+        SurfaceMesh< dimension > &mesh, vtkPolyData *polydata )
     {
         detail::set_geode_points( mesh, polydata );
 
@@ -59,7 +59,7 @@ namespace geode
     }
 
     template < index_t dimension >
-    std::string extract_surface_wireframe( PolygonalSurface< dimension > &mesh )
+    std::string extract_surface_wireframe( SurfaceMesh< dimension > &mesh )
     {
         vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
         detail::set_geode_points( mesh, polydata );
@@ -77,13 +77,13 @@ namespace geode
     }
 
     template std::string opengeode_geode_mesh_api extract_surface_wireframe(
-        PolygonalSurface< 2 > & );
+        SurfaceMesh< 2 > & );
     template std::string opengeode_geode_mesh_api extract_surface_wireframe(
-        PolygonalSurface< 3 > & );
+        SurfaceMesh< 3 > & );
 
     template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 2 > &, vtkPolyData * );
+        SurfaceMesh< 2 > &, vtkPolyData * );
     template void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< 3 > &, vtkPolyData * );
+        SurfaceMesh< 3 > &, vtkPolyData * );
 
 } // namespace geode
