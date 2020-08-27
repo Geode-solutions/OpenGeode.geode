@@ -25,7 +25,7 @@
 
 namespace geode
 {
-    FORWARD_DECLARATION_DIMENSION_CLASS( PolygonalSurface );
+    FORWARD_DECLARATION_DIMENSION_CLASS( SurfaceMesh );
 }
 
 class vtkPolyData;
@@ -34,9 +34,9 @@ namespace geode
 {
     template < index_t dimension >
     void opengeode_geode_mesh_api convert_surface_to_polydata(
-        PolygonalSurface< dimension > &mesh, vtkPolyData *polydata );
+        SurfaceMesh< dimension > &mesh, vtkPolyData *polydata );
 
     template < index_t dimension >
     std::string opengeode_geode_mesh_api extract_surface_wireframe(
-        PolygonalSurface< dimension > &mesh );
+        SurfaceMesh< dimension > &mesh );
 } // namespace geode
