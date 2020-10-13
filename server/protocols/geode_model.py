@@ -1,9 +1,27 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2019 - 2020 Geode-solutions
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import vtk
 
-import opengeode_py_basic as basic
-import opengeode_py_geometry
-import opengeode_py_mesh as mesh
-import opengeode_py_model as model
+import opengeode
 
 import opengeode_geode_py_mesh as py_mesh
 import opengeode_geode_py_model as py_model
@@ -41,18 +59,23 @@ def blocksToPolydata(blocks, dimension):
         vtk[block.id().string()] = geode_mesh.SolidToPolydata(block.mesh(), dimension)
     return vtk
 
+def brepToVTK(brep):
+    vtk = {
+        "corners": cornersToPolydata(brep.corners(), 3),
+        "lines": linesToPolydata(brep.lines(), 3),
+        "surfaces": surfacesToPolydata(brep.surfaces(), 3),
+        "blocks": blocksToPolydata(brep.blocks(), 3)
+    }
+    vtk_light = py_model.export_brep_lines(brep)
+    return vtk, vtk_light
+
+
 class OpenGeodeIOModel(GeodeProtocol):
     @exportRpc("opengeode.load.brep")
     def loadBRep(self, filename):
-        brep = model.BRep()
-        model.load_brep(brep,filename)
-        vtk = {
-            "corners": cornersToPolydata(brep.corners(), 3),
-            "lines": linesToPolydata(brep.lines(), 3),
-            "surfaces": surfacesToPolydata(brep.surfaces(), 3),
-            "blocks": blocksToPolydata(brep.blocks(), 3)
-        }
-        vtk_light = py_model.export_brep_lines(brep)
+        brep = opengeode.BRep()
+        opengeode.load_brep(brep,filename)
+        vtk, vtk_light = brepToVTK(brep)
         return self.registerObjectFromFile("BRep",filename, brep, vtk, vtk_light)
 
     @exportRpc("opengeode.model.mesh.visibility")

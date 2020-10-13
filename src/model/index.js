@@ -21,17 +21,10 @@
  *
  */
 
-import ToggleCorners from "./components/ToggleCorners";
-import CornersSize from "./components/CornersSize";
-import CornersColor from "./components/CornersColor";
-import ToggleLines from "./components/ToggleLines";
-import LinesColor from "./components/LinesColor";
-import ToggleSurfaces from "./components/ToggleSurfaces";
-import SurfacesMesh from "./components/SurfacesMesh";
-import SurfacesColor from "./components/SurfacesColor";
-import LogoModel from "@/assets/model.svg";
-import LogoBRep from "@/assets/brep.svg";
+import LogoModel from "../assets/model.svg";
+import LogoBRep from "../assets/brep.svg";
 import Store from "./store";
+import BRepMenu from "./brep_menu";
 
 export default function(store) {
   store.registerModule("model", Store);
@@ -49,36 +42,5 @@ export default function(store) {
     action: "model/loadBRep",
     tooltip: "Import BRep"
   });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: ToggleCorners
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: CornersSize
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: CornersColor
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: ToggleLines
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: LinesColor
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: ToggleSurfaces
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: SurfacesMesh
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "BRep",
-    component: SurfacesColor
-  });
+  BRepMenu(store);
 }

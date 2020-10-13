@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import LogoCorners from "@/assets/point_set.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoCorners from "../../assets/point_set.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "ToggleCorners",

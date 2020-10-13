@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import LogoSurfacesColor from "@/assets/surface_color.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoSurfacesColor from "../../assets/surface_color.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "SurfacesColor",

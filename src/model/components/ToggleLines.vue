@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import LogoLines from "@/assets/edged_curve.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoLines from "../../assets/edged_curve.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "ToggleLines",

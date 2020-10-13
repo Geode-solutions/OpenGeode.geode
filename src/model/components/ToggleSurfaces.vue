@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import LogoSurfaces from "@/assets/surface.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoSurfaces from "../../assets/surface.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "ToggleSurfaces",

@@ -1,8 +1,27 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2019 - 2020 Geode-solutions
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import vtk
 
-import opengeode_py_basic as basic
-import opengeode_py_geometry as geom
-import opengeode_py_mesh as mesh
+import opengeode
 
 import opengeode_geode_py_mesh as geode_mesh
 
@@ -34,79 +53,79 @@ class OpenGeodeIOMesh(GeodeProtocol):
 
     @exportRpc("opengeode.create.point")
     def createPoint(self, name, x, y, z):
-        point_set = mesh.PointSet3D.create()
-        builder = mesh.PointSetBuilder3D.create( point_set )
-        builder.create_point(geom.Point3D([x, y, z]))
+        point_set = opengeode.PointSet3D.create()
+        builder = opengeode.PointSetBuilder3D.create( point_set )
+        builder.create_point(opengeode.Point3D([x, y, z]))
         vtk = PointSetToPolydata(point_set, 3)
         vtk_light = geode_mesh.extract_point_set_points3D(point_set)
         return self.registerObject("PointSet3D", name, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.point_set2d")
     def loadPointSet2D(self, filename):
-        point_set = mesh.load_point_set2D(filename)
+        point_set = opengeode.load_point_set2D(filename)
         vtk = PointSetToPolydata(point_set, 2)
         vtk_light = geode_mesh.extract_point_set_points2D(point_set)
         return self.registerObjectFromFile("PointSet2D",filename, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.point_set3d")
     def loadPointSet3D(self, filename):
-        point_set = mesh.load_point_set3D(filename)
+        point_set = opengeode.load_point_set3D(filename)
         vtk = PointSetToPolydata(point_set, 3)
         vtk_light = geode_mesh.extract_point_set_points3D(point_set)
         return self.registerObjectFromFile("PointSet3D",filename, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.edged_curve2d")
     def loadEdgedCurve2D(self, filename):
-        edged_curve = mesh.load_edged_curve2D(filename)
+        edged_curve = opengeode.load_edged_curve2D(filename)
         vtk = EdgedCurveToPolydata(edged_curve, 2)
         vtk_light = geode_mesh.extract_edged_curve_edges2D(edged_curve)
         return self.registerObjectFromFile("EdgedCurve2D",filename, edged_curve, vtk, vtk_light)
 
     @exportRpc("opengeode.load.edged_curve3d")
     def loadEdgedCurve3D(self, filename):
-        edged_curve = mesh.load_edged_curve3D(filename)
+        edged_curve = opengeode.load_edged_curve3D(filename)
         vtk = EdgedCurveToPolydata(edged_curve, 3)
         vtk_light = geode_mesh.extract_edged_curve_edges3D(edged_curve)
         return self.registerObjectFromFile("EdgedCurve3D",filename, edged_curve, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.polygonal2d")
     def loadPolygonalSurface2D(self, filename):
-        surface = mesh.load_polygonal_surface2D(filename)
+        surface = opengeode.load_polygonal_surface2D(filename)
         vtk = SurfaceToPolydata(surface, 2)
         vtk_light = geode_mesh.extract_surface_wireframe2D(surface)
         return self.registerObjectFromFile("PolygonalSurface2D",filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.polygonal3d")
     def loadPolygonalSurface3D(self, filename):
-        surface = mesh.load_polygonal_surface3D(filename)
+        surface = opengeode.load_polygonal_surface3D(filename)
         vtk = SurfaceToPolydata(surface, 3)
         vtk_light = geode_mesh.extract_surface_wireframe3D(surface)
         return self.registerObjectFromFile("PolygonalSurface3D",filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.triangulated2d")
     def loadTriangulatedSurface2D(self, filename):
-        surface = mesh.load_triangulated_surface2D(filename)
+        surface = opengeode.load_triangulated_surface2D(filename)
         vtk = SurfaceToPolydata(surface, 2)
         vtk_light = geode_mesh.extract_surface_wireframe2D(surface)
         return self.registerObjectFromFile("TriangulatedSurface2D",filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.triangulated3d")
     def loadTriangulatedSurface3D(self, filename):
-        surface = mesh.load_triangulated_surface3D(filename)
+        surface = opengeode.load_triangulated_surface3D(filename)
         vtk = SurfaceToPolydata(surface, 3)
         vtk_light = geode_mesh.extract_surface_wireframe3D(surface)
         return self.registerObjectFromFile("TriangulatedSurface3D",filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.solid.polyhedral3d")
     def loadPolyhedralSolid3D(self, filename):
-        solid = mesh.load_polyhedral_solid3D(filename)
+        solid = opengeode.load_polyhedral_solid3D(filename)
         vtk = SolidToPolydata(solid, 3)
         vtk_light = geode_mesh.extract_solid_wireframe3D(solid)
         return self.registerObjectFromFile("PolyhedralSolid3D",filename, solid, vtk, vtk_light)
 
     @exportRpc("opengeode.load.solid.tetrahedral3d")
     def loadTetrahedralSolid3D(self, filename):
-        solid = mesh.load_tetrahedral_solid3D(filename)
+        solid = opengeode.load_tetrahedral_solid3D(filename)
         vtk = SolidToPolydata(solid, 3)
         vtk_light = geode_mesh.extract_solid_wireframe3D(solid)
         return self.registerObjectFromFile("TetrahedralSolid3D",filename, solid, vtk, vtk_light)

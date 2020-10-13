@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import LogoCornersColor from "@/assets/point_set_color.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoCornersColor from "../../assets/point_set_color.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "CornersColor",

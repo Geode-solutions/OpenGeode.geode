@@ -80,6 +80,9 @@ archive.append(fs.createReadStream(configFile), {
 });
 
 archive.directory("server/protocols", path.join(dir, "server"));
+archive.append(fs.createReadStream("server/requirements.txt"), {
+  name: path.join(dir, "server", "requirements.txt")
+});
 archive.directory("build/install", path.join(dir, "server"));
 
 for (let i = 4; i < process.argv.length; i++) {
