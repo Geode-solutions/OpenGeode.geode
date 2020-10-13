@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import LogoSurfacesMesh from "@/assets/triangulated_surface.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoSurfacesMesh from "../../assets/triangulated_surface.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "SurfacesMesh",

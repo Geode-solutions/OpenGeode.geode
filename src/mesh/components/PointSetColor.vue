@@ -41,8 +41,8 @@
 
 <script>
 import { mapActions } from "vuex";
-import LogoPointsColor from "@/assets/point_set_color.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoPointsColor from "../../assets/point_set_color.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "PointsColor",

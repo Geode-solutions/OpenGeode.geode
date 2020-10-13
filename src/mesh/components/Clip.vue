@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import ContextualItem from "@/components/ContextualItem";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 import vtkImplicitPlaneWidget from "vtk.js/Sources/Widgets/Widgets3D/ImplicitPlaneWidget";
 import vtkPlane from "vtk.js/Sources/Common/DataModel/Plane";
 

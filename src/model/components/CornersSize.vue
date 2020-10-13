@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import LogoCornersSize from "@/assets/point_set_size.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoCornersSize from "../../assets/point_set_size.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "CornersSize",

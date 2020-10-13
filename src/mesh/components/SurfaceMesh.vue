@@ -12,8 +12,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import LogoMesh from "@/assets/triangulated_surface.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoMesh from "../../assets/triangulated_surface.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "SurfaceMesh",

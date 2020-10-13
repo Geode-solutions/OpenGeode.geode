@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import LogoLinesColor from "@/assets/edged_curve_color.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoLinesColor from "../../assets/edged_curve_color.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "LinesColor",

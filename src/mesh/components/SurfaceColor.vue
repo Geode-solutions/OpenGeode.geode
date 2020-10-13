@@ -47,8 +47,8 @@
 
 <script>
 import { mapActions } from "vuex";
-import LogoSurfaceColor from "@/assets/surface_color.svg";
-import ContextualItem from "@/components/ContextualItem";
+import LogoSurfaceColor from "../../assets/surface_color.svg";
+import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
   name: "SurfacesColor",
