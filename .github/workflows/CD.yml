@@ -27,7 +27,7 @@ jobs:
       id: opengeode
       with:
         repository: OpenGeode
-        file: '${{ matrix.python }}-ubuntu.tar.gz'
+        file: '-ubuntu.tar.gz'
         token: ${{ secrets.TOKEN }}
     - name: Generate package
       id: package
@@ -117,7 +117,7 @@ jobs:
       id: opengeode
       with:
         repository: OpenGeode
-        file: '${{ matrix.python }}-darwin.tar.gz'
+        file: '-darwin.tar.gz'
         token: ${{ secrets.TOKEN }}
     - name: Generate package
       id: package
@@ -166,7 +166,7 @@ jobs:
       id: opengeode
       with:
         repository: OpenGeode
-        file: '${{ matrix.python }}-win64.zip'
+        file: '-win64.zip'
         token: ${{ secrets.TOKEN }}
     - name: Generate package
       id: package
