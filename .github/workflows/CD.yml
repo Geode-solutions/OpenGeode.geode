@@ -34,7 +34,7 @@ jobs:
       run: |
         npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
-        version="${GITHUB_REF##*/*/}"
+        version="${GITHUB_REF##*/*/v}"
         echo ::set-output name=version::$version-python${{ matrix.python }}
         npm install
         npm run package -- $version-python${{ matrix.python }} ubuntu ${{ steps.opengeode.outputs.path }}
@@ -124,7 +124,7 @@ jobs:
       run: |
         npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
-        version="${GITHUB_REF##*/*/}"
+        version="${GITHUB_REF##*/*/v}"
         echo ::set-output name=version::$version-python${{ matrix.python }}
         npm install
         npm run package -- $version-python${{ matrix.python }} darwin ${{ steps.opengeode.outputs.path }}
@@ -173,7 +173,7 @@ jobs:
       run: |
         npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
         npm config set cmake_CMAKE_PREFIX_PATH $env:GITHUB_WORKSPACE/${{ steps.opengeode.outputs.path }}
-        $version = ${env:GITHUB_REF} -replace 'refs\/tags\/', ''
+        $version = ${env:GITHUB_REF} -replace 'refs\/tags\/v', ''
         echo "::set-output name=version::$version-python${{ matrix.python }}"
         npm install
         npm run package -- $version-python${{ matrix.python }} win64 ${{ steps.opengeode.outputs.path }}
