@@ -37,7 +37,7 @@ jobs:
         version="${GITHUB_REF##*/*/v}"
         echo ::set-output name=version::$version-python${{ matrix.python }}
         npm install
-        npm run package -- $version-python${{ matrix.python }} ubuntu ${{ steps.opengeode.outputs.path }}
+        npm run package -- $version-python${{ matrix.python }} ubuntu 
       env:
         Python3_ROOT_DIR: ${{ env.pythonLocation }}
     - name: Upload
@@ -127,7 +127,7 @@ jobs:
         version="${GITHUB_REF##*/*/v}"
         echo ::set-output name=version::$version-python${{ matrix.python }}
         npm install
-        npm run package -- $version-python${{ matrix.python }} darwin ${{ steps.opengeode.outputs.path }}
+        npm run package -- $version-python${{ matrix.python }} darwin 
       env:
         Python3_ROOT_DIR: ${{ env.pythonLocation }}
     - name: Upload
@@ -176,7 +176,7 @@ jobs:
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/v', ''
         echo "::set-output name=version::$version-python${{ matrix.python }}"
         npm install
-        npm run package -- $version-python${{ matrix.python }} win64 ${{ steps.opengeode.outputs.path }}
+        npm run package -- $version-python${{ matrix.python }} win64 
       env:
         Python3_ROOT_DIR: ${{ env.pythonLocation }}
     - name: Upload
