@@ -40,7 +40,9 @@ def EdgedCurveToPolydata(edges, dimension):
     return polydata
 
 def SurfaceToPolydata(surface, dimension):
+    print(surface)
     polydata = vtk.vtkPolyData()
+    print(polydata)
     getattr(geode_mesh, 'convert_surface_to_polydata' + str(dimension) + 'D')(surface, polydata)
     return polydata
 
