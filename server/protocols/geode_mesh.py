@@ -114,8 +114,8 @@ class OpenGeodeIOMesh(GeodeProtocol):
     @exportRpc("opengeode.load.surface.triangulated3d")
     def loadTriangulatedSurface3D(self, filename):
         surface = opengeode.load_triangulated_surface3D(filename)
-        vtk = SurfaceToPolydata(surface, 3)
         vtk_light = geode_mesh.extract_surface_wireframe3D(surface)
+        vtk = SurfaceToPolydata(surface, 3)
         return self.registerObjectFromFile("TriangulatedSurface3D",filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.solid.polyhedral3d")
