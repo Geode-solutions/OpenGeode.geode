@@ -22,12 +22,9 @@
 import vtk
 
 import opengeode
-
-import opengeode_geode_py_mesh as py_mesh
-import opengeode_geode_py_model as py_model
+import opengeode_geode
 
 from geode_protocols import GeodeProtocol
-import geode_mesh 
 
 from wslink import register as exportRpc
 
@@ -35,28 +32,28 @@ def cornersToPolydata(corners, dimension):
     print("corners")
     vtk = {}
     for corner in corners:
-        vtk[corner.id().string()] = geode_mesh.PointSetToPolydata(corner.mesh(), dimension)
+        vtk[corner.id().string()] = opengeode_geode.PointSetToPolydata(corner.mesh(), dimension)
     return vtk
 
 def linesToPolydata(lines, dimension):
     print("lines")
     vtk = {}
     for line in lines:
-        vtk[line.id().string()] = geode_mesh.EdgedCurveToPolydata(line.mesh(), dimension)
+        vtk[line.id().string()] = opengeode_geode.EdgedCurveToPolydata(line.mesh(), dimension)
     return vtk
 
 def surfacesToPolydata(surfaces, dimension):
     print("surfaces")
     vtk = {}
     for surface in surfaces:
-        vtk[surface.id().string()] = geode_mesh.SurfaceToPolydata(surface.mesh(), dimension)
+        vtk[surface.id().string()] = opengeode_geode.SurfaceToPolydata(surface.mesh(), dimension)
     return vtk
 
 def blocksToPolydata(blocks, dimension):
     print("blocks")
     vtk = {}
     for block in blocks:
-        vtk[block.id().string()] = geode_mesh.SolidToPolydata(block.mesh(), dimension)
+        vtk[block.id().string()] = opengeode_geode.SolidToPolydata(block.mesh(), dimension)
     return vtk
 
 def brepToVTK(brep):
@@ -66,7 +63,7 @@ def brepToVTK(brep):
         "surfaces": surfacesToPolydata(brep.surfaces(), 3),
         "blocks": blocksToPolydata(brep.blocks(), 3)
     }
-    vtk_light = py_model.export_brep_lines(brep)
+    vtk_light = opengeode_geode.export_brep_lines(brep)
     return vtk, vtk_light
 
 
