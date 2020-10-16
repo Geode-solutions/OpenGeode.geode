@@ -18,21 +18,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_subdirectory(src)
-
-configure_file(
-    __init__.py
-    ${PROJECT_BINARY_DIR}/wheel/opengeode_geode/__init__.py
-)
-configure_file(
-    setup.py
-    ${PROJECT_BINARY_DIR}/wheel/setup.py
-)
-add_custom_target(wheel
-    COMMAND ${CMAKE_COMMAND} 
-        -DSOURCE_DIR="${CMAKE_INSTALL_PREFIX}"
-        -DDEST_DIR="${CMAKE_BINARY_DIR}/wheel/opengeode_geode"
-        -P "${CMAKE_CURRENT_LIST_DIR}/copy_wheel.cmake"
-    COMMAND ${PYTHON_EXECUTABLE} setup.py bdist_wheel
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/wheel
-)
+from .opengeode_geode_py_mesh import *
+from .opengeode_geode_py_model import *

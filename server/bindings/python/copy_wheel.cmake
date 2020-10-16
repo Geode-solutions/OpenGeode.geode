@@ -18,32 +18,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.13)
+file(GLOB_RECURSE SO_LIBRARIES "${SOURCE_DIR}/*.so")
+file(COPY ${SO_LIBRARIES} DESTINATION "${DEST_DIR}")
 
-# Define the project
-project(OpenGeode_geode CXX)
+file(GLOB_RECURSE DLL_LIBRARIES "${SOURCE_DIR}/*.dll")
+file(COPY ${DLL_LIBRARIES} DESTINATION "${DEST_DIR}")
 
-# Get OpenGeode_geode dependencies
-find_package(OpenGeode REQUIRED)
-find_package(VTK REQUIRED CONFIG NO_DEFAULT_PATH PATHS "../node_modules/@geode/geode-tools/build/vtk/install")
+file(GLOB_RECURSE PYD_LIBRARIES "${SOURCE_DIR}/*.pyd")
+file(COPY ${PYD_LIBRARIES} DESTINATION "${DEST_DIR}")
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
-
-#------------------------------------------------------------------------------------------------
-# Configure the OpenGeode_geode libraries
-add_subdirectory(src/geode)
-
-#------------------------------------------------------------------------------------------------
-# Configure the OpenGeode_geode bindings
-add_subdirectory(bindings/python)
-
-#------------------------------------------------------------------------------------------------
-# Configure CPack
-if(WIN32)
-    set(CPACK_GENERATOR "ZIP")
-else()
-    set(CPACK_GENERATOR "TGZ")
-endif()
-
-# This must always be last!
-include(CPack)
+file(GLOB_RECURSE DYLIB_LIBRARIES "${SOURCE_DIR}/*.dylib")
+file(COPY ${DYLIB_LIBRARIES} DESTINATION "${DEST_DIR}")

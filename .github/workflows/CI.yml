@@ -33,20 +33,10 @@ jobs:
       with:
         path: node_modules
         key: node-ubuntu-${{ matrix.python }}-${{ hashFiles('package-lock.json') }}
-    - uses: Geode-solutions/actions/get-release@master
-      id: opengeode
-      with:
-        repository: OpenGeode
-        file: '-ubuntu.tar.gz'
-        token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         npm install
         npm run package -- version ubuntu
-      env:
-        Python3_ROOT_DIR: ${{ env.pythonLocation }}
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
       uses: 8398a7/action-slack@v2
@@ -56,71 +46,43 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
 
-  # build-rhel:
-  #   runs-on: ubuntu-18.04
-  #   container: "geodesolutions/centos"
-  #   needs: format
-
-  #   steps:
-  #   - uses: actions/checkout@v1
-  #   - name: Cache node modules
-  #     uses: actions/cache@v1.2.0
-  #     with:
-  #       path: node_modules
-  #       key: node-rhel-${{ hashFiles('package-lock.json') }}
-  #   - uses: Geode-solutions/actions/get-release@master
-  #     id: opengeode
-  #     with:
-  #       repository: OpenGeode
-  #       file: '-rhel.tar.gz'
-  #       token: ${{ secrets.TOKEN }}
-  #   - name: Compile
-  #     run: |
-  #       npm config set cmake_PYTHON_VERSION 2.7
-  #       npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
-  #       npm install
-  #       npm run package -- version rhel
-  #   - name: Notify slack
-  #     if: failure() && github.ref == 'refs/heads/master'
-  #     uses: 8398a7/action-slack@v2
-  #     with:
-  #       status: failure
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
-
-  build-mac:
-    runs-on: macos-latest
+  build-ubuntu-wheel:
+    runs-on: ubuntu-18.04
+    container: "geodesolutions/centos8"
     needs: format
     strategy:
       matrix:
-        python: [3.6, 3.7, 3.8]
+        config:
+        - {python: 3.6, tag: "cp36-cp36m", tag2: "3.6m"}
+        - {python: 3.7, tag: "cp37-cp37m", tag2: "3.7m"}
+        - {python: 3.8, tag: "cp38-cp38", tag2: "3.8"}
 
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python }}
+    - name: Set up Python ${{ matrix.config.python }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python }}
+        python-version: ${{ matrix.config.python }}
     - name: Cache node modules
       uses: actions/cache@v1.2.0
       with:
         path: node_modules
-        key: node-darwin-${{ matrix.python }}-${{ hashFiles('package-lock.json') }}
+        key: node-centos-${{ matrix.config.python }}-${{ hashFiles('package-lock.json') }}
     - uses: Geode-solutions/actions/get-release@master
       id: opengeode
       with:
         repository: OpenGeode
-        file: '-darwin.tar.gz'
+        file: '-ubuntu.tar.gz'
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
+        export PATH=${{ env.pythonLocation }}/bin:$PATH
+        python -m pip install wheel
+        export Python3_ROOT_DIR=${{ env.pythonLocation }}
+        npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
         npm install
-        npm run package -- version darwin
-      env:
-        Python3_ROOT_DIR: ${{ env.pythonLocation }}
+        npm run wheel
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
       uses: 8398a7/action-slack@v2
@@ -128,8 +90,8 @@ jobs:
         status: failure
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
+
   build-windows:
     runs-on: windows-2016
     needs: format
@@ -156,10 +118,12 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
+        pip install wheel
         npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
         npm config set cmake_CMAKE_PREFIX_PATH $env:GITHUB_WORKSPACE/${{ steps.opengeode.outputs.path }}
         npm install
         npm run package -- version win64
+        npm run wheel
       env:
         Python3_ROOT_DIR: ${{ env.pythonLocation }}
     - name: Notify slack
@@ -173,7 +137,7 @@ jobs:
         
   semantic-release:
     runs-on: ubuntu-18.04
-    needs: [build-ubuntu, build-mac, build-windows]
+    needs: [build-ubuntu, build-ubuntu-wheel, build-windows]
     steps:
     - uses: actions/checkout@v1
     - run: npx semantic-release
