@@ -85,7 +85,7 @@ jobs:
         npm config set cmake_CMAKE_PACKAGE_VERSION $version
         npm install
         npm run wheel
-        mv wheel/dist/*.whl wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-manylinux2014_x86_64.whl
+        mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-manylinux2014_x86_64.whl
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
@@ -143,7 +143,7 @@ jobs:
         npm config set cmake_CMAKE_PACKAGE_VERSION $version
         npm install
         npm run wheel
-        mv wheel/dist/*.whl wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
+        mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
       env:
         Python3_ROOT_DIR: ${{ env.pythonLocation }}
     - name: Upload
