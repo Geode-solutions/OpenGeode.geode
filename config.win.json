@@ -1,5 +1,5 @@
 {
 	"name": "opengeode",
-	"python": ["server","server/bin"],
-	"lib": ["server/bin"]
+	"python": ["server"],
+	"lib": []
 }
