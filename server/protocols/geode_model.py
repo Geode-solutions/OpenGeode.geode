@@ -23,6 +23,7 @@ import vtk
 
 import opengeode
 import opengeode_geode
+import geode_mesh as mesh
 
 from geode_protocols import GeodeProtocol
 
@@ -32,28 +33,28 @@ def cornersToPolydata(corners, dimension):
     print("corners")
     vtk = {}
     for corner in corners:
-        vtk[corner.id().string()] = opengeode_geode.PointSetToPolydata(corner.mesh(), dimension)
+        vtk[corner.id().string()] = mesh.PointSetToPolydata(corner.mesh(), dimension)
     return vtk
 
 def linesToPolydata(lines, dimension):
     print("lines")
     vtk = {}
     for line in lines:
-        vtk[line.id().string()] = opengeode_geode.EdgedCurveToPolydata(line.mesh(), dimension)
+        vtk[line.id().string()] = mesh.EdgedCurveToPolydata(line.mesh(), dimension)
     return vtk
 
 def surfacesToPolydata(surfaces, dimension):
     print("surfaces")
     vtk = {}
     for surface in surfaces:
-        vtk[surface.id().string()] = opengeode_geode.SurfaceToPolydata(surface.mesh(), dimension)
+        vtk[surface.id().string()] = mesh.SurfaceToPolydata(surface.mesh(), dimension)
     return vtk
 
 def blocksToPolydata(blocks, dimension):
     print("blocks")
     vtk = {}
     for block in blocks:
-        vtk[block.id().string()] = opengeode_geode.SolidToPolydata(block.mesh(), dimension)
+        vtk[block.id().string()] = mesh.SolidToPolydata(block.mesh(), dimension)
     return vtk
 
 def brepToVTK(brep):
