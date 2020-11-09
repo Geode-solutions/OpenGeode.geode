@@ -25,6 +25,7 @@
 
 #include <vtkPolyData.h>
 
+#include <geode/mesh/core/surface_edges.h>
 #include <geode/mesh/core/surface_mesh.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
@@ -65,11 +66,12 @@ namespace geode
         detail::set_geode_points( mesh, polydata );
 
         vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
-        const auto nb_edges = mesh.nb_edges();
+        mesh.enable_edges();
+        const auto nb_edges = mesh.edges().nb_edges();
         edges->AllocateExact( nb_edges, nb_edges * 2 );
         for( const auto e : Range{ nb_edges } )
         {
-            const auto &vertices = mesh.edge_vertices( e );
+            const auto &vertices = mesh.edges().edge_vertices( e );
             edges->InsertNextCell( { vertices[0], vertices[1] } );
         }
         polydata->SetLines( edges );
