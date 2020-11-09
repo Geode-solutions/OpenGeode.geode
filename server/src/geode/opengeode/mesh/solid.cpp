@@ -26,6 +26,8 @@
 #include <vtkPolyData.h>
 #include <vtkPolygon.h>
 
+#include <geode/mesh/core/solid_edges.h>
+#include <geode/mesh/core/solid_facets.h>
 #include <geode/mesh/core/solid_mesh.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
@@ -41,14 +43,15 @@ namespace geode
 
         vtkSmartPointer< vtkCellArray > Facets = vtkCellArray::New();
         index_t nb{ 0 };
-        for( const auto f : Range( mesh.nb_facets() ) )
+        mesh.enable_facets();
+        for( const auto f : Range( mesh.facets().nb_facets() ) )
         {
-            nb += mesh.facet_vertices( f ).size();
+            nb += mesh.facets().facet_vertices( f ).size();
         }
-        Facets->AllocateExact( mesh.nb_facets(), nb );
-        for( const auto f : Range( mesh.nb_facets() ) )
+        Facets->AllocateExact( mesh.facets().nb_facets(), nb );
+        for( const auto f : Range( mesh.facets().nb_facets() ) )
         {
-            const auto &vertices = mesh.facet_vertices( f );
+            const auto &vertices = mesh.facets().facet_vertices( f );
             absl::FixedArray< vtkIdType > vtk_vertices( vertices.size() );
             for( const auto v : Range( vertices.size() ) )
             {
@@ -63,8 +66,9 @@ namespace geode
     std::string opengeode_geode_mesh_api extract_solid_wireframe(
         SolidMesh< dimension > &mesh )
     {
+        mesh.enable_edges();
         std::vector< bool > exported_vertex( mesh.nb_vertices(), false );
-        std::vector< bool > exported_edge( mesh.nb_edges(), false );
+        std::vector< bool > exported_edge( mesh.edges().nb_edges(), false );
         for( const auto p : Range{ mesh.nb_polyhedra() } )
         {
             for( const auto f : Range{ mesh.nb_polyhedron_facets( p ) } )
@@ -77,8 +81,12 @@ namespace geode
                     {
                         exported_vertex[mesh.polyhedron_facet_vertex(
                             { facet, v } )] = true;
-                        exported_edge[mesh.polyhedron_facet_edge( { facet, v } )
-                                          .value()] = true;
+                        exported_edge
+                            [mesh.edges()
+                                    .edge_from_vertices(
+                                        mesh.polyhedron_facet_edge_vertices(
+                                            { facet, v } ) )
+                                    .value()] = true;
                     }
                 }
             }
@@ -104,11 +112,11 @@ namespace geode
             }
         }
 
-        for( const auto e : Range{ mesh.nb_edges() } )
+        for( const auto e : Range{ mesh.edges().nb_edges() } )
         {
             if( exported_edge[e] )
             {
-                const auto &edge_vertices = mesh.edge_vertices( e );
+                const auto &edge_vertices = mesh.edges().edge_vertices( e );
                 edges->InsertNextCell( { vertices[edge_vertices[0]],
                     vertices[edge_vertices[1]] } );
             }
