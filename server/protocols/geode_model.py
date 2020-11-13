@@ -71,8 +71,7 @@ def brepToVTK(brep):
 class OpenGeodeIOModel(GeodeProtocol):
     @exportRpc("opengeode.load.brep")
     def loadBRep(self, filename):
-        brep = opengeode.BRep()
-        opengeode.load_brep(brep,filename)
+        brep = opengeode.load_brep(filename)
         vtk, vtk_light = brepToVTK(brep)
         return self.registerObjectFromFile("BRep",filename, brep, vtk, vtk_light)
 
