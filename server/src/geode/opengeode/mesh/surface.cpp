@@ -50,7 +50,7 @@ namespace geode
         {
             absl::FixedArray< vtkIdType > polygon(
                 mesh.nb_polygon_vertices( p ) );
-            for( const auto v : Range( mesh.nb_polygon_vertices( p ) ) )
+            for( const auto v : LRange( mesh.nb_polygon_vertices( p ) ) )
             {
                 polygon[v] = mesh.polygon_vertex( { p, v } );
             }

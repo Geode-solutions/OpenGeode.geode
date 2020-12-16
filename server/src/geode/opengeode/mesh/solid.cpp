@@ -71,13 +71,13 @@ namespace geode
         std::vector< bool > exported_edge( mesh.edges().nb_edges(), false );
         for( const auto p : Range{ mesh.nb_polyhedra() } )
         {
-            for( const auto f : Range{ mesh.nb_polyhedron_facets( p ) } )
+            for( const auto f : LRange{ mesh.nb_polyhedron_facets( p ) } )
             {
                 const PolyhedronFacet facet{ p, f };
                 if( mesh.is_polyhedron_facet_on_border( facet ) )
                 {
                     for( const auto v :
-                        Range{ mesh.nb_polyhedron_facet_vertices( facet ) } )
+                        LRange{ mesh.nb_polyhedron_facet_vertices( facet ) } )
                     {
                         exported_vertex[mesh.polyhedron_facet_vertex(
                             { facet, v } )] = true;
