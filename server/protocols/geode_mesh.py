@@ -169,7 +169,11 @@ class OpenGeodeIOMesh(GeodeProtocol):
         data.SetNumberOfTuples(manager.nb_elements())
         print(manager.nb_elements())
         for i in range(manager.nb_elements()):
-            data.SetValue(i,attribute.generic_value(i))
+            value = attribute.generic_value(i)
+            if(value != opengeode.NO_ID)
+                data.SetValue(i,value)
+            else
+                data.SetValue(i,float('nan'))
         return data
 
 
@@ -187,7 +191,7 @@ class OpenGeodeIOMesh(GeodeProtocol):
         points.SetActiveScalars(name)
         mapper = store["mapper"]
         mapper.ScalarVisibilityOn()
-        mapper.SetScalarModeToUseCellData()
+        mapper.SetScalarModeToUsePointData()
         mapper.SetScalarRange(points.GetScalars().GetRange())
         self.render()
 
