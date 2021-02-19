@@ -23,11 +23,13 @@
 
 import LogoModel from "../assets/model.svg";
 import LogoBRep from "../assets/brep.svg";
+import LogoSection from "../assets/section.svg";
 import Store from "./store";
 import BRepMenu from "./brep_menu";
 
 export default function(store) {
   store.registerModule("model", Store);
+  store.dispatch("registerObjectType", "Section");
   store.dispatch("registerObjectType", "BRep");
   store.commit("ui/registerInputItem", {
     parent: "import",
@@ -35,6 +37,14 @@ export default function(store) {
     component: LogoModel,
     tooltip: "Import model"
   });
+  store.commit("ui/registerInputItem", {
+    parent: "model",
+    name: "section",
+    component: LogoSection,
+    action: "model/loadSection",
+    tooltip: "Import Section"
+  });
+  BRepMenu(store, "Section");
   store.commit("ui/registerInputItem", {
     parent: "model",
     name: "brep",

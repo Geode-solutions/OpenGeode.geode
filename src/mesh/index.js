@@ -38,11 +38,12 @@ import LogoPolygonalSurface3D from "../assets/polygonal_surface3d.svg";
 import LogoSolid from "../assets/block.svg";
 import LogoTetrahedralSolid from "../assets/tetrahedral_solid.svg";
 import LogoPolyhedralSolid from "../assets/polyhedral_solid.svg";
+import EdgedCurvePointsColor from "./components/EdgedCurvePointsColor";
+import EdgedCurvePointsSize from "./components/EdgedCurvePointsSize";
 import PointsColor from "./components/PointSetColor";
 import PointsSize from "./components/PointSetSize";
 import SurfaceColor from "./components/SurfaceColor";
 import SurfaceMesh from "./components/SurfaceMesh";
-import Clip from "./components/Clip";
 import Store from "./store";
 
 export default function(store) {
@@ -186,6 +187,22 @@ export default function(store) {
     component: PointsColor
   });
   store.commit("ui/registerContextualItem", {
+    type: "EdgedCurve2D",
+    component: EdgedCurvePointsColor
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "EdgedCurve3D",
+    component: EdgedCurvePointsColor
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "EdgedCurve2D",
+    component: EdgedCurvePointsSize
+  });
+  store.commit("ui/registerContextualItem", {
+    type: "EdgedCurve3D",
+    component: EdgedCurvePointsSize
+  });
+  store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface2D",
     component: SurfaceMesh
   });
@@ -216,9 +233,5 @@ export default function(store) {
   store.commit("ui/registerContextualItem", {
     type: "PolygonalSurface3D",
     component: SurfaceColor
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "TetrahedralSolid",
-    component: Clip
   });
 }

@@ -57,6 +57,15 @@ def blocksToPolydata(blocks, dimension):
         vtk[block.id().string()] = mesh.SolidToPolydata(block.mesh(), dimension)
     return vtk
 
+def sectionToVTK(section):
+    vtk = {
+        "corners": cornersToPolydata(section.corners(), 2),
+        "lines": linesToPolydata(section.lines(), 2),
+        "surfaces": surfacesToPolydata(section.surfaces(), 2)
+    }
+    vtk_light = opengeode_geode.export_section_lines(section)
+    return vtk, vtk_light
+
 def brepToVTK(brep):
     vtk = {
         "corners": cornersToPolydata(brep.corners(), 3),
@@ -69,6 +78,12 @@ def brepToVTK(brep):
 
 
 class OpenGeodeIOModel(GeodeProtocol):
+    @exportRpc("opengeode.load.section")
+    def loadSection(self, filename):
+        section = opengeode.load_section(filename)
+        vtk, vtk_light = sectionToVTK(section)
+        return self.registerObjectFromFile("Section",filename, section, vtk, vtk_light)
+
     @exportRpc("opengeode.load.brep")
     def loadBRep(self, filename):
         brep = opengeode.load_brep(filename)

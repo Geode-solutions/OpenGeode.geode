@@ -1,11 +1,11 @@
 <template>
   <contextual-item v-bind="$attrs">
     <template #tooltip>
-      Color
+      Points color
     </template>
 
     <template #btn="{ btnStyle }">
-      <logo-surface-color
+      <logo-points-color
         :style="{ height: btnStyle.height, width: btnStyle.width }"
       />
     </template>
@@ -33,12 +33,6 @@
             :items="vertexAttributes"
             label="Select attribute"
           ></v-combobox>
-          <v-combobox
-            v-model="polygonAttributeName"
-            v-if="select === 'From polygon attribute'"
-            :items="polygonAttributes"
-            label="Select attribute"
-          ></v-combobox>
         </v-card-text>
       </v-card>
     </template>
@@ -47,32 +41,27 @@
 
 <script>
 import { mapActions } from "vuex";
-import LogoSurfaceColor from "../../assets/surface_color.svg";
+import LogoPointsColor from "../../assets/edged_curve_point_color.svg";
 import ContextualItem from "@geode/geode-tools/src/components/ContextualItem";
 
 export default {
-  name: "SurfacesColor",
+  name: "EdgedCurvePointsColor",
   components: {
     ContextualItem,
-    LogoSurfaceColor
+    LogoPointsColor
   },
   data: () => ({
     color: { r: 0, g: 0, b: 0 },
     select: "",
-    styles: ["Constant", "From vertex attribute", "From polygon attribute"],
+    styles: ["Constant", "From vertex attribute"],
     vertexAttributeName: "",
-    polygonAttributeName: "",
-    vertexAttributes: [],
-    polygonAttributes: []
+    vertexAttributes: []
   }),
   props: {
     item: Object
   },
   created() {
-    console.log("GET ATTRIBUTES NAMES");
     this.getAttributeNames();
-    console.log(this.vertexAttributes);
-    console.log(this.polygonAttributes);
   },
   methods: {
     ...mapActions("network", ["call"]),
@@ -81,10 +70,6 @@ export default {
         command: "opengeode.attribute.vertex.names",
         args: [this.item.id]
       }).then(names => (this.vertexAttributes = names));
-      this.call({
-        command: "opengeode.attribute.polygon.names",
-        args: [this.item.id]
-      }).then(names => (this.polygonAttributes = names));
     }
   },
   watch: {
@@ -96,32 +81,23 @@ export default {
       });
     },
     color: function(value) {
-      this.$store.dispatch("mesh/style/setColor", {
+      const newColor = [value.r / 255, value.g / 255, value.b / 255];
+      this.$store.dispatch("mesh/style/setPointsColor", {
         id: this.item.id,
-        color: [value.r / 255, value.g / 255, value.b / 255]
+        color: newColor
       });
     },
     vertexAttributeName: function(value) {
       if (!value) return;
-      this.$store.dispatch("mesh/style/setAttributeColor", {
-        id: this.item.id,
-        attribute: value,
-        location: "vertex"
-      });
-    },
-    polygonAttributeName: function(value) {
-      if (!value) return;
-      this.$store.dispatch("mesh/style/setAttributeColor", {
-        id: this.item.id,
-        attribute: value,
-        location: "polygon"
+      this.call({
+        command: "opengeode.attribute.vertex",
+        args: [this.item.id, value]
       });
     }
   },
   mounted() {
     this.select = this.item.style.color.type;
     this.vertexAttributeName = this.item.style.color.vertexAttributeName;
-    this.polygonAttributeName = this.item.style.color.polygonAttributeName;
     const color = this.item.style.color.value;
     this.color = {
       r: color[0] * 255,
