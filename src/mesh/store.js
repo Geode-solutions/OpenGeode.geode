@@ -21,51 +21,6 @@
  *
  */
 
-let pointSetStyle = {
-  style: {
-    size: 1,
-    color: {
-      type: "Constant",
-      value: [1, 1, 1],
-      vertexAttributeName: "",
-      polygonAttributeName: ""
-    }
-  }
-};
-
-let edgedCurveStyle = {
-  style: {
-    size: 1,
-    color: {
-      type: "Constant",
-      value: [1, 1, 1],
-      vertexAttributeName: "",
-      polygonAttributeName: ""
-    },
-    points:{
-      size: 1,
-      color: {
-        type: "Constant",
-        value: [1, 1, 1],
-        vertexAttributeName: "",
-        polygonAttributeName: ""
-      }
-    }
-  }
-};
-
-let surfaceStyle = {
-  style: {
-    mesh: { visible: true },
-    color: {
-      type: "Constant",
-      value: [1, 1, 1],
-      vertexAttributeName: "",
-      polygonAttributeName: ""
-    }
-  }
-};
-
 export default {
   namespaced: true,
   actions: {
@@ -78,6 +33,17 @@ export default {
         },
         { root: true }
       ).then(object => {
+        let pointSetStyle = {
+          style: {
+            size: 1,
+            color: {
+              type: "Constant",
+              value: [1, 1, 1],
+              vertexAttributeName: "",
+              polygonAttributeName: ""
+            }
+          }
+        };
         dispatch("addObject", Object.assign(object, pointSetStyle), {
           root: true
         });
@@ -167,6 +133,17 @@ export default {
             command,
             filename
           }).then(object => {
+            let pointSetStyle = {
+              style: {
+                size: 1,
+                color: {
+                  type: "Constant",
+                  value: [1, 1, 1],
+                  vertexAttributeName: "",
+                  polygonAttributeName: ""
+                }
+              }
+            };
             dispatch("addObject", Object.assign(object, pointSetStyle), {
               root: true
             });
@@ -177,6 +154,27 @@ export default {
             command,
             filename
           }).then(object => {
+            let edgedCurveStyle = {
+              style: {
+                size: 1,
+                color: {
+                  type: "Constant",
+                  value: [1, 1, 1],
+                  vertexAttributeName: "",
+                  polygonAttributeName: ""
+                },
+                points: {
+                  size: 1,
+                  color: {
+                    type: "Constant",
+                    value: [1, 1, 1],
+                    vertexAttributeName: "",
+                    polygonAttributeName: ""
+                  }
+                }
+              }
+            };
+
             dispatch("addObject", Object.assign(object, edgedCurveStyle), {
               root: true
             });
@@ -187,6 +185,17 @@ export default {
             command,
             filename
           }).then(object => {
+            let surfaceStyle = {
+              style: {
+                mesh: { visible: false },
+                color: {
+                  type: "Constant",
+                  value: [1, 1, 1],
+                  vertexAttributeName: "",
+                  polygonAttributeName: ""
+                }
+              }
+            };
             dispatch("addObject", Object.assign(object, surfaceStyle), {
               root: true
             });

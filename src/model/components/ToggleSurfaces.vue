@@ -30,9 +30,9 @@ export default {
   },
   mounted() {
     this.toggle = this.item.style.surfaces.visible;
-    console.log("this.toggle",this.toggle);
+    console.log("this.toggle", this.toggle);
     this.$on("toggle-change", value => {
-    console.log("value",value);
+      console.log("value", value);
       this.$store.dispatch("model/style/setSurfacesVisibility", {
         id: this.item.id,
         value

@@ -42,7 +42,9 @@ export default {
             blocks: {}
           }
         };
-        dispatch("addObject", Object.assign(object, sectionStyle), { root: true });
+        dispatch("addObject", Object.assign(object, sectionStyle), {
+          root: true
+        });
       });
     },
     loadBRep({ state, dispatch }, filename) {
