@@ -25,6 +25,26 @@ export default {
   namespaced: true,
   state: {},
   actions: {
+    loadSection({ state, dispatch }, filename) {
+      dispatch("private/loadObject", {
+        command: "opengeode.load.section",
+        filename
+      }).then(object => {
+        let sectionStyle = {
+          style: {
+            corners: { visible: true, size: 1, color: [1, 1, 1] },
+            lines: { visible: true, color: [1, 1, 1] },
+            surfaces: {
+              visible: true,
+              color: [1, 1, 1],
+              mesh: { visible: false }
+            },
+            blocks: {}
+          }
+        };
+        dispatch("addObject", Object.assign(object, sectionStyle), { root: true });
+      });
+    },
     loadBRep({ state, dispatch }, filename) {
       dispatch("private/loadObject", {
         command: "opengeode.load.brep",
@@ -68,7 +88,7 @@ export default {
             "setObjectStyle",
             {
               id,
-              style: [objectType, "mesh", "visible"],
+              style: [objectType, "visible"],
               value
             },
             { root: true }

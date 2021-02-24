@@ -27,7 +27,29 @@ let pointSetStyle = {
     color: {
       type: "Constant",
       value: [1, 1, 1],
-      vertexAttributeName: ""
+      vertexAttributeName: "",
+      polygonAttributeName: ""
+    }
+  }
+};
+
+let edgedCurveStyle = {
+  style: {
+    size: 1,
+    color: {
+      type: "Constant",
+      value: [1, 1, 1],
+      vertexAttributeName: "",
+      polygonAttributeName: ""
+    },
+    points:{
+      size: 1,
+      color: {
+        type: "Constant",
+        value: [1, 1, 1],
+        vertexAttributeName: "",
+        polygonAttributeName: ""
+      }
     }
   }
 };
@@ -74,19 +96,15 @@ export default {
       });
     },
     loadEdgedCurve2D({ dispatch }, filename) {
-      dispatch("private/loadObject", {
+      dispatch("private/loadEdgedCurve", {
         command: "opengeode.load.edged_curve2d",
         filename
-      }).then(object => {
-        dispatch("addObject", object, { root: true });
       });
     },
     loadEdgedCurve3D({ dispatch }, filename) {
-      dispatch("private/loadObject", {
+      dispatch("private/loadEdgedCurve", {
         command: "opengeode.load.edged_curve3d",
         filename
-      }).then(object => {
-        dispatch("addObject", object, { root: true });
       });
     },
     loadPolygonalSurface2D({ dispatch }, filename) {
@@ -154,6 +172,16 @@ export default {
             });
           });
         },
+        loadEdgedCurve({ dispatch }, { command, filename }) {
+          dispatch("loadObject", {
+            command,
+            filename
+          }).then(object => {
+            dispatch("addObject", Object.assign(object, edgedCurveStyle), {
+              root: true
+            });
+          });
+        },
         loadSurface({ dispatch }, { command, filename }) {
           dispatch("loadObject", {
             command,
@@ -182,7 +210,7 @@ export default {
           dispatch(
             "network/call",
             {
-              command: "opengeode.points.size",
+              command: "opengeode.point.size",
               args: [id, value]
             },
             { root: true }
@@ -223,6 +251,25 @@ export default {
             {
               command: "opengeode.color",
               args: [id, color]
+            },
+            { root: true }
+          );
+        },
+        setAttributeColor({ commit, dispatch }, { id, attribute, location }) {
+          commit(
+            "setObjectStyle",
+            {
+              id,
+              style: ["color", location + "AttributeName"],
+              value: attribute
+            },
+            { root: true }
+          );
+          dispatch(
+            "network/call",
+            {
+              command: "opengeode.attribute." + location,
+              args: [id, attribute]
             },
             { root: true }
           );
