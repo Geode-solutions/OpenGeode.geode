@@ -186,22 +186,22 @@ export default function(store) {
     type: "PointSet3D",
     component: PointsColor
   });
-  store.commit("ui/registerContextualItem", {
-    type: "EdgedCurve2D",
-    component: EdgedCurvePointsColor
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "EdgedCurve3D",
-    component: EdgedCurvePointsColor
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "EdgedCurve2D",
-    component: EdgedCurvePointsSize
-  });
-  store.commit("ui/registerContextualItem", {
-    type: "EdgedCurve3D",
-    component: EdgedCurvePointsSize
-  });
+  // store.commit("ui/registerContextualItem", {
+  //   type: "EdgedCurve2D",
+  //   component: EdgedCurvePointsColor
+  // });
+  // store.commit("ui/registerContextualItem", {
+  //   type: "EdgedCurve3D",
+  //   component: EdgedCurvePointsColor
+  // });
+  // store.commit("ui/registerContextualItem", {
+  //   type: "EdgedCurve2D",
+  //   component: EdgedCurvePointsSize
+  // });
+  // store.commit("ui/registerContextualItem", {
+  //   type: "EdgedCurve3D",
+  //   component: EdgedCurvePointsSize
+  // });
   store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface2D",
     component: SurfaceMesh

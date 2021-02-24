@@ -25,7 +25,7 @@ export default {
   namespaced: true,
   state: {},
   actions: {
-    loadBRep({ state, dispatch }, filename) {
+    loadSection({ state, dispatch }, filename) {
       dispatch("private/loadObject", {
         command: "opengeode.load.section",
         filename
