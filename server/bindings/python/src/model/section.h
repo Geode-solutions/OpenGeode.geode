@@ -21,17 +21,14 @@
  *
  */
 
-#include <pybind11/iostream.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include <geode/opengeode/model/section.h>
 
-#include "brep.h"
-#include "section.h"
+#include <geode/model/representation/core/section.h>
 
-PYBIND11_MODULE( opengeode_geode_py_model, module )
+namespace geode
 {
-    pybind11::add_ostream_redirect( module );
-    module.doc() = "OpenGeode Python binding for Geode model extension";
-    geode::define_brep( module );
-    geode::define_section( module );
-}
+    void define_section( pybind11::module& module )
+    {
+        module.def( "export_section_lines", &export_section_lines );
+    }
+} // namespace geode
