@@ -21,6 +21,7 @@
  *
  */
 
+#include <pybind11/iostream.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -64,6 +65,7 @@ namespace pybind11
 
 PYBIND11_MODULE( opengeode_geode_py_mesh, module )
 {
+    pybind11::add_ostream_redirect( module );
     module.doc() = "OpenGeode Python binding for Geode mesh extension";
     geode::define_point_set( module );
     geode::define_edged_curve( module );
