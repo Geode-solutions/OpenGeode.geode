@@ -44,7 +44,7 @@ jobs:
 
   build-ubuntu-wheel:
     runs-on: ubuntu-latest
-    container: "geodesolutions/centos8"
+    container: "geodesolutions/centos"
     needs: format
     strategy:
       matrix:
