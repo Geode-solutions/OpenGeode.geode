@@ -11,7 +11,7 @@ jobs:
       TOKEN: ${{ secrets.TOKEN }}
       
   build-ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container: "geodesolutions/ubuntu"
     needs: format
     strategy:
@@ -43,8 +43,8 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
 
   build-ubuntu-wheel:
-    runs-on: ubuntu-latest
-    container: "geodesolutions/centos"
+    runs-on: ubuntu-18.04
+    container: "geodesolutions/centos8"
     needs: format
     strategy:
       matrix:
