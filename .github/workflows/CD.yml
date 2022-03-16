@@ -10,7 +10,7 @@ jobs:
     container: "geodesolutions/ubuntu"
     strategy:
       matrix:
-        python: [3.6, 3.7, 3.8]
+        python: [3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v1
@@ -51,7 +51,6 @@ jobs:
     strategy:
       matrix:
         config:
-        - {python: 3.6, tag: "cp36-cp36m"}
         - {python: 3.7, tag: "cp37-cp37m"}
         - {python: 3.8, tag: "cp38-cp38"}
 
@@ -79,19 +78,13 @@ jobs:
         python -m pip install wheel
         export Python3_ROOT_DIR=${{ env.pythonLocation }}
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/v}"
         echo ::set-output name=version::$version
         npm config set cmake_CMAKE_PACKAGE_VERSION $version
         npm install
         npm run wheel
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-manylinux2014_x86_64.whl
-    - name: Upload
-      uses: softprops/action-gh-release@v1
-      with:
-        files: "build/wheel/dist/OpenGeode_core.geode-${{ steps.package.outputs.version }}-${{ matrix.config.tag }}-manylinux2014_x86_64.whl"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
@@ -112,8 +105,8 @@ jobs:
     strategy:
       matrix:
         config:
-        - {python: 3.6, tag: "cp36-cp36m"}
         - {python: 3.7, tag: "cp37-cp37m"}
+        - {python: 3.8, tag: "cp38-cp38"}
 
     steps:
     - uses: actions/checkout@v1
@@ -137,7 +130,7 @@ jobs:
       run: |
         pip install wheel
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH $env:GITHUB_WORKSPACE/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/v', ''
         echo "::set-output name=version::$version"
         npm config set cmake_CMAKE_PACKAGE_VERSION $version
@@ -146,12 +139,6 @@ jobs:
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
       env:
         Python3_ROOT_DIR: ${{ env.pythonLocation }}
-    - name: Upload
-      uses: softprops/action-gh-release@v1
-      with:
-        files: "build/wheel/dist/OpenGeode_core.geode-${{ steps.package.outputs.version }}-${{ matrix.config.tag }}-win_amd64.whl"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: PyPI
       run: |
         pip install twine
@@ -169,7 +156,7 @@ jobs:
     runs-on: windows-2016
     strategy:
       matrix:
-        python: [3.6, 3.7]
+        python: [3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v1

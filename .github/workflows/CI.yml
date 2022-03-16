@@ -6,21 +6,17 @@ on:
 
 jobs:
   format:
-    runs-on: ubuntu-18.04
-    
-    steps:
-      - uses: actions/checkout@v1
-      - uses: Geode-solutions/actions/clang-format@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+    uses: Geode-solutions/actions/.github/workflows/format.yml@master
+    secrets:
+      TOKEN: ${{ secrets.TOKEN }}
       
   build-ubuntu:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: "geodesolutions/ubuntu"
     needs: format
     strategy:
       matrix:
-        python: [3.6, 3.7, 3.8]
+        python: [3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v1
@@ -47,15 +43,14 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
 
   build-ubuntu-wheel:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: "geodesolutions/centos8"
     needs: format
     strategy:
       matrix:
         config:
-        - {python: 3.6, tag: "cp36-cp36m", tag2: "3.6m"}
-        - {python: 3.7, tag: "cp37-cp37m", tag2: "3.7m"}
-        - {python: 3.8, tag: "cp38-cp38", tag2: "3.8"}
+        - {python: 3.7, tag: "cp37-cp37m"}
+        - {python: 3.8, tag: "cp38-cp38"}
 
     steps:
     - uses: actions/checkout@v1
@@ -80,7 +75,7 @@ jobs:
         python -m pip install wheel
         export Python3_ROOT_DIR=${{ env.pythonLocation }}
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH ${GITHUB_WORKSPACE}/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         npm install
         npm run wheel
     - name: Notify slack
@@ -97,7 +92,7 @@ jobs:
     needs: format
     strategy:
       matrix:
-        python: [3.6, 3.7]
+        python: [3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v1
@@ -120,7 +115,7 @@ jobs:
       run: |
         pip install wheel
         npm config set cmake_PYTHON_VERSION ${{ matrix.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH $env:GITHUB_WORKSPACE/${{ steps.opengeode.outputs.path }}
+        npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         npm install
         npm run package -- version win64
         npm run wheel
