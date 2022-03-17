@@ -33,6 +33,6 @@ add_custom_target(wheel
         -DSOURCE_DIR="${CMAKE_INSTALL_PREFIX}"
         -DDEST_DIR="${CMAKE_BINARY_DIR}/wheel/opengeode_geode"
         -P "${CMAKE_CURRENT_LIST_DIR}/copy_wheel.cmake"
-    COMMAND ${PYTHON_EXECUTABLE} setup.py bdist_wheel
+    COMMAND python3 setup.py bdist_wheel
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/wheel
 )
