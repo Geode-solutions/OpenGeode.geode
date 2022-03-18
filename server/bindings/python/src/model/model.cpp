@@ -30,6 +30,7 @@
 
 PYBIND11_MODULE( opengeode_geode_py_model, module )
 {
+    pybind11::module::import( "opengeode" );
     pybind11::add_ostream_redirect( module );
     module.doc() = "OpenGeode Python binding for Geode model extension";
     geode::define_brep( module );

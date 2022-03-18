@@ -65,6 +65,7 @@ namespace pybind11
 
 PYBIND11_MODULE( opengeode_geode_py_mesh, module )
 {
+    pybind11::module::import( "opengeode" );
     pybind11::add_ostream_redirect( module );
     module.doc() = "OpenGeode Python binding for Geode mesh extension";
     geode::define_point_set( module );
