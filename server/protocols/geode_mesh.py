@@ -41,7 +41,6 @@ def EdgedCurveToPolydata(edges, dimension):
 def SurfaceToPolydata(surface, dimension):
     print(surface)
     polydata = vtk.vtkPolyData()
-    print(polydata)
     getattr(opengeode_geode, 'convert_surface_to_polydata' + str(dimension) + 'D')(surface, polydata)
     return polydata
 

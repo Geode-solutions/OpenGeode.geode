@@ -1,1 +1,1 @@
-OpenGeode-core >= 10.0.18, == 10.*
+OpenGeode-core >= 10.0.19, == 10.*
