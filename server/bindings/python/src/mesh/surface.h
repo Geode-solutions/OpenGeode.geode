@@ -35,7 +35,11 @@
     const auto extract##dimension =                                            \
         "extract_surface_wireframe" + std::to_string( dimension ) + "D";       \
     module.def(                                                                \
-        extract##dimension.c_str(), &extract_surface_wireframe< dimension > )
+        extract##dimension.c_str(), &extract_surface_wireframe< dimension > ); \
+    const auto extract2##dimension = "extract_triangulate_surface_wireframe"   \
+                                     + std::to_string( dimension ) + "D";      \
+    module.def( extract2##dimension.c_str(),                                   \
+        &extract_triangulate_surface_wireframe< dimension > )
 
 namespace geode
 {

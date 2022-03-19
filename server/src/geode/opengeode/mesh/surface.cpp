@@ -27,6 +27,7 @@
 
 #include <geode/mesh/core/surface_edges.h>
 #include <geode/mesh/core/surface_mesh.h>
+#include <geode/mesh/core/trianguated_surface.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 #include <geode/opengeode/mesh/detail/vtk_xml.h>
@@ -78,10 +79,22 @@ namespace geode
         return detail::export_xml( polydata );
     }
 
+    template < index_t dimension >
+    std::string extract_triangulate_surface_wireframe(
+        TriangulateSurface< dimension > &mesh )
+    {
+        return extract_surface_wireframe< dimension >( mesh );
+    }
+
     template std::string opengeode_geode_mesh_api extract_surface_wireframe(
         SurfaceMesh< 2 > & );
     template std::string opengeode_geode_mesh_api extract_surface_wireframe(
         SurfaceMesh< 3 > & );
+
+    template std::string opengeode_geode_mesh_api
+        extract_triangulate_surface_wireframe( TriangulateSurface< 2 > & );
+    template std::string opengeode_geode_mesh_api
+        extract_triangulate_surface_wireframe( TriangulateSurface< 3 > & );
 
     template void opengeode_geode_mesh_api convert_surface_to_polydata(
         SurfaceMesh< 2 > &, vtkPolyData * );
