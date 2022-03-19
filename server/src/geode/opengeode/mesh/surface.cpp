@@ -27,7 +27,7 @@
 
 #include <geode/mesh/core/surface_edges.h>
 #include <geode/mesh/core/surface_mesh.h>
-#include <geode/mesh/core/trianguated_surface.h>
+#include <geode/mesh/core/triangulated_surface.h>
 
 #include <geode/opengeode/mesh/detail/geode_points.h>
 #include <geode/opengeode/mesh/detail/vtk_xml.h>
