@@ -26,6 +26,7 @@
 #include <vtkPolyData.h>
 
 #include <geode/mesh/core/surface_mesh.h>
+#include <geode/mesh/core/triangulated_surface.h>
 
 #define PYTHON_SURFACE( dimension )                                            \
     const auto convert##dimension =                                            \

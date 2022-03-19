@@ -26,7 +26,7 @@
 namespace geode
 {
     FORWARD_DECLARATION_DIMENSION_CLASS( SurfaceMesh );
-    FORWARD_DECLARATION_DIMENSION_CLASS( TriangulateSurface );
+    FORWARD_DECLARATION_DIMENSION_CLASS( TriangulatedSurface );
 } // namespace geode
 
 class vtkPolyData;
@@ -42,5 +42,5 @@ namespace geode
 
     template < index_t dimension >
     std::string extract_triangulate_surface_wireframe(
-        TriangulateSurface< dimension > &mesh );
+        TriangulatedSurface< dimension > &mesh );
 } // namespace geode
