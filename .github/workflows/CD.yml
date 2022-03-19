@@ -46,16 +46,20 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
 
   build-ubuntu-wheel:
-    runs-on: ubuntu-latest
-    container: "ghcr.io/geode-solutions/centos:master"
+    runs-on: ubuntu-18.04
+    container: "geodesolutions/centos8"
     strategy:
       matrix:
         config:
-        - {python: "3.7", tag: "cp37-cp37m"}
-        - {python: "3.8", tag: "cp38-cp38"}
+        - {python: 3.7, tag: "cp37-cp37m"}
+        - {python: 3.8, tag: "cp38-cp38"}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.config.python }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.config.python }}
     - name: Cache node modules
       uses: actions/cache@v1.2.0
       with:
@@ -65,15 +69,14 @@ jobs:
       id: opengeode
       with:
         repository: OpenGeode
-        file: '-rhel-private.tar.gz'
+        file: '-ubuntu.tar.gz'
         token: ${{ secrets.TOKEN }}
     - name: Generate package
       id: package
       run: |
-        export PATH=/opt/python/${{ matrix.config.tag }}/bin:$PATH
+        export PATH=${{ env.pythonLocation }}/bin:$PATH
         python -m pip install wheel
-        export Python3_ROOT_DIR=/opt/python/${{ matrix.config.tag }}
-        export Python3_INCLUDE_DIRS=/opt/python/${{ matrix.config.tag }}/include
+        export Python3_ROOT_DIR=${{ env.pythonLocation }}
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/v}"

@@ -23,12 +23,12 @@
 
 #include <geode/opengeode/mesh/edged_curve.h>
 
-// #include <vtkPolyData.h>
+#include <vtkPolyData.h>
 
 #include <geode/mesh/core/edged_curve.h>
 
-// #include <geode/opengeode/mesh/detail/geode_points.h>
-// #include <geode/opengeode/mesh/detail/vtk_xml.h>
+#include <geode/opengeode/mesh/detail/geode_points.h>
+#include <geode/opengeode/mesh/detail/vtk_xml.h>
 
 namespace
 {
@@ -36,15 +36,15 @@ namespace
     void extract_edges(
         const geode::EdgedCurve< dimension > &mesh, vtkPolyData *polydata )
     {
-        // vtkSmartPointer< vtkCellArray > Edges = vtkCellArray::New();
-        // const auto nb_edges = mesh.nb_edges();
-        // Edges->AllocateExact( nb_edges, nb_edges * 2 );
-        // for( const auto e : geode::Range{ nb_edges } )
-        // {
-        //     Edges->InsertNextCell( { mesh.edge_vertex( { e, 0 } ),
-        //         mesh.edge_vertex( { e, 1 } ) } );
-        // }
-        // polydata->SetLines( Edges );
+        vtkSmartPointer< vtkCellArray > Edges = vtkCellArray::New();
+        const auto nb_edges = mesh.nb_edges();
+        Edges->AllocateExact( nb_edges, nb_edges * 2 );
+        for( const auto e : geode::Range{ nb_edges } )
+        {
+            Edges->InsertNextCell( { mesh.edge_vertex( { e, 0 } ),
+                mesh.edge_vertex( { e, 1 } ) } );
+        }
+        polydata->SetLines( Edges );
     }
 } // namespace
 
@@ -54,18 +54,17 @@ namespace geode
     void convert_edged_curve_to_polydata(
         EdgedCurve< dimension > &mesh, vtkPolyData *polydata )
     {
-        // detail::set_geode_points( mesh, polydata );
-        // extract_edges( mesh, polydata );
+        detail::set_geode_points( mesh, polydata );
+        extract_edges( mesh, polydata );
     }
 
     template < index_t dimension >
     std::string extract_edged_curve_edges( EdgedCurve< dimension > &mesh )
     {
-        // vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
-        // detail::set_geode_points( mesh, polydata );
-        // extract_edges( mesh, polydata );
-        // return detail::export_xml( polydata );
-        return "";
+        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+        detail::set_geode_points( mesh, polydata );
+        extract_edges( mesh, polydata );
+        return detail::export_xml( polydata );
     }
 
     template std::string opengeode_geode_mesh_api extract_edged_curve_edges(

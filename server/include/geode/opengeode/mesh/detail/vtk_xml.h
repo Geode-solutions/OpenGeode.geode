@@ -21,27 +21,25 @@
  *
  */
 
-#include <geode/opengeode/mesh/edged_curve.h>
+#pragma once
 
 #include <vtkPolyData.h>
-
-#include <geode/mesh/core/edged_curve.h>
-
-#define PYTHON_EDGEDCURVE( dimension )                                         \
-    const auto convert##dimension =                                            \
-        "convert_edged_curve_to_polydata" + std::to_string( dimension ) + "D"; \
-    module.def( convert##dimension.c_str(),                                    \
-        &convert_edged_curve_to_polydata< dimension > );                       \
-    const auto extract##dimension =                                            \
-        "extract_edged_curve_edges" + std::to_string( dimension ) + "D";       \
-    module.def(                                                                \
-        extract##dimension.c_str(), &extract_edged_curve_edges< dimension > )
+#include <vtkXMLPolyDataWriter.h>
 
 namespace geode
 {
-    void define_edged_curve( pybind11::module& module )
+    namespace detail
     {
-        PYTHON_EDGEDCURVE( 2 );
-        PYTHON_EDGEDCURVE( 3 );
-    }
+        inline std::string export_xml( vtkPolyData* polydata )
+        {
+            vtkSmartPointer< vtkXMLPolyDataWriter > writer =
+                vtkXMLPolyDataWriter::New();
+            writer->SetInputData( polydata );
+            writer->WriteToOutputStringOn();
+            writer->SetDataModeToBinary();
+            writer->SetCompressorTypeToZLib();
+            writer->Write();
+            return writer->GetOutputString();
+        }
+    } // namespace detail
 } // namespace geode

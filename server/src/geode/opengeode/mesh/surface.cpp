@@ -23,18 +23,14 @@
 
 #include <geode/opengeode/mesh/surface.h>
 
-// #include <vtkPolyData.h>
+#include <vtkPolyData.h>
 
-#include <geode/geometry/point.h>
-
-#include <geode/mesh/builder/edged_curve_builder.h>
-#include <geode/mesh/core/edged_curve.h>
 #include <geode/mesh/core/surface_edges.h>
 #include <geode/mesh/core/surface_mesh.h>
 #include <geode/mesh/core/triangulated_surface.h>
 
-// #include <geode/opengeode/mesh/detail/geode_points.h>
-// #include <geode/opengeode/mesh/detail/vtk_xml.h>
+#include <geode/opengeode/mesh/detail/geode_points.h>
+#include <geode/opengeode/mesh/detail/vtk_xml.h>
 
 namespace geode
 {
@@ -42,72 +38,63 @@ namespace geode
     void convert_surface_to_polydata(
         SurfaceMesh< dimension > &mesh, vtkPolyData *polydata )
     {
-        // detail::set_geode_points( mesh, polydata );
+        detail::set_geode_points( mesh, polydata );
 
-        // vtkSmartPointer< vtkCellArray > Polygons = vtkCellArray::New();
-        // index_t nb{ 0 };
-        // for( const auto p : Range( mesh.nb_polygons() ) )
-        // {
-        //     nb += mesh.nb_polygon_vertices( p );
-        // }
-        // Polygons->AllocateExact( mesh.nb_polygons(), nb );
-        // for( const auto p : Range( mesh.nb_polygons() ) )
-        // {
-        //     absl::FixedArray< vtkIdType > polygon(
-        //         mesh.nb_polygon_vertices( p ) );
-        //     for( const auto v : LRange( mesh.nb_polygon_vertices( p ) ) )
-        //     {
-        //         polygon[v] = mesh.polygon_vertex( { p, v } );
-        //     }
-        //     Polygons->InsertNextCell( polygon.size(), polygon.data() );
-        // }
-        // polydata->SetPolys( Polygons );
+        vtkSmartPointer< vtkCellArray > Polygons = vtkCellArray::New();
+        index_t nb{ 0 };
+        for( const auto p : Range( mesh.nb_polygons() ) )
+        {
+            nb += mesh.nb_polygon_vertices( p );
+        }
+        Polygons->AllocateExact( mesh.nb_polygons(), nb );
+        for( const auto p : Range( mesh.nb_polygons() ) )
+        {
+            absl::FixedArray< vtkIdType > polygon(
+                mesh.nb_polygon_vertices( p ) );
+            for( const auto v : LRange( mesh.nb_polygon_vertices( p ) ) )
+            {
+                polygon[v] = mesh.polygon_vertex( { p, v } );
+            }
+            Polygons->InsertNextCell( polygon.size(), polygon.data() );
+        }
+        polydata->SetPolys( Polygons );
     }
 
     template < index_t dimension >
-    std::unique_ptr< EdgedCurve< dimension > > extract_surface_wireframe(
-        SurfaceMesh< dimension > &mesh )
+    std::string extract_surface_wireframe( SurfaceMesh< dimension > &mesh )
     {
-        auto new_mesh = EdgedCurve< dimension >::create();
-        auto builder = EdgedCurveBuilder< dimension >::create( *new_mesh );
-        builder->create_vertices( mesh.nb_vertices() );
-        for( const auto v : Range{ mesh.nb_vertices() } )
-        {
-            builder->set_point( v, mesh.point( v ) );
-        }
-        // vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
-        // detail::set_geode_points( mesh, polydata );
+        vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+        detail::set_geode_points( mesh, polydata );
 
-        // vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
+        vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
         mesh.enable_edges();
         const auto nb_edges = mesh.edges().nb_edges();
-        // edges->AllocateExact( nb_edges, nb_edges * 2 );
+        edges->AllocateExact( nb_edges, nb_edges * 2 );
         for( const auto e : Range{ nb_edges } )
         {
             const auto &vertices = mesh.edges().edge_vertices( e );
-            builder->create_edge( vertices[0], vertices[1] );
+            edges->InsertNextCell( { vertices[0], vertices[1] } );
         }
-        // polydata->SetLines( edges );
-        // return detail::export_xml( polydata );
-        return new_mesh;
+        polydata->SetLines( edges );
+        return detail::export_xml( polydata );
     }
 
-    // template < index_t dimension >
-    // std::string extract_triangulate_surface_wireframe(
-    //     TriangulatedSurface< dimension > &mesh )
-    // {
-    //     return extract_surface_wireframe< dimension >( mesh );
-    // }
+    template < index_t dimension >
+    std::string extract_triangulate_surface_wireframe(
+        TriangulatedSurface< dimension > &mesh )
+    {
+        return extract_surface_wireframe< dimension >( mesh );
+    }
 
-    template std::unique_ptr< EdgedCurve< 2 > > opengeode_geode_mesh_api
-        extract_surface_wireframe( SurfaceMesh< 2 > & );
-    template std::unique_ptr< EdgedCurve< 3 > > opengeode_geode_mesh_api
-        extract_surface_wireframe( SurfaceMesh< 3 > & );
+    template std::string opengeode_geode_mesh_api extract_surface_wireframe(
+        SurfaceMesh< 2 > & );
+    template std::string opengeode_geode_mesh_api extract_surface_wireframe(
+        SurfaceMesh< 3 > & );
 
-    // template std::string opengeode_geode_mesh_api
-    //     extract_triangulate_surface_wireframe( TriangulatedSurface< 2 > & );
-    // template std::string opengeode_geode_mesh_api
-    //     extract_triangulate_surface_wireframe( TriangulatedSurface< 3 > & );
+    template std::string opengeode_geode_mesh_api
+        extract_triangulate_surface_wireframe( TriangulatedSurface< 2 > & );
+    template std::string opengeode_geode_mesh_api
+        extract_triangulate_surface_wireframe( TriangulatedSurface< 3 > & );
 
     template void opengeode_geode_mesh_api convert_surface_to_polydata(
         SurfaceMesh< 2 > &, vtkPolyData * );

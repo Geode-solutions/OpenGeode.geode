@@ -23,11 +23,15 @@
 
 #include <geode/opengeode/mesh/point_set.h>
 
-// #include <vtkPolyData.h>
+#include <vtkPolyData.h>
 
 #include <geode/mesh/core/point_set.h>
 
 #define PYTHON_POINTSET( dimension )                                           \
+    const auto convert##dimension =                                            \
+        "convert_point_set_to_polydata" + std::to_string( dimension ) + "D";   \
+    module.def( convert##dimension.c_str(),                                    \
+        &convert_point_set_to_polydata< dimension > );                         \
     const auto extract##dimension =                                            \
         "extract_point_set_points" + std::to_string( dimension ) + "D";        \
     module.def(                                                                \

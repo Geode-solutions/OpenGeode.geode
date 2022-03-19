@@ -25,8 +25,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-// #include <vtkPolyData.h>
-// #include <vtkPythonArgs.h>
+#include <vtkPolyData.h>
+#include <vtkPythonArgs.h>
 
 #include "edged_curve.h"
 #include "point_set.h"
@@ -37,29 +37,29 @@ namespace pybind11
 {
     namespace detail
     {
-        // template <>
-        // struct type_caster< vtkPolyData >
-        //     : public type_caster_base< vtkPolyData >
-        // {
-        //     bool load( handle src, bool )
-        //     {
-        //         if( !src )
-        //         {
-        //             return false;
-        //         }
-        //         auto *ptr =
-        //             vtkPythonArgs::GetSelfPointer( src.ptr(), src.ptr() );
-        //         value = static_cast< vtkPolyData * >( ptr );
-        //         return true;
-        //     }
+        template <>
+        struct type_caster< vtkPolyData >
+            : public type_caster_base< vtkPolyData >
+        {
+            bool load( handle src, bool )
+            {
+                if( !src )
+                {
+                    return false;
+                }
+                auto *ptr =
+                    vtkPythonArgs::GetSelfPointer( src.ptr(), src.ptr() );
+                value = static_cast< vtkPolyData * >( ptr );
+                return true;
+            }
 
-        //     static handle cast( vtkPolyData *v,
-        //         return_value_policy /*policy*/,
-        //         handle /*parent*/ )
-        //     {
-        //         return vtkPythonArgs::BuildVTKObject( v );
-        //     }
-        // };
+            static handle cast( vtkPolyData *v,
+                return_value_policy /*policy*/,
+                handle /*parent*/ )
+            {
+                return vtkPythonArgs::BuildVTKObject( v );
+            }
+        };
     } // namespace detail
 } // namespace pybind11
 
