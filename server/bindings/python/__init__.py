@@ -18,5 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import opengeode
 from .opengeode_geode_py_mesh import *
 from .opengeode_geode_py_model import *
