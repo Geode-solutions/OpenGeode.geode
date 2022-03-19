@@ -43,8 +43,8 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}    
 
   build-ubuntu-wheel:
-    runs-on: ubuntu-18.04
-    container: "geodesolutions/centos8"
+    runs-on: ubuntu-latest
+    container: "ghcr.io/geode-solutions/centos:master"
     needs: format
     strategy:
       matrix:
@@ -53,11 +53,7 @@ jobs:
         - {python: 3.8, tag: "cp38-cp38"}
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.config.python }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.config.python }}
+    - uses: actions/checkout@v3
     - name: Cache node modules
       uses: actions/cache@v1.2.0
       with:
@@ -67,13 +63,13 @@ jobs:
       id: opengeode
       with:
         repository: OpenGeode
-        file: '-ubuntu.tar.gz'
+        file: '-rhel-private.tar.gz'
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        export PATH=${{ env.pythonLocation }}/bin:$PATH
+        export PATH=/opt/python/${{ matrix.config.tag }}/bin:$PATH
         python -m pip install wheel
-        export Python3_ROOT_DIR=${{ env.pythonLocation }}
+        export Python3_ROOT_DIR=/opt/python/${{ matrix.config.tag }}
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         npm install
