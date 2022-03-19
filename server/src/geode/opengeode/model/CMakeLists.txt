@@ -35,7 +35,4 @@ add_geode_library(
         OpenGeode::geometry
         OpenGeode::mesh
         OpenGeode::model
-        VTK::CommonCore
-        VTK::CommonDataModel
-        VTK::IOXML
 )

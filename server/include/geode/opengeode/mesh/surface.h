@@ -21,12 +21,15 @@
  *
  */
 
+#include <memory>
+
 #include <geode/opengeode/mesh/common.h>
 
 namespace geode
 {
     FORWARD_DECLARATION_DIMENSION_CLASS( SurfaceMesh );
     FORWARD_DECLARATION_DIMENSION_CLASS( TriangulatedSurface );
+    FORWARD_DECLARATION_DIMENSION_CLASS( EdgedCurve );
 } // namespace geode
 
 class vtkPolyData;
@@ -38,9 +41,10 @@ namespace geode
         SurfaceMesh< dimension > &mesh, vtkPolyData *polydata );
 
     template < index_t dimension >
-    std::string extract_surface_wireframe( SurfaceMesh< dimension > &mesh );
+    std::unique_ptr< EdgedCurve< dimension > > extract_surface_wireframe(
+        SurfaceMesh< dimension > &mesh );
 
-    template < index_t dimension >
-    std::string extract_triangulate_surface_wireframe(
-        TriangulatedSurface< dimension > &mesh );
+    // template < index_t dimension >
+    // std::string extract_triangulate_surface_wireframe(
+    //     TriangulatedSurface< dimension > &mesh );
 } // namespace geode

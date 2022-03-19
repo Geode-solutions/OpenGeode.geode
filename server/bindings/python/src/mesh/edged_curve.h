@@ -23,15 +23,11 @@
 
 #include <geode/opengeode/mesh/edged_curve.h>
 
-#include <vtkPolyData.h>
+// #include <vtkPolyData.h>
 
 #include <geode/mesh/core/edged_curve.h>
 
 #define PYTHON_EDGEDCURVE( dimension )                                         \
-    const auto convert##dimension =                                            \
-        "convert_edged_curve_to_polydata" + std::to_string( dimension ) + "D"; \
-    module.def( convert##dimension.c_str(),                                    \
-        &convert_edged_curve_to_polydata< dimension > );                       \
     const auto extract##dimension =                                            \
         "extract_edged_curve_edges" + std::to_string( dimension ) + "D";       \
     module.def(                                                                \
