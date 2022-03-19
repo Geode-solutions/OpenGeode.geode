@@ -65,12 +65,14 @@ jobs:
         repository: OpenGeode
         file: '-rhel-private.tar.gz'
         token: ${{ secrets.TOKEN }}
+    - name: Libraries
+      id: libraries
+      run: |
+        echo "/opt/python/${{ matrix.config.tag }}:/opt/python/${{ matrix.config.tag }}/bin:" >> $GITHUB_PATH
+        echo "Python3_ROOT_DIR=opt/python/${{ matrix.config.tag }}" >> $GITHUB_ENV
     - name: Compile
       run: |
-        export PATH=/opt/python/${{ matrix.config.tag }}/bin:$PATH
         python -m pip install wheel
-        export Python3_ROOT_DIR=/opt/python/${{ matrix.config.tag }}
-        export Python3_INCLUDE_DIRS=/opt/python/${{ matrix.config.tag }}/include
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         npm install
