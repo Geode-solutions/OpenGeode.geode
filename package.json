@@ -30,7 +30,7 @@
     "build:pip": "node pip",
     "build:vue": "vue-cli-service build --target lib --no-clean ./src/main.js",
     "build:package": "node package",
-    "wheel": "npm run build:vtk && npm run build:cmake && npm run build:wheel",
+    "wheel": "npm run build:cmake && npm run build:wheel",
     "package": "npm run build:vue && npm run build:package",
     "lint": "vue-cli-service lint"
   },

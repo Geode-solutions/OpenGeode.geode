@@ -23,15 +23,11 @@
 
 #include <geode/opengeode/mesh/solid.h>
 
-#include <vtkPolyData.h>
+// #include <vtkPolyData.h>
 
 #include <geode/mesh/core/polyhedral_solid.h>
 
 #define PYTHON_SOLID( dimension )                                              \
-    const auto convert##dimension =                                            \
-        "convert_solid_to_polydata" + std::to_string( dimension ) + "D";       \
-    module.def(                                                                \
-        convert##dimension.c_str(), &convert_solid_to_polydata< dimension > ); \
     const auto extract##dimension =                                            \
         "extract_solid_wireframe" + std::to_string( dimension ) + "D";         \
     module.def(                                                                \

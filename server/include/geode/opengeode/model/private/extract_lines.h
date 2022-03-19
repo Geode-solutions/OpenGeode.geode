@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <vtkPolyData.h>
+// #include <vtkPolyData.h>
 
 #include <geode/geometry/point.h>
 
@@ -31,7 +31,7 @@
 
 #include <geode/model/mixin/core/line.h>
 
-#include <geode/opengeode/mesh/detail/vtk_xml.h>
+// #include <geode/opengeode/mesh/detail/vtk_xml.h>
 
 namespace geode
 {
@@ -40,47 +40,48 @@ namespace geode
         template < index_t dimension, typename Model >
         std::string export_model_lines( const Model &model )
         {
-            index_t nb_points{ 0 };
-            index_t nb_edges{ 0 };
-            for( const auto &line : model.lines() )
-            {
-                const auto &mesh = line.mesh();
-                nb_points += mesh.nb_vertices();
-                nb_edges += mesh.nb_edges();
-            }
+            // index_t nb_points{ 0 };
+            // index_t nb_edges{ 0 };
+            // for( const auto &line : model.lines() )
+            // {
+            //     const auto &mesh = line.mesh();
+            //     nb_points += mesh.nb_vertices();
+            //     nb_edges += mesh.nb_edges();
+            // }
 
-            vtkSmartPointer< vtkPoints > points = vtkPoints::New();
-            points->Allocate( nb_points );
-            vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
-            edges->AllocateExact( nb_edges, nb_edges * 2 );
-            for( const auto &line : model.lines() )
-            {
-                const auto offset = points->GetNumberOfPoints();
-                const auto &mesh = line.mesh();
-                for( const auto v : Range{ mesh.nb_vertices() } )
-                {
-                    const auto &point = mesh.point( v );
-                    Point3D vtk_point;
-                    for( const auto i : Range{ dimension } )
-                    {
-                        vtk_point.set_value( i, point.value( i ) );
-                    }
-                    points->InsertNextPoint( vtk_point.value( 0 ),
-                        vtk_point.value( 1 ), vtk_point.value( 2 ) );
-                }
-                for( const auto e : Range( mesh.nb_edges() ) )
-                {
-                    edges->InsertNextCell(
-                        { offset + mesh.edge_vertex( { e, 0 } ),
-                            offset + mesh.edge_vertex( { e, 1 } ) } );
-                }
-            }
+            // vtkSmartPointer< vtkPoints > points = vtkPoints::New();
+            // points->Allocate( nb_points );
+            // vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
+            // edges->AllocateExact( nb_edges, nb_edges * 2 );
+            // for( const auto &line : model.lines() )
+            // {
+            //     const auto offset = points->GetNumberOfPoints();
+            //     const auto &mesh = line.mesh();
+            //     for( const auto v : Range{ mesh.nb_vertices() } )
+            //     {
+            //         const auto &point = mesh.point( v );
+            //         Point3D vtk_point;
+            //         for( const auto i : Range{ dimension } )
+            //         {
+            //             vtk_point.set_value( i, point.value( i ) );
+            //         }
+            //         points->InsertNextPoint( vtk_point.value( 0 ),
+            //             vtk_point.value( 1 ), vtk_point.value( 2 ) );
+            //     }
+            //     for( const auto e : Range( mesh.nb_edges() ) )
+            //     {
+            //         edges->InsertNextCell(
+            //             { offset + mesh.edge_vertex( { e, 0 } ),
+            //                 offset + mesh.edge_vertex( { e, 1 } ) } );
+            //     }
+            // }
 
-            vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
-            polydata->SetPoints( points );
-            polydata->SetLines( edges );
+            // vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
+            // polydata->SetPoints( points );
+            // polydata->SetLines( edges );
 
-            return export_xml( polydata );
+            // return export_xml( polydata );
+            return "";
         }
     } // namespace detail
 } // namespace geode

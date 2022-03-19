@@ -23,24 +23,16 @@
 
 #include <geode/opengeode/mesh/surface.h>
 
-#include <vtkPolyData.h>
+// #include <vtkPolyData.h>
 
 #include <geode/mesh/core/surface_mesh.h>
 #include <geode/mesh/core/triangulated_surface.h>
 
 #define PYTHON_SURFACE( dimension )                                            \
-    const auto convert##dimension =                                            \
-        "convert_surface_to_polydata" + std::to_string( dimension ) + "D";     \
-    module.def( convert##dimension.c_str(),                                    \
-        &convert_surface_to_polydata< dimension > );                           \
     const auto extract##dimension =                                            \
         "extract_surface_wireframe" + std::to_string( dimension ) + "D";       \
     module.def(                                                                \
-        extract##dimension.c_str(), &extract_surface_wireframe< dimension > ); \
-    const auto extract2##dimension = "extract_triangulate_surface_wireframe"   \
-                                     + std::to_string( dimension ) + "D";      \
-    module.def( extract2##dimension.c_str(),                                   \
-        &extract_triangulate_surface_wireframe< dimension > )
+        extract##dimension.c_str(), &extract_surface_wireframe< dimension > )
 
 namespace geode
 {

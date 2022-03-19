@@ -22,6 +22,7 @@
 import vtk
 
 import opengeode
+import opengeode_io
 import opengeode_geode
 
 from geode_protocols import GeodeProtocol
@@ -30,23 +31,23 @@ from wslink import register as exportRpc
 
 def PointSetToPolydata(points, dimension):
     polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_point_set_to_polydata' + str(dimension) + 'D')(points, polydata)
+    # getattr(opengeode_geode, 'convert_point_set_to_polydata' + str(dimension) + 'D')(points, polydata)
     return polydata
 
 def EdgedCurveToPolydata(edges, dimension):
     polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_edged_curve_to_polydata' + str(dimension) + 'D')(edges, polydata)
+    # getattr(opengeode_geode, 'convert_edged_curve_to_polydata' + str(dimension) + 'D')(edges, polydata)
     return polydata
 
 def SurfaceToPolydata(surface, dimension):
     print(surface)
     polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_surface_to_polydata' + str(dimension) + 'D')(surface, polydata)
+    # getattr(opengeode_geode, 'convert_surface_to_polydata' + str(dimension) + 'D')(surface, polydata)
     return polydata
 
 def SolidToPolydata(solid, dimension):
     polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_solid_to_polydata' + str(dimension) + 'D')(solid, polydata)
+    # getattr(opengeode_geode, 'convert_solid_to_polydata' + str(dimension) + 'D')(solid, polydata)
     return polydata
 
 class OpenGeodeIOMesh(GeodeProtocol):
@@ -112,8 +113,16 @@ class OpenGeodeIOMesh(GeodeProtocol):
     @exportRpc("opengeode.load.surface.triangulated3d")
     def loadTriangulatedSurface3D(self, filename):
         surface = opengeode.load_triangulated_surface3D(filename)
-        vtk_light = opengeode_geode.extract_triangulate_surface_wireframe3D(surface)
-        vtk = SurfaceToPolydata(surface, 3)
+        opengoede.save_triangulated_surface3D("surface.vtp")
+        reader = vtk.vtkXMLPolyDataReader()
+        reader.SetFileName("surface.vtp")
+        reader.Update()
+        vtk = reader.GetOutput()
+        edges = opengeode_geode.extract_surface_wireframe3D(surface)
+        opengoede.save_edged_curve3D("edges.vtp")
+        file = open("edges.vtp",mode='r')
+        vtk_light = file.read()
+        # vtk = SurfaceToPolydata(surface, 3)
         return self.registerObjectFromFile("TriangulatedSurface3D",filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.solid.polyhedral3d")
