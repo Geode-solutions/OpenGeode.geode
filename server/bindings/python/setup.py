@@ -1,4 +1,4 @@
-# Copyright (c) 2019 - 2021 Geode-solutions
+# Copyright (c) 2019 - 2022 Geode-solutions
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the 'Software'), to deal
@@ -38,7 +38,7 @@ setup(
     packages=['opengeode_geode'],
     package_data={
         '': ['*.so', '*.dll', '*.pyd', '*.dylib']
-    },   
+    },
     install_requires=install_requires,
     license='MIT',
     classifiers=[
