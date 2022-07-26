@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019 - 2021 Geode-solutions
+# Copyright (c) 2019 - 2022 Geode-solutions
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -29,26 +29,33 @@ from geode_protocols import GeodeProtocol
 
 from wslink import register as exportRpc
 
+
 def cornersToPolydata(corners, dimension):
     print("corners")
     vtk = {}
     for corner in corners:
-        vtk[corner.id().string()] = mesh.PointSetToPolydata(corner.mesh(), dimension)
+        vtk[corner.id().string()] = mesh.PointSetToPolydata(
+            corner.mesh(), dimension)
     return vtk
+
 
 def linesToPolydata(lines, dimension):
     print("lines")
     vtk = {}
     for line in lines:
-        vtk[line.id().string()] = mesh.EdgedCurveToPolydata(line.mesh(), dimension)
+        vtk[line.id().string()] = mesh.EdgedCurveToPolydata(
+            line.mesh(), dimension)
     return vtk
+
 
 def surfacesToPolydata(surfaces, dimension):
     print("surfaces")
     vtk = {}
     for surface in surfaces:
-        vtk[surface.id().string()] = mesh.SurfaceToPolydata(surface.mesh(), dimension)
+        vtk[surface.id().string()] = mesh.SurfaceToPolydata(
+            surface.mesh(), dimension)
     return vtk
+
 
 def blocksToPolydata(blocks, dimension):
     print("blocks")
@@ -56,6 +63,7 @@ def blocksToPolydata(blocks, dimension):
     for block in blocks:
         vtk[block.id().string()] = mesh.SolidToPolydata(block.mesh(), dimension)
     return vtk
+
 
 def sectionToVTK(section):
     vtk = {
@@ -65,6 +73,7 @@ def sectionToVTK(section):
     }
     vtk_light = opengeode_geode.export_section_lines(section)
     return vtk, vtk_light
+
 
 def brepToVTK(brep):
     vtk = {
@@ -82,13 +91,13 @@ class OpenGeodeIOModel(GeodeProtocol):
     def loadSection(self, filename):
         section = opengeode.load_section(filename)
         vtk, vtk_light = sectionToVTK(section)
-        return self.registerObjectFromFile("Section",filename, section, vtk, vtk_light)
+        return self.registerObjectFromFile("Section", filename, section, vtk, vtk_light)
 
     @exportRpc("opengeode.load.brep")
     def loadBRep(self, filename):
         brep = opengeode.load_brep(filename)
         vtk, vtk_light = brepToVTK(brep)
-        return self.registerObjectFromFile("BRep",filename, brep, vtk, vtk_light)
+        return self.registerObjectFromFile("BRep", filename, brep, vtk, vtk_light)
 
     @exportRpc("opengeode.model.mesh.visibility")
     def setModelMeshVisibility(self, id, object_type, visibility):

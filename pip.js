@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - 2021 Geode-solutions
+ * Copyright (C) 2019 - 2022 Geode-solutions
  *
  * This file is a part of Geode library.
  *
