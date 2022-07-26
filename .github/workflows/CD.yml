@@ -40,6 +40,7 @@ jobs:
         echo ::set-output name=version::$version
         npm config set cmake_CMAKE_PACKAGE_VERSION $version
         npm install
+        npm run package -- $version-python${{ matrix.config.python }} linux 
         npm run wheel
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-manylinux2014_x86_64.whl
       env:
@@ -50,6 +51,10 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
         packages_dir: "build/wheel/dist/"
+    - name: Upload
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "opengeode-${{ steps.package.outputs.version }}-linux.zip"
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
       uses: 8398a7/action-slack@v2
@@ -59,7 +64,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}  
 
-  build-windows-wheel:
+  build-windows:
     runs-on: windows-2019
     strategy:
       matrix:
@@ -96,6 +101,7 @@ jobs:
         echo "::set-output name=version::$version"
         npm config set cmake_CMAKE_PACKAGE_VERSION $version
         npm install
+        npm run package -- $version-python${{ matrix.config.python }} win64 
         npm run wheel
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
       env:
@@ -104,6 +110,12 @@ jobs:
       run: |
         pip install twine
         twine upload -u __token__ -p ${{ secrets.PYPI_TOKEN }} build/wheel/dist/*
+    - name: Upload
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "opengeode-${{ steps.package.outputs.version }}-win64.zip"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
       uses: 8398a7/action-slack@v2
