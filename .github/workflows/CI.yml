@@ -36,7 +36,6 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - name: Compile
       run: |
-        export PATH=/opt/python/${{ matrix.config.tag }}/bin:$PATH
         python -m pip install wheel
         npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
         npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
