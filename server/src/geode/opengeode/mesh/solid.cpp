@@ -26,6 +26,9 @@
 #include <vtkPolyData.h>
 #include <vtkPolygon.h>
 
+#include <absl/algorithm/container.h>
+#include <absl/container/flat_hash_map.h>
+
 #include <geode/mesh/core/solid_edges.h>
 #include <geode/mesh/core/solid_facets.h>
 #include <geode/mesh/core/solid_mesh.h>
