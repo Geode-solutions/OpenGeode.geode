@@ -42,10 +42,7 @@ jobs:
         npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         npm install
         npm run package -- version linux
-        npm run build:vtk 
-        ls node_modules/@geode/geode-tools/build/vtk/install
-        cd node_modules/@geode/geode-tools/build/vtk/src/vtk-build
-        grep -rn VTK_INSTALL_SDK .
+        npm run wheel
       env:
         PYTHON_EXE: /opt/python/${{ matrix.config.tag }}/bin/python
     - name: Notify slack
