@@ -54,7 +54,7 @@ jobs:
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
-        files: "opengeode-${{ steps.package.outputs.version }}-linux.zip"
+        files: "opengeode-${{ steps.package.outputs.version }}-python${{ matrix.config.python }}-linux.zip"
     - name: Notify slack
       if: failure() && github.ref == 'refs/heads/master'
       uses: 8398a7/action-slack@v2
@@ -113,7 +113,7 @@ jobs:
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
-        files: "opengeode-${{ steps.package.outputs.version }}-win64.zip"
+        files: "opengeode-${{ steps.package.outputs.version }}-python${{ matrix.config.python }}-win64.zip"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Notify slack
