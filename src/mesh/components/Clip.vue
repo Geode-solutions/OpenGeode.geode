@@ -24,7 +24,7 @@ import vtkImplicitPlaneWidget from "vtk.js/Sources/Widgets/Widgets3D/ImplicitPla
 import vtkPlane from "vtk.js/Sources/Common/DataModel/Plane";
 
 export default {
-  name: "Clip",
+  name: "ClipPlane",
   components: {
     ContextualItem,
   },
