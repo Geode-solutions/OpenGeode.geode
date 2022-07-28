@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs">
-    <template #tooltip>
-      Corners size
-    </template>
+    <template #tooltip> Corners size </template>
 
     <template #btn="{ btnStyle }">
       <logo-corners-size
@@ -35,24 +33,24 @@ export default {
   name: "CornersSize",
   components: {
     ContextualItem,
-    LogoCornersSize
+    LogoCornersSize,
   },
   data: () => ({
-    size: 0
+    size: 0,
   }),
   props: {
-    item: Object
+    item: Object,
   },
   watch: {
-    size: function(value) {
+    size: function (value) {
       this.$store.dispatch("model/style/setCornersSize", {
         id: this.item.id,
-        value
+        value,
       });
-    }
+    },
   },
   mounted() {
     this.size = this.item.style.corners.size;
-  }
+  },
 };
 </script>

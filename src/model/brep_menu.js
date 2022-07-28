@@ -30,37 +30,37 @@ import ToggleSurfaces from "./components/ToggleSurfaces";
 import SurfacesMesh from "./components/SurfacesMesh";
 import SurfacesColor from "./components/SurfacesColor";
 
-export default function(store, type = "BRep") {
+export default function (store, type = "BRep") {
   store.commit("ui/registerContextualItem", {
     type,
-    component: ToggleCorners
+    component: ToggleCorners,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: CornersSize
+    component: CornersSize,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: CornersColor
+    component: CornersColor,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: ToggleLines
+    component: ToggleLines,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: LinesColor
+    component: LinesColor,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: ToggleSurfaces
+    component: ToggleSurfaces,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: SurfacesMesh
+    component: SurfacesMesh,
   });
   store.commit("ui/registerContextualItem", {
     type,
-    component: SurfacesColor
+    component: SurfacesColor,
   });
 }

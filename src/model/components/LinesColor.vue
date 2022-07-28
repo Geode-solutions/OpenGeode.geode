@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs">
-    <template #tooltip>
-      Lines color
-    </template>
+    <template #tooltip> Lines color </template>
 
     <template #btn="{ btnStyle }">
       <logo-lines-color
@@ -30,30 +28,30 @@ export default {
   name: "LinesColor",
   components: {
     ContextualItem,
-    LogoLinesColor
+    LogoLinesColor,
   },
   data: () => ({
-    color: { r: 0, g: 0, b: 0 }
+    color: { r: 0, g: 0, b: 0 },
   }),
   props: {
-    item: Object
+    item: Object,
   },
   watch: {
-    color: function(value) {
+    color: function (value) {
       const newColor = [value.r / 255, value.g / 255, value.b / 255];
       this.$store.dispatch("model/style/setLinesColor", {
         id: this.item.id,
-        value: newColor
+        value: newColor,
       });
-    }
+    },
   },
   mounted() {
     const color = this.item.style.lines.color;
     this.color = {
       r: color[0] * 255,
       g: color[1] * 255,
-      b: color[2] * 255
+      b: color[2] * 255,
     };
-  }
+  },
 };
 </script>

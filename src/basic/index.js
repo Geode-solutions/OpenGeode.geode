@@ -23,9 +23,9 @@
 
 const basicStore = {
   namespaced: true,
-  state: {}
+  state: {},
 };
 
-export default function(store) {
+export default function (store) {
   store.registerModule("basic", basicStore);
 }

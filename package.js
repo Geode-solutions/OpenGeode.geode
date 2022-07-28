@@ -37,7 +37,7 @@ const archive = archiver("zip");
 
 // listen for all archive data to be written
 // 'close' event is fired only when a file descriptor is involved
-output.on("close", function() {
+output.on("close", function () {
   console.log(archive.pointer() + " total bytes");
   console.log(
     "archiver has been finalized and the output file descriptor has closed."
@@ -47,12 +47,12 @@ output.on("close", function() {
 // This event is fired when the data source is drained no matter what was the data source.
 // It is not part of this library but rather from the NodeJS Stream API.
 // @see: https://nodejs.org/api/stream.html#stream_event_end
-output.on("end", function() {
+output.on("end", function () {
   console.log("Data has been drained");
 });
 
 // good practice to catch warnings (ie stat failures and other non-blocking errors)
-archive.on("warning", function(err) {
+archive.on("warning", function (err) {
   if (err.code === "ENOENT") {
     // log warning
   } else {
@@ -62,7 +62,7 @@ archive.on("warning", function(err) {
 });
 
 // good practice to catch this error explicitly
-archive.on("error", function(err) {
+archive.on("error", function (err) {
   throw err;
 });
 
@@ -71,17 +71,17 @@ archive.pipe(output);
 
 const frontFile = path.join(__dirname, "dist", "opengeode.umd.min.js");
 archive.append(fs.createReadStream(frontFile), {
-  name: path.join(dir, "index.js")
+  name: path.join(dir, "index.js"),
 });
 const configFile =
   process.platform === "win32" ? "config.win.json" : "config.unix.json";
 archive.append(fs.createReadStream(configFile), {
-  name: path.join(dir, "config.json")
+  name: path.join(dir, "config.json"),
 });
 
 archive.directory("server/protocols", path.join(dir, "server"));
 archive.append(fs.createReadStream("server/requirements.txt"), {
-  name: path.join(dir, "server", "requirements.txt")
+  name: path.join(dir, "server", "requirements.txt"),
 });
 
 for (let i = 4; i < process.argv.length; i++) {

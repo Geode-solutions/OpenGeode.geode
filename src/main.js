@@ -25,7 +25,7 @@ import basic from "./basic";
 import mesh from "./mesh";
 import model from "./model";
 
-export default function(store) {
+export default function (store) {
   basic(store);
   mesh(store);
   model(store);

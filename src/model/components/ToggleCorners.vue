@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs" toggle :toggle-init="toggle">
-    <template #tooltip>
-      Toggle Corners
-    </template>
+    <template #tooltip> Toggle Corners </template>
 
     <template #btn="{ btnStyle }">
       <logo-corners
@@ -20,23 +18,23 @@ export default {
   name: "ToggleCorners",
   components: {
     ContextualItem,
-    LogoCorners
+    LogoCorners,
   },
   data: () => ({
-    toggle: false
+    toggle: false,
   }),
   props: {
-    item: Object
+    item: Object,
   },
   mounted() {
     this.toggle = this.item.style.corners.visible;
-    this.$on("toggle-change", value => {
+    this.$on("toggle-change", (value) => {
       this.$store.dispatch("model/style/setCornersVisibility", {
         id: this.item.id,
-        value
+        value,
       });
       this.$emit("update");
     });
-  }
+  },
 };
 </script>

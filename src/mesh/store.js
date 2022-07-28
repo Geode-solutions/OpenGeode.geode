@@ -29,10 +29,10 @@ export default {
         "network/call",
         {
           command: "opengeode.create.point",
-          args: [point.name, point.x, point.y, point.z]
+          args: [point.name, point.x, point.y, point.z],
         },
         { root: true }
-      ).then(object => {
+      ).then((object) => {
         let pointSetStyle = {
           style: {
             size: 1,
@@ -40,79 +40,79 @@ export default {
               type: "Constant",
               value: [1, 1, 1],
               vertexAttributeName: "",
-              polygonAttributeName: ""
-            }
-          }
+              polygonAttributeName: "",
+            },
+          },
         };
         dispatch("addObject", Object.assign(object, pointSetStyle), {
-          root: true
+          root: true,
         });
       });
     },
     loadPointSet2D({ dispatch }, filename) {
       dispatch("private/loadPointSet", {
         command: "opengeode.load.point_set2d",
-        filename
+        filename,
       });
     },
     loadPointSet3D({ dispatch }, filename) {
       dispatch("private/loadPointSet", {
         command: "opengeode.load.point_set3d",
-        filename
+        filename,
       });
     },
     loadEdgedCurve2D({ dispatch }, filename) {
       dispatch("private/loadEdgedCurve", {
         command: "opengeode.load.edged_curve2d",
-        filename
+        filename,
       });
     },
     loadEdgedCurve3D({ dispatch }, filename) {
       dispatch("private/loadEdgedCurve", {
         command: "opengeode.load.edged_curve3d",
-        filename
+        filename,
       });
     },
     loadPolygonalSurface2D({ dispatch }, filename) {
       dispatch("private/loadSurface", {
         command: "opengeode.load.surface.polygonal2d",
-        filename
+        filename,
       });
     },
     loadPolygonalSurface3D({ dispatch }, filename) {
       dispatch("private/loadSurface", {
         command: "opengeode.load.surface.polygonal3d",
-        filename
+        filename,
       });
     },
     loadTriangulatedSurface2D({ dispatch }, filename) {
       dispatch("private/loadSurface", {
         command: "opengeode.load.surface.triangulated2d",
-        filename
+        filename,
       });
     },
     loadTriangulatedSurface3D({ dispatch }, filename) {
       dispatch("private/loadSurface", {
         command: "opengeode.load.surface.triangulated3d",
-        filename
+        filename,
       });
     },
     loadPolyhedralSolid({ dispatch }, filename) {
       dispatch("private/loadObject", {
         command: "opengeode.load.solid.polyhedral3d",
-        filename
-      }).then(object => {
+        filename,
+      }).then((object) => {
         dispatch("addObject", object, { root: true });
       });
     },
     loadTetrahedralSolid({ dispatch }, filename) {
       dispatch("private/loadObject", {
         command: "opengeode.load.solid.tetrahedral3d",
-        filename
-      }).then(object => {
+        filename,
+      }).then((object) => {
         dispatch("addObject", object, { root: true });
       });
-    }
+    },
   },
   modules: {
     private: {
@@ -123,7 +123,7 @@ export default {
             "network/call",
             {
               command,
-              args: [filename]
+              args: [filename],
             },
             { root: true }
           );
@@ -131,8 +131,8 @@ export default {
         loadPointSet({ dispatch }, { command, filename }) {
           dispatch("loadObject", {
             command,
-            filename
-          }).then(object => {
+            filename,
+          }).then((object) => {
             let pointSetStyle = {
               style: {
                 size: 1,
@@ -140,20 +140,20 @@ export default {
                   type: "Constant",
                   value: [1, 1, 1],
                   vertexAttributeName: "",
-                  polygonAttributeName: ""
-                }
-              }
+                  polygonAttributeName: "",
+                },
+              },
             };
             dispatch("addObject", Object.assign(object, pointSetStyle), {
-              root: true
+              root: true,
             });
           });
         },
         loadEdgedCurve({ dispatch }, { command, filename }) {
           dispatch("loadObject", {
             command,
-            filename
-          }).then(object => {
+            filename,
+          }).then((object) => {
             let edgedCurveStyle = {
               style: {
                 size: 1,
@@ -161,7 +161,7 @@ export default {
                   type: "Constant",
                   value: [1, 1, 1],
                   vertexAttributeName: "",
-                  polygonAttributeName: ""
+                  polygonAttributeName: "",
                 },
                 points: {
                   size: 1,
@@ -169,22 +169,22 @@ export default {
                     type: "Constant",
                     value: [1, 1, 1],
                     vertexAttributeName: "",
-                    polygonAttributeName: ""
-                  }
-                }
-              }
+                    polygonAttributeName: "",
+                  },
+                },
+              },
             };
 
             dispatch("addObject", Object.assign(object, edgedCurveStyle), {
-              root: true
+              root: true,
             });
           });
         },
         loadSurface({ dispatch }, { command, filename }) {
           dispatch("loadObject", {
             command,
-            filename
-          }).then(object => {
+            filename,
+          }).then((object) => {
             let surfaceStyle = {
               style: {
                 mesh: { visible: false },
@@ -192,16 +192,16 @@ export default {
                   type: "Constant",
                   value: [1, 1, 1],
                   vertexAttributeName: "",
-                  polygonAttributeName: ""
-                }
-              }
+                  polygonAttributeName: "",
+                },
+              },
             };
             dispatch("addObject", Object.assign(object, surfaceStyle), {
-              root: true
+              root: true,
             });
           });
-        }
-      }
+        },
+      },
     },
     style: {
       namespaced: true,
@@ -212,7 +212,7 @@ export default {
             {
               id,
               style: ["size"],
-              value
+              value,
             },
             { root: true }
           );
@@ -220,7 +220,7 @@ export default {
             "network/call",
             {
               command: "opengeode.point.size",
-              args: [id, value]
+              args: [id, value],
             },
             { root: true }
           );
@@ -231,7 +231,7 @@ export default {
             {
               id,
               style: ["mesh", "visible"],
-              value
+              value,
             },
             { root: true }
           );
@@ -239,7 +239,7 @@ export default {
             "network/call",
             {
               command: "opengeode.edge.visibility",
-              args: [id, value]
+              args: [id, value],
             },
             { root: true }
           );
@@ -251,7 +251,7 @@ export default {
             {
               id,
               style: ["color", "value"],
-              value: color
+              value: color,
             },
             { root: true }
           );
@@ -259,7 +259,7 @@ export default {
             "network/call",
             {
               command: "opengeode.color",
-              args: [id, color]
+              args: [id, color],
             },
             { root: true }
           );
@@ -270,7 +270,7 @@ export default {
             {
               id,
               style: ["color", location + "AttributeName"],
-              value: attribute
+              value: attribute,
             },
             { root: true }
           );
@@ -278,12 +278,12 @@ export default {
             "network/call",
             {
               command: "opengeode.attribute." + location,
-              args: [id, attribute]
+              args: [id, attribute],
             },
             { root: true }
           );
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

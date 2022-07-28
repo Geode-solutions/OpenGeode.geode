@@ -46,7 +46,7 @@ import SurfaceColor from "./components/SurfaceColor";
 import SurfaceMesh from "./components/SurfaceMesh";
 import Store from "./store";
 
-export default function(store) {
+export default function (store) {
   store.registerModule("mesh", Store);
   store.dispatch("registerObjectType", "PointSet2D");
   store.dispatch("registerObjectType", "PointSet3D");
@@ -62,129 +62,129 @@ export default function(store) {
     parent: "import",
     name: "mesh",
     component: LogoMesh,
-    tooltip: "Import mesh"
+    tooltip: "Import mesh",
   });
   store.commit("ui/registerInputItem", {
     parent: "mesh",
     name: "point set",
     component: LogoPointSet,
-    tooltip: "Import point set"
+    tooltip: "Import point set",
   });
   store.commit("ui/registerInputItem", {
     parent: "point set",
     name: "2D",
     component: LogoPointSet2D,
     tooltip: "Import point set 2D",
-    action: "mesh/loadPointSet2D"
+    action: "mesh/loadPointSet2D",
   });
   store.commit("ui/registerInputItem", {
     parent: "point set",
     name: "3D",
     component: LogoPointSet3D,
     tooltip: "Import point set 3D",
-    action: "mesh/loadPointSet3D"
+    action: "mesh/loadPointSet3D",
   });
   store.commit("ui/registerInputItem", {
     parent: "mesh",
     name: "curve",
     component: LogoEdgedCurve,
-    tooltip: "Import curve"
+    tooltip: "Import curve",
   });
   store.commit("ui/registerInputItem", {
     parent: "curve",
     name: "2D",
     component: LogoEdgedCurve2D,
     tooltip: "Import curve 2D",
-    action: "mesh/loadEdgedCurve2D"
+    action: "mesh/loadEdgedCurve2D",
   });
   store.commit("ui/registerInputItem", {
     parent: "curve",
     name: "3D",
     component: LogoEdgedCurve3D,
     tooltip: "Import curve 3D",
-    action: "mesh/loadEdgedCurve3D"
+    action: "mesh/loadEdgedCurve3D",
   });
   store.commit("ui/registerInputItem", {
     parent: "mesh",
     name: "surface",
     component: LogoSurface,
-    tooltip: "Import surface"
+    tooltip: "Import surface",
   });
   store.commit("ui/registerInputItem", {
     parent: "surface",
     name: "triangulated surface",
     component: LogoTriangulatedSurface,
-    tooltip: "Import triangulated surface"
+    tooltip: "Import triangulated surface",
   });
   store.commit("ui/registerInputItem", {
     parent: "triangulated surface",
     name: "2D",
     component: LogoTriangulatedSurface2D,
     tooltip: "Import triangulated surface 2D",
-    action: "mesh/loadTriangulatedSurface2D"
+    action: "mesh/loadTriangulatedSurface2D",
   });
   store.commit("ui/registerInputItem", {
     parent: "triangulated surface",
     name: "3D",
     component: LogoTriangulatedSurface3D,
     tooltip: "Import triangulated surface 3D",
-    action: "mesh/loadTriangulatedSurface3D"
+    action: "mesh/loadTriangulatedSurface3D",
   });
   store.commit("ui/registerInputItem", {
     parent: "surface",
     name: "polygonal surface",
     component: LogoPolygonalSurface,
-    tooltip: "Import polygonal surface"
+    tooltip: "Import polygonal surface",
   });
   store.commit("ui/registerInputItem", {
     parent: "polygonal surface",
     name: "2D",
     component: LogoPolygonalSurface2D,
     tooltip: "Import polygonal surface 2D",
-    action: "mesh/loadPolygonalSurface2D"
+    action: "mesh/loadPolygonalSurface2D",
   });
   store.commit("ui/registerInputItem", {
     parent: "polygonal surface",
     name: "3D",
     component: LogoPolygonalSurface3D,
     tooltip: "Import polygonal surface 3D",
-    action: "mesh/loadPolygonalSurface3D"
+    action: "mesh/loadPolygonalSurface3D",
   });
   store.commit("ui/registerInputItem", {
     parent: "mesh",
     name: "solid",
     component: LogoSolid,
-    tooltip: "Import solid"
+    tooltip: "Import solid",
   });
   store.commit("ui/registerInputItem", {
     parent: "solid",
     name: "tetrahedral solid",
     component: LogoTetrahedralSolid,
     tooltip: "Import tetrahedral solid",
-    action: "mesh/loadTetrahedralSolid"
+    action: "mesh/loadTetrahedralSolid",
   });
   store.commit("ui/registerInputItem", {
     parent: "solid",
     name: "polyhedral solid",
     component: LogoPolyhedralSolid,
     tooltip: "Import polyhedral solid",
-    action: "mesh/loadPolyhedralSolid"
+    action: "mesh/loadPolyhedralSolid",
   });
   store.commit("ui/registerContextualItem", {
     type: "PointSet2D",
-    component: PointsSize
+    component: PointsSize,
   });
   store.commit("ui/registerContextualItem", {
     type: "PointSet3D",
-    component: PointsSize
+    component: PointsSize,
   });
   store.commit("ui/registerContextualItem", {
     type: "PointSet2D",
-    component: PointsColor
+    component: PointsColor,
   });
   store.commit("ui/registerContextualItem", {
     type: "PointSet3D",
-    component: PointsColor
+    component: PointsColor,
   });
   // store.commit("ui/registerContextualItem", {
   //   type: "EdgedCurve2D",
@@ -204,34 +204,34 @@ export default function(store) {
   // });
   store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface2D",
-    component: SurfaceMesh
+    component: SurfaceMesh,
   });
   store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface3D",
-    component: SurfaceMesh
+    component: SurfaceMesh,
   });
   store.commit("ui/registerContextualItem", {
     type: "PolygonalSurface2D",
-    component: SurfaceMesh
+    component: SurfaceMesh,
   });
   store.commit("ui/registerContextualItem", {
     type: "PolygonalSurface3D",
-    component: SurfaceMesh
+    component: SurfaceMesh,
   });
   store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface2D",
-    component: SurfaceColor
+    component: SurfaceColor,
   });
   store.commit("ui/registerContextualItem", {
     type: "TriangulatedSurface3D",
-    component: SurfaceColor
+    component: SurfaceColor,
   });
   store.commit("ui/registerContextualItem", {
     type: "PolygonalSurface2D",
-    component: SurfaceColor
+    component: SurfaceColor,
   });
   store.commit("ui/registerContextualItem", {
     type: "PolygonalSurface3D",
-    component: SurfaceColor
+    component: SurfaceColor,
   });
 }

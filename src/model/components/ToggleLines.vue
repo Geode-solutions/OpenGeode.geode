@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs" toggle :toggle-init="toggle">
-    <template #tooltip>
-      Toggle Lines
-    </template>
+    <template #tooltip> Toggle Lines </template>
 
     <template #btn="{ btnStyle }">
       <logo-lines :style="{ height: btnStyle.height, width: btnStyle.width }" />
@@ -18,23 +16,23 @@ export default {
   name: "ToggleLines",
   components: {
     ContextualItem,
-    LogoLines
+    LogoLines,
   },
   data: () => ({
-    toggle: false
+    toggle: false,
   }),
   props: {
-    item: Object
+    item: Object,
   },
   mounted() {
     this.toggle = this.item.style.lines.visible;
-    this.$on("toggle-change", value => {
+    this.$on("toggle-change", (value) => {
       this.$store.dispatch("model/style/setLinesVisibility", {
         id: this.item.id,
-        value
+        value,
       });
       this.$emit("update");
     });
-  }
+  },
 };
 </script>

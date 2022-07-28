@@ -1,13 +1,9 @@
 <template>
   <contextual-item v-bind="$attrs">
-    <template #tooltip>
-      Clip
-    </template>
+    <template #tooltip> Clip </template>
 
     <template #btn>
-      <v-icon>
-        fas fa-expand
-      </v-icon>
+      <v-icon> fas fa-expand </v-icon>
     </template>
 
     <template #option>
@@ -30,35 +26,35 @@ import vtkPlane from "vtk.js/Sources/Common/DataModel/Plane";
 export default {
   name: "Clip",
   components: {
-    ContextualItem
+    ContextualItem,
   },
   data: () => ({
     clip: false,
     display: true,
-    fixed: false
+    fixed: false,
   }),
   props: {
     item: Object,
-    views: Array
+    views: Array,
   },
   watch: {
-    clip: function(value) {
-      this.views.forEach(v => {
+    clip: function (value) {
+      this.views.forEach((v) => {
         const widgetManager = v.getReferenceByName("widgetManager");
-        v.getRepresentations().forEach(r => {
+        v.getRepresentations().forEach((r) => {
           if (r.getInput().getDataset() === this.item.vtk) {
             this.item.style.clipper.widget.placeWidget(
               this.item.vtk.getBounds()
             );
             this.item.style.clipper.widget.setPlaceFactor(3);
-            this.item.style.clipper.widget.onWidgetChange(state => {
+            this.item.style.clipper.widget.onWidgetChange((state) => {
               const mapper = r.getMapper();
               mapper.removeAllClippingPlanes();
               if (!value) {
                 mapper.addClippingPlane(
                   vtkPlane.newInstance({
                     origin: state.getOrigin(),
-                    normal: state.getNormal()
+                    normal: state.getNormal(),
                   })
                 );
               }
@@ -71,11 +67,11 @@ export default {
       this.$store.commit("setObjectStyle", {
         id: this.item.id,
         style: ["clipper", "clip"],
-        value
+        value,
       });
     },
-    display: function(value) {
-      this.views.forEach(v => {
+    display: function (value) {
+      this.views.forEach((v) => {
         const widgetManager = v.getReferenceByName("widgetManager");
         if (value) widgetManager.addWidget(this.item.style.clipper.widget);
         else widgetManager.removeWidget(this.item.style.clipper.widget);
@@ -84,11 +80,11 @@ export default {
       this.$store.commit("setObjectStyle", {
         id: this.item.id,
         style: ["clipper", "display"],
-        value
+        value,
       });
     },
-    fixed: function(value) {
-      this.views.forEach(v => {
+    fixed: function (value) {
+      this.views.forEach((v) => {
         const widgetManager = v.getReferenceByName("widgetManager");
         if (value) widgetManager.disablePicking();
         else widgetManager.enablePicking();
@@ -96,14 +92,14 @@ export default {
       this.$store.commit("setObjectStyle", {
         id: this.item.id,
         style: ["clipper", "fixed"],
-        value
+        value,
       });
-    }
+    },
   },
   mounted() {
     this.clip = this.item.style.clipper.clip;
     this.display = this.item.style.clipper.display;
     this.fixed = this.item.style.clipper.fixed;
-  }
+  },
 };
 </script>

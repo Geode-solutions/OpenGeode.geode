@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs">
-    <template #tooltip>
-      Color
-    </template>
+    <template #tooltip> Color </template>
 
     <template #btn="{ btnStyle }">
       <logo-surface-color
@@ -54,7 +52,7 @@ export default {
   name: "SurfacesColor",
   components: {
     ContextualItem,
-    LogoSurfaceColor
+    LogoSurfaceColor,
   },
   data: () => ({
     color: { r: 0, g: 0, b: 0 },
@@ -63,10 +61,10 @@ export default {
     vertexAttributeName: "",
     polygonAttributeName: "",
     vertexAttributes: [],
-    polygonAttributes: []
+    polygonAttributes: [],
   }),
   props: {
-    item: Object
+    item: Object,
   },
   created() {
     console.log("GET ATTRIBUTES NAMES");
@@ -79,44 +77,44 @@ export default {
     getAttributeNames() {
       this.call({
         command: "opengeode.attribute.vertex.names",
-        args: [this.item.id]
-      }).then(names => (this.vertexAttributes = names));
+        args: [this.item.id],
+      }).then((names) => (this.vertexAttributes = names));
       this.call({
         command: "opengeode.attribute.polygon.names",
-        args: [this.item.id]
-      }).then(names => (this.polygonAttributes = names));
-    }
+        args: [this.item.id],
+      }).then((names) => (this.polygonAttributes = names));
+    },
   },
   watch: {
-    select: function(value) {
+    select: function (value) {
       this.$store.commit("setObjectStyle", {
         id: this.item.id,
         style: ["color", "type"],
-        value
+        value,
       });
     },
-    color: function(value) {
+    color: function (value) {
       this.$store.dispatch("mesh/style/setColor", {
         id: this.item.id,
-        color: [value.r / 255, value.g / 255, value.b / 255]
+        color: [value.r / 255, value.g / 255, value.b / 255],
       });
     },
-    vertexAttributeName: function(value) {
+    vertexAttributeName: function (value) {
       if (!value) return;
       this.$store.dispatch("mesh/style/setAttributeColor", {
         id: this.item.id,
         attribute: value,
-        location: "vertex"
+        location: "vertex",
       });
     },
-    polygonAttributeName: function(value) {
+    polygonAttributeName: function (value) {
       if (!value) return;
       this.$store.dispatch("mesh/style/setAttributeColor", {
         id: this.item.id,
         attribute: value,
-        location: "polygon"
+        location: "polygon",
       });
-    }
+    },
   },
   mounted() {
     this.select = this.item.style.color.type;
@@ -126,8 +124,8 @@ export default {
     this.color = {
       r: color[0] * 255,
       g: color[1] * 255,
-      b: color[2] * 255
+      b: color[2] * 255,
     };
-  }
+  },
 };
 </script>

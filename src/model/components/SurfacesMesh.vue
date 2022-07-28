@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs" toggle :toggle-init="toggle">
-    <template #tooltip>
-      Toggle Surfaces mesh
-    </template>
+    <template #tooltip> Toggle Surfaces mesh </template>
 
     <template #btn="{ btnStyle }">
       <logo-surfaces-mesh
@@ -20,22 +18,22 @@ export default {
   name: "SurfacesMesh",
   components: {
     ContextualItem,
-    LogoSurfacesMesh
+    LogoSurfacesMesh,
   },
   data: () => ({
-    toggle: false
+    toggle: false,
   }),
   props: {
-    item: Object
+    item: Object,
   },
   mounted() {
     this.toggle = this.item.style.surfaces.mesh.visible;
-    this.$on("toggle-change", value => {
+    this.$on("toggle-change", (value) => {
       this.$store.dispatch("model/style/setSurfacesMeshVisibility", {
         id: this.item.id,
-        value
+        value,
       });
     });
-  }
+  },
 };
 </script>

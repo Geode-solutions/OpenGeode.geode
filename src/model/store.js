@@ -28,8 +28,8 @@ export default {
     loadSection({ state, dispatch }, filename) {
       dispatch("private/loadObject", {
         command: "opengeode.load.section",
-        filename
-      }).then(object => {
+        filename,
+      }).then((object) => {
         let sectionStyle = {
           style: {
             corners: { visible: true, size: 1, color: [1, 1, 1] },
@@ -37,21 +37,21 @@ export default {
             surfaces: {
               visible: true,
               color: [1, 1, 1],
-              mesh: { visible: false }
+              mesh: { visible: false },
             },
-            blocks: {}
-          }
+            blocks: {},
+          },
         };
         dispatch("addObject", Object.assign(object, sectionStyle), {
-          root: true
+          root: true,
         });
       });
     },
     loadBRep({ state, dispatch }, filename) {
       dispatch("private/loadObject", {
         command: "opengeode.load.brep",
-        filename
-      }).then(object => {
+        filename,
+      }).then((object) => {
         let brepStyle = {
           style: {
             corners: { visible: true, size: 1, color: [1, 1, 1] },
@@ -59,14 +59,14 @@ export default {
             surfaces: {
               visible: true,
               color: [1, 1, 1],
-              mesh: { visible: false }
+              mesh: { visible: false },
             },
-            blocks: {}
-          }
+            blocks: {},
+          },
         };
         dispatch("addObject", Object.assign(object, brepStyle), { root: true });
       });
-    }
+    },
   },
   modules: {
     private: {
@@ -77,7 +77,7 @@ export default {
             "network/call",
             {
               command,
-              args: [filename]
+              args: [filename],
             },
             { root: true }
           );
@@ -91,7 +91,7 @@ export default {
             {
               id,
               style: [objectType, "visible"],
-              value
+              value,
             },
             { root: true }
           );
@@ -99,7 +99,7 @@ export default {
             "network/call",
             {
               command: "opengeode.model.components.visibility",
-              args: [id, objectType, value]
+              args: [id, objectType, value],
             },
             { root: true }
           );
@@ -113,7 +113,7 @@ export default {
             {
               id,
               style: [objectType, "color"],
-              value
+              value,
             },
             { root: true }
           );
@@ -121,12 +121,12 @@ export default {
             "network/call",
             {
               command: "opengeode.model.components.color",
-              args: [id, objectType, value]
+              args: [id, objectType, value],
             },
             { root: true }
           );
-        }
-      }
+        },
+      },
     },
     style: {
       namespaced: true,
@@ -137,7 +137,7 @@ export default {
             {
               id,
               style: ["surfaces", "mesh", "visible"],
-              value
+              value,
             },
             { root: true }
           );
@@ -145,7 +145,7 @@ export default {
             "network/call",
             {
               command: "opengeode.model.mesh.visibility",
-              args: [id, "surfaces", value]
+              args: [id, "surfaces", value],
             },
             { root: true }
           );
@@ -160,7 +160,7 @@ export default {
             "ui/setContextualItemVisibility",
             {
               name: "CornersSize",
-              value
+              value,
             },
             { root: true }
           );
@@ -168,7 +168,7 @@ export default {
             "ui/setContextualItemVisibility",
             {
               name: "CornersColor",
-              value
+              value,
             },
             { root: true }
           );
@@ -186,7 +186,7 @@ export default {
             {
               id,
               style: ["corners", "size"],
-              value
+              value,
             },
             { root: true }
           );
@@ -194,7 +194,7 @@ export default {
             "network/call",
             {
               command: "opengeode.model.corners.size",
-              args: [id, value]
+              args: [id, value],
             },
             { root: true }
           );
@@ -209,7 +209,7 @@ export default {
             "ui/setContextualItemVisibility",
             {
               name: "LinesColor",
-              value
+              value,
             },
             { root: true }
           );
@@ -231,7 +231,7 @@ export default {
             "ui/setContextualItemVisibility",
             {
               name: "SurfacesMesh",
-              value
+              value,
             },
             { root: true }
           );
@@ -239,7 +239,7 @@ export default {
             "ui/setContextualItemVisibility",
             {
               name: "SurfacesColor",
-              value
+              value,
             },
             { root: true }
           );
@@ -250,8 +250,8 @@ export default {
             { id, objectType: "surfaces", value },
             { root: true }
           );
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

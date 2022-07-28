@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs">
-    <template #tooltip>
-      Points color
-    </template>
+    <template #tooltip> Points color </template>
 
     <template #btn="{ btnStyle }">
       <logo-points-color
@@ -48,17 +46,17 @@ export default {
   name: "PointsColor",
   components: {
     ContextualItem,
-    LogoPointsColor
+    LogoPointsColor,
   },
   data: () => ({
     color: { r: 0, g: 0, b: 0 },
     select: "",
     styles: ["Constant", "From vertex attribute"],
     vertexAttributeName: "",
-    vertexAttributes: []
+    vertexAttributes: [],
   }),
   props: {
-    item: Object
+    item: Object,
   },
   created() {
     this.getAttributeNames();
@@ -68,32 +66,32 @@ export default {
     getAttributeNames() {
       this.call({
         command: "opengeode.attribute.vertex.names",
-        args: [this.item.id]
-      }).then(names => (this.vertexAttributes = names));
-    }
+        args: [this.item.id],
+      }).then((names) => (this.vertexAttributes = names));
+    },
   },
   watch: {
-    select: function(value) {
+    select: function (value) {
       this.$store.commit("setObjectStyle", {
         id: this.item.id,
         style: ["color", "type"],
-        value
+        value,
       });
     },
-    color: function(value) {
+    color: function (value) {
       const newColor = [value.r / 255, value.g / 255, value.b / 255];
       this.$store.dispatch("mesh/style/setColor", {
         id: this.item.id,
-        color: newColor
+        color: newColor,
       });
     },
-    vertexAttributeName: function(value) {
+    vertexAttributeName: function (value) {
       if (!value) return;
       this.call({
         command: "opengeode.attribute.vertex",
-        args: [this.item.id, value]
+        args: [this.item.id, value],
       });
-    }
+    },
   },
   mounted() {
     this.select = this.item.style.color.type;
@@ -102,8 +100,8 @@ export default {
     this.color = {
       r: color[0] * 255,
       g: color[1] * 255,
-      b: color[2] * 255
+      b: color[2] * 255,
     };
-  }
+  },
 };
 </script>

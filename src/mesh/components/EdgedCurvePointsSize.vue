@@ -1,8 +1,6 @@
 <template>
   <contextual-item v-bind="$attrs">
-    <template #tooltip>
-      Points size
-    </template>
+    <template #tooltip> Points size </template>
 
     <template #btn="{ btnStyle }">
       <logo-points-size
@@ -35,24 +33,24 @@ export default {
   name: "PointsSize",
   components: {
     ContextualItem,
-    LogoPointsSize
+    LogoPointsSize,
   },
   data: () => ({
-    size: 0
+    size: 0,
   }),
   props: {
-    item: Object
+    item: Object,
   },
   watch: {
-    size: function(value) {
+    size: function (value) {
       this.$store.dispatch("mesh/style/setPointsSize", {
         id: this.item.id,
-        value
+        value,
       });
-    }
+    },
   },
   mounted() {
     this.size = this.item.style.size;
-  }
+  },
 };
 </script>
