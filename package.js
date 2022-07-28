@@ -79,8 +79,6 @@ archive.append(fs.createReadStream(configFile), {
   name: path.join(dir, "config.json"),
 });
 
-const imgDir = path.join(__dirname, "dist", "img");
-archive.directory(imgDir, path.join(dir, "img"));
 archive.directory("server/protocols", path.join(dir, "server"));
 archive.append(fs.createReadStream("server/requirements.txt"), {
   name: path.join(dir, "server", "requirements.txt"),
