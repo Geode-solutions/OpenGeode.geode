@@ -19,43 +19,72 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
+import uuid
+
 import vtk
 
 import opengeode
-import opengeode_geode
+import opengeode_io
 
 from geode_protocols import GeodeProtocol
 
 from wslink import register as exportRpc
 
 
+def importVtkDataset(file):
+    reader = None
+    if file.endswith(".vtu"):
+        reader = vtk.vtkXMLUnstructuredGridReader()
+    elif file.endswith(".vtp"):
+        reader = vtk.vtkXMLPolyDataReader()
+    reader.SetFileName(file)
+    reader.Update()
+    text_file = open(file, "r")
+    data = text_file.read()
+    text_file.close()
+    os.remove(file)
+    return reader.GetOutput(), data
+
+
 def PointSetToPolydata(points, dimension):
-    polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_point_set_to_polydata' +
-            str(dimension) + 'D')(points, polydata)
-    return polydata
+    file = str(uuid.uuid4())+'.vtp'
+    getattr(opengeode, 'save_point_set' + str(dimension) + 'D')(points, file)
+    return importVtkDataset(file)
 
 
 def EdgedCurveToPolydata(edges, dimension):
-    polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_edged_curve_to_polydata' +
-            str(dimension) + 'D')(edges, polydata)
-    return polydata
+    file = str(uuid.uuid4())+'.vtp'
+    getattr(opengeode, 'save_edged_curve' + str(dimension) + 'D')(edges, file)
+    return importVtkDataset(file)
 
 
-def SurfaceToPolydata(surface, dimension):
-    print(surface)
-    polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_surface_to_polydata' +
-            str(dimension) + 'D')(surface, polydata)
-    return polydata
+def TriangulatedSurfaceToPolydata(surface, dimension):
+    file = str(uuid.uuid4())+'.vtp'
+    getattr(opengeode, 'save_triangulated_surface' +
+            str(dimension) + 'D')(surface, file)
+    return importVtkDataset(file)
 
 
-def SolidToPolydata(solid, dimension):
-    polydata = vtk.vtkPolyData()
-    getattr(opengeode_geode, 'convert_solid_to_polydata' +
-            str(dimension) + 'D')(solid, polydata)
-    return polydata
+def PolygonalSurfaceToPolydata(surface, dimension):
+    file = str(uuid.uuid4())+'.vtp'
+    getattr(opengeode, 'save_polygonal_surface' +
+            str(dimension) + 'D')(surface, file)
+    return importVtkDataset(file)
+
+
+def TetrahedralSolidToPolydata(solid, dimension):
+    file = str(uuid.uuid4())+'.vtu'
+    getattr(opengeode, 'save_tetrahedral_solid' +
+            str(dimension) + 'D')(solid, file)
+    return importVtkDataset(file)
+
+
+def PolyhedralSolidToPolydata(solid, dimension):
+    file = str(uuid.uuid4())+'.vtu'
+    getattr(opengeode, 'save_polyhedral_solid' +
+            str(dimension) + 'D')(solid, file)
+    return importVtkDataset(file)
 
 
 class OpenGeodeIOMesh(GeodeProtocol):
@@ -65,79 +94,67 @@ class OpenGeodeIOMesh(GeodeProtocol):
         point_set = opengeode.PointSet3D.create()
         builder = opengeode.PointSetBuilder3D.create(point_set)
         builder.create_point(opengeode.Point3D([x, y, z]))
-        vtk = PointSetToPolydata(point_set, 3)
-        vtk_light = opengeode_geode.extract_point_set_points3D(point_set)
+        vtk, vtk_light = PointSetToPolydata(point_set, 3)
         return self.registerObject("PointSet3D", name, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.point_set2d")
     def loadPointSet2D(self, filename):
         point_set = opengeode.load_point_set2D(filename)
-        vtk = PointSetToPolydata(point_set, 2)
-        vtk_light = opengeode_geode.extract_point_set_points2D(point_set)
+        vtk, vtk_light = PointSetToPolydata(point_set, 2)
         return self.registerObjectFromFile("PointSet2D", filename, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.point_set3d")
     def loadPointSet3D(self, filename):
         point_set = opengeode.load_point_set3D(filename)
-        vtk = PointSetToPolydata(point_set, 3)
-        vtk_light = opengeode_geode.extract_point_set_points3D(point_set)
+        vtk, vtk_light = PointSetToPolydata(point_set, 3)
         return self.registerObjectFromFile("PointSet3D", filename, point_set, vtk, vtk_light)
 
     @exportRpc("opengeode.load.edged_curve2d")
     def loadEdgedCurve2D(self, filename):
         edged_curve = opengeode.load_edged_curve2D(filename)
-        vtk = EdgedCurveToPolydata(edged_curve, 2)
-        vtk_light = opengeode_geode.extract_edged_curve_edges2D(edged_curve)
+        vtk, vtk_light = EdgedCurveToPolydata(edged_curve, 2)
         return self.registerObjectFromFile("EdgedCurve2D", filename, edged_curve, vtk, vtk_light)
 
     @exportRpc("opengeode.load.edged_curve3d")
     def loadEdgedCurve3D(self, filename):
         edged_curve = opengeode.load_edged_curve3D(filename)
-        vtk = EdgedCurveToPolydata(edged_curve, 3)
-        vtk_light = opengeode_geode.extract_edged_curve_edges3D(edged_curve)
+        vtk, vtk_light = EdgedCurveToPolydata(edged_curve, 3)
         return self.registerObjectFromFile("EdgedCurve3D", filename, edged_curve, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.polygonal2d")
     def loadPolygonalSurface2D(self, filename):
         surface = opengeode.load_polygonal_surface2D(filename)
-        vtk = SurfaceToPolydata(surface, 2)
-        vtk_light = opengeode_geode.extract_surface_wireframe2D(surface)
+        vtk, vtk_light = PolygonalSurfaceToPolydata(surface, 2)
         return self.registerObjectFromFile("PolygonalSurface2D", filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.polygonal3d")
     def loadPolygonalSurface3D(self, filename):
         surface = opengeode.load_polygonal_surface3D(filename)
-        vtk = SurfaceToPolydata(surface, 3)
-        vtk_light = opengeode_geode.extract_surface_wireframe3D(surface)
+        vtk, vtk_light = PolygonalSurfaceToPolydata(surface, 3)
         return self.registerObjectFromFile("PolygonalSurface3D", filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.triangulated2d")
     def loadTriangulatedSurface2D(self, filename):
         surface = opengeode.load_triangulated_surface2D(filename)
-        vtk = SurfaceToPolydata(surface, 2)
-        vtk_light = opengeode_geode.extract_surface_wireframe2D(surface)
+        vtk, vtk_light = TriangulatedSurfaceToPolydata(surface, 2)
         return self.registerObjectFromFile("TriangulatedSurface2D", filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.surface.triangulated3d")
     def loadTriangulatedSurface3D(self, filename):
         surface = opengeode.load_triangulated_surface3D(filename)
-        vtk_light = opengeode_geode.extract_triangulate_surface_wireframe3D(
-            surface)
-        vtk = SurfaceToPolydata(surface, 3)
+        vtk, vtk_light = TriangulatedSurfaceToPolydata(surface, 3)
         return self.registerObjectFromFile("TriangulatedSurface3D", filename, surface, vtk, vtk_light)
 
     @exportRpc("opengeode.load.solid.polyhedral3d")
     def loadPolyhedralSolid3D(self, filename):
         solid = opengeode.load_polyhedral_solid3D(filename)
-        vtk = SolidToPolydata(solid, 3)
-        vtk_light = opengeode_geode.extract_solid_wireframe3D(solid)
+        vtk, vtk_light = PolyhedralSolidToPolydata(solid, 3)
         return self.registerObjectFromFile("PolyhedralSolid3D", filename, solid, vtk, vtk_light)
 
     @exportRpc("opengeode.load.solid.tetrahedral3d")
     def loadTetrahedralSolid3D(self, filename):
         solid = opengeode.load_tetrahedral_solid3D(filename)
-        vtk = SolidToPolydata(solid, 3)
-        vtk_light = opengeode_geode.extract_solid_wireframe3D(solid)
+        vtk, vtk_light = TetrahedralSolidToPolydata(solid, 3)
         return self.registerObjectFromFile("TetrahedralSolid3D", filename, solid, vtk, vtk_light)
 
     @exportRpc("opengeode.edge.visibility")

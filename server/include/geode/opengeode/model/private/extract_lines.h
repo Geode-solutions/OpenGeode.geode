@@ -23,22 +23,20 @@
 
 #pragma once
 
-#include <vtkPolyData.h>
-
 #include <geode/geometry/point.h>
 
+#include <geode/mesh/builder/edged_curve_builder.h>
 #include <geode/mesh/core/edged_curve.h>
 
 #include <geode/model/mixin/core/line.h>
-
-#include <geode/opengeode/mesh/detail/vtk_xml.h>
 
 namespace geode
 {
     namespace detail
     {
         template < index_t dimension, typename Model >
-        std::string export_model_lines( const Model &model )
+        std::unique_ptr< EdgedCurve< dimension > > export_model_lines(
+            const Model &model )
         {
             index_t nb_points{ 0 };
             index_t nb_edges{ 0 };
@@ -48,39 +46,30 @@ namespace geode
                 nb_points += mesh.nb_vertices();
                 nb_edges += mesh.nb_edges();
             }
-
-            vtkSmartPointer< vtkPoints > points = vtkPoints::New();
-            points->Allocate( nb_points );
-            vtkSmartPointer< vtkCellArray > edges = vtkCellArray::New();
-            edges->AllocateExact( nb_edges, nb_edges * 2 );
+            auto curve = EdgedCurve< dimension >::create();
+            auto builder = EdgedCurveBuilder< dimension >::create( *curve );
+            builder->create_vertices( nb_points );
+            builder->create_edges( nb_edges );
+            index_t offset_v{ 0 };
+            index_t offset_e{ 0 };
             for( const auto &line : model.lines() )
             {
-                const auto offset = points->GetNumberOfPoints();
                 const auto &mesh = line.mesh();
                 for( const auto v : Range{ mesh.nb_vertices() } )
                 {
-                    const auto &point = mesh.point( v );
-                    Point3D vtk_point;
-                    for( const auto i : Range{ dimension } )
-                    {
-                        vtk_point.set_value( i, point.value( i ) );
-                    }
-                    points->InsertNextPoint( vtk_point.value( 0 ),
-                        vtk_point.value( 1 ), vtk_point.value( 2 ) );
+                    builder->set_point( offset_v + v, mesh.point( v ) );
                 }
-                for( const auto e : Range( mesh.nb_edges() ) )
+                for( const auto e : Range{ mesh.nb_edges() } )
                 {
-                    edges->InsertNextCell(
-                        { offset + mesh.edge_vertex( { e, 0 } ),
-                            offset + mesh.edge_vertex( { e, 1 } ) } );
+                    builder->set_edge_vertex( { offset_e + e, 0 },
+                        offset_v + mesh.edge_vertex( { e, 0 } ) );
+                    builder->set_edge_vertex( { offset_e + e, 1 },
+                        offset_v + mesh.edge_vertex( { e, 1 } ) );
                 }
+                offset_v += mesh.nb_vertices();
+                offset_e += mesh.nb_vertices();
             }
-
-            vtkSmartPointer< vtkPolyData > polydata = vtkPolyData::New();
-            polydata->SetPoints( points );
-            polydata->SetLines( edges );
-
-            return export_xml( polydata );
+            return curve;
         }
     } // namespace detail
 } // namespace geode

@@ -29,7 +29,7 @@
 
 namespace geode
 {
-    std::string export_brep_lines( const BRep &brep )
+    std::unique_ptr< EdgedCurve3D > export_brep_lines( const BRep &brep )
     {
         return detail::export_model_lines< 3 >( brep );
     }

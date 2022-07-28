@@ -24,7 +24,5 @@ add_geode_python_binding(
         "model.cpp"
     DEPENDENCIES
         OpenGeode::model
-        VTK::CommonDataModel
-        VTK::WrappingPythonCore
         ${PROJECT_NAME}::model
 )

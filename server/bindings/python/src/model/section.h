@@ -23,6 +23,8 @@
 
 #include <geode/opengeode/model/section.h>
 
+#include <geode/mesh/core/edged_curve.h>
+
 #include <geode/model/representation/core/section.h>
 
 namespace geode

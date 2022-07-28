@@ -20,5 +20,4 @@
 
 #------------------------------------------------------------------------------------------------
 # Configure the OpenGeode.geode libraries
-add_subdirectory(opengeode/mesh)
 add_subdirectory(opengeode/model)

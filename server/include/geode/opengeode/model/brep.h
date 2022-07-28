@@ -21,14 +21,19 @@
  *
  */
 
+#include <memory>
+
 #include <geode/opengeode/model/common.h>
 
 namespace geode
 {
+    FORWARD_DECLARATION_DIMENSION_CLASS( EdgedCurve );
+    ALIAS_3D( EdgedCurve );
     class BRep;
-}
+} // namespace geode
 
 namespace geode
 {
-    std::string opengeode_geode_model_api export_brep_lines( const BRep& brep );
+    std::unique_ptr< EdgedCurve3D > opengeode_geode_model_api export_brep_lines(
+        const BRep& brep );
 } // namespace geode

@@ -23,6 +23,8 @@
 
 #include <geode/opengeode/model/brep.h>
 
+#include <geode/mesh/core/edged_curve.h>
+
 #include <geode/model/representation/core/brep.h>
 
 namespace geode

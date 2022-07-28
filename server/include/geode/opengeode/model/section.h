@@ -21,15 +21,19 @@
  *
  */
 
+#include <memory>
+
 #include <geode/opengeode/model/common.h>
 
 namespace geode
 {
+    FORWARD_DECLARATION_DIMENSION_CLASS( EdgedCurve );
+    ALIAS_2D( EdgedCurve );
     class Section;
-}
+} // namespace geode
 
 namespace geode
 {
-    std::string opengeode_geode_model_api export_section_lines(
-        const Section& section );
+    std::unique_ptr< EdgedCurve2D > opengeode_geode_model_api
+        export_section_lines( const Section& section );
 } // namespace geode

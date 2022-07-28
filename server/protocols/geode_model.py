@@ -34,7 +34,7 @@ def cornersToPolydata(corners, dimension):
     print("corners")
     vtk = {}
     for corner in corners:
-        vtk[corner.id().string()] = mesh.PointSetToPolydata(
+        vtk[corner.id().string()], _ = mesh.PointSetToPolydata(
             corner.mesh(), dimension)
     return vtk
 
@@ -43,7 +43,7 @@ def linesToPolydata(lines, dimension):
     print("lines")
     vtk = {}
     for line in lines:
-        vtk[line.id().string()] = mesh.EdgedCurveToPolydata(
+        vtk[line.id().string()], _ = mesh.EdgedCurveToPolydata(
             line.mesh(), dimension)
     return vtk
 
@@ -61,7 +61,8 @@ def blocksToPolydata(blocks, dimension):
     print("blocks")
     vtk = {}
     for block in blocks:
-        vtk[block.id().string()] = mesh.SolidToPolydata(block.mesh(), dimension)
+        vtk[block.id().string()], _ = mesh.SolidToPolydata(
+            block.mesh(), dimension)
     return vtk
 
 
@@ -71,7 +72,8 @@ def sectionToVTK(section):
         "lines": linesToPolydata(section.lines(), 2),
         "surfaces": surfacesToPolydata(section.surfaces(), 2)
     }
-    vtk_light = opengeode_geode.export_section_lines(section)
+    _, vtk_light = mesh.EdgedCurveToPolydata(
+        opengeode_geode.export_section_lines(section), 2)
     return vtk, vtk_light
 
 
@@ -82,7 +84,8 @@ def brepToVTK(brep):
         "surfaces": surfacesToPolydata(brep.surfaces(), 3),
         "blocks": blocksToPolydata(brep.blocks(), 3)
     }
-    vtk_light = opengeode_geode.export_brep_lines(brep)
+    _, vtk_light = mesh.EdgedCurveToPolydata(
+        opengeode_geode.export_brep_lines(brep), 3)
     return vtk, vtk_light
 
 

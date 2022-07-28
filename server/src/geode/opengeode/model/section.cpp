@@ -29,7 +29,8 @@
 
 namespace geode
 {
-    std::string export_section_lines( const Section &section )
+    std::unique_ptr< EdgedCurve2D > export_section_lines(
+        const Section &section )
     {
         return detail::export_model_lines< 2 >( section );
     }
