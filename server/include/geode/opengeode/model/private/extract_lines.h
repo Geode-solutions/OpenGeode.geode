@@ -67,7 +67,7 @@ namespace geode
                         offset_v + mesh.edge_vertex( { e, 1 } ) );
                 }
                 offset_v += mesh.nb_vertices();
-                offset_e += mesh.nb_vertices();
+                offset_e += mesh.nb_edges();
             }
             return curve;
         }
