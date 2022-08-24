@@ -53,10 +53,10 @@ def surfacesToPolydata(surfaces, dimension):
     vtk = {}
     for surface in surfaces:
         if surface.mesh().is_triangulated_type():
-            vtk[surface.id().string()] = mesh.TriangulatedSurfaceToPolydata(
+            vtk[surface.id().string()], _ = mesh.TriangulatedSurfaceToPolydata(
                 surface.triangulated_mesh(), dimension)
         else:
-            vtk[surface.id().string()] = mesh.PolygonalSurfaceToPolydata(
+            vtk[surface.id().string()], _ = mesh.PolygonalSurfaceToPolydata(
                 surface.polygonal_mesh(), dimension)
     return vtk
 
@@ -66,10 +66,10 @@ def blocksToPolydata(blocks, dimension):
     vtk = {}
     for block in blocks:
         if block.mesh().is_tetrahedral_type():
-            vtk[block.id().string()] = mesh.TetrahedralSolidToPolydata(
+            vtk[block.id().string()], _ = mesh.TetrahedralSolidToPolydata(
                 block.tetrahedral_mesh(), dimension)
         else:
-            vtk[block.id().string()] = mesh.PolyhedralSolidToPolydata(
+            vtk[block.id().string()], _ = mesh.PolyhedralSolidToPolydata(
                 block.polyhedral_mesh(), dimension)
     return vtk
 
