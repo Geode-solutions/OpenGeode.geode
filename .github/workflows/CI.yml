@@ -90,7 +90,8 @@ jobs:
         pip install wheel
         npm install
         npm run package -- version win64
-        npx cmake-js compile -T install -d server -O build --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
+        npx cmake-js compile -d server -O build --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
+        npx cmake-js compile -T install -d server -O build
         npx cmake-js compile -T wheel -d server -O build
       env:
         PYTHON_EXE: ${{ env.pythonLocation }}/python
