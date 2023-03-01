@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "build:vtk": "npm explore @geode/geode-tools -- npm run build:vtk",
-    "build:cmake": "cmake-js compile -T install -d server -O build",
+    "build:cmake": "cmake-js compile -d server -O build && cmake-js compile -T install -d server -O build",
     "build:wheel": "cmake-js compile -T wheel -d server -O build",
     "build:pip": "node pip",
     "build:vue": "vue-cli-service build --target lib --no-clean ./src/main.js",
