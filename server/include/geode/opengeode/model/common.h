@@ -21,5 +21,13 @@
  *
  */
 
+#pragma once
+
 #include <geode/basic/common.h>
+#include <geode/basic/library.h>
 #include <geode/opengeode/model/opengeode_geode_model_export.h>
+
+namespace geode
+{
+    OPENGEODE_LIBRARY( opengeode_geode_model_api, OpenGeodeGeodeModel );
+} // namespace geode

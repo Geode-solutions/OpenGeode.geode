@@ -95,14 +95,12 @@ jobs:
       id: package
       run: |
         pip install wheel
-        npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/v', ''
         echo "::set-output name=version::$version"
-        npm config set cmake_CMAKE_PACKAGE_VERSION $version
         npm install
-        npm run package -- $version-python${{ matrix.config.python }} win64 
-        npm run wheel
+        npm run package -- $version-python${{ matrix.config.python }} win64
+        npx cmake-js compile -T install -d server -O build --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
+        npx cmake-js compile -T wheel -d server -O build
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
       env:
         PYTHON_EXE: ${{ env.pythonLocation }}/python

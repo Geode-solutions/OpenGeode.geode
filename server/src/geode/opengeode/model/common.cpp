@@ -23,7 +23,12 @@
 
 #include <geode/opengeode/model/common.h>
 
-namespace
+#include <geode/model/common.h>
+
+namespace geode
 {
-    OPENGEODE_LIBRARY_INITIALIZE( OpenGeode_geode_model ) {}
-} // namespace
+    OPENGEODE_LIBRARY_IMPLEMENTATION( OpenGeodeGeodeModel )
+    {
+        OpenGeodeModel::initialize();
+    }
+} // namespace geode
