@@ -87,6 +87,13 @@ def PolyhedralSolidToPolydata(solid, dimension):
     return importVtkDataset(file)
 
 
+def HybridSolidToPolydata(solid, dimension):
+    file = str(uuid.uuid4())+'.vtu'
+    getattr(opengeode, 'save_hybrid_solid' +
+            str(dimension) + 'D')(solid, file)
+    return importVtkDataset(file)
+
+
 class OpenGeodeIOMesh(GeodeProtocol):
 
     @exportRpc("opengeode.create.point")

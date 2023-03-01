@@ -67,6 +67,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
     - name: Set up Python ${{ matrix.config.python }}
       uses: actions/setup-python@v2
       with:
@@ -85,11 +88,10 @@ jobs:
     - name: Compile
       run: |
         pip install wheel
-        npm config set cmake_PYTHON_VERSION ${{ matrix.config.python }}
-        npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         npm install
         npm run package -- version win64
-        npm run wheel
+        npx cmake-js compile -T install -d server -O build --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
+        npx cmake-js compile -T wheel -d server -O build
       env:
         PYTHON_EXE: ${{ env.pythonLocation }}/python
     - name: Notify slack

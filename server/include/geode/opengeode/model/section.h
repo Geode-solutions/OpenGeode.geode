@@ -21,6 +21,8 @@
  *
  */
 
+#pragma once
+
 #include <memory>
 
 #include <geode/opengeode/model/common.h>

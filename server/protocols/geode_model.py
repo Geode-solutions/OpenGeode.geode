@@ -68,9 +68,12 @@ def blocksToPolydata(blocks, dimension):
         if block.mesh().is_tetrahedral_type():
             vtk[block.id().string()], _ = mesh.TetrahedralSolidToPolydata(
                 block.tetrahedral_mesh(), dimension)
-        else:
+        elif block.mesh().is_polyhedral_type():
             vtk[block.id().string()], _ = mesh.PolyhedralSolidToPolydata(
                 block.polyhedral_mesh(), dimension)
+        elif block.mesh().is_hybrid_type():
+            vtk[block.id().string()], _ = mesh.HybridSolidToPolydata(
+                block.hybrid_mesh(), dimension)
     return vtk
 
 
