@@ -102,7 +102,7 @@ jobs:
         echo "::set-output name=version::$version-python${{ matrix.config.python }}"
         npm install
         npm run package -- $version-python${{ matrix.config.python }} win64
-        npx cmake-js compile -T install -d server -O build --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
+        npx cmake-js compile -T install -d server -O build --CDCMAKE_PACKAGE_VERSION="$version" --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
         npx cmake-js compile -T wheel -d server -O build
         dir build
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
