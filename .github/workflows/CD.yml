@@ -99,11 +99,12 @@ jobs:
       run: |
         pip install wheel
         $version = ${env:GITHUB_REF} -replace 'refs\/tags\/v', ''
-        echo "::set-output name=version::$version"
+        echo "::set-output name=version::$version-python${{ matrix.config.python }}"
         npm install
         npm run package -- $version-python${{ matrix.config.python }} win64
         npx cmake-js compile -T install -d server -O build --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
         npx cmake-js compile -T wheel -d server -O build
+        dir build
         mv build/wheel/dist/*.whl build/wheel/dist/OpenGeode_core.geode-$version-${{ matrix.config.tag }}-win_amd64.whl
       env:
         PYTHON_EXE: ${{ env.pythonLocation }}/python
@@ -114,7 +115,7 @@ jobs:
     - name: Upload
       uses: softprops/action-gh-release@v1
       with:
-        files: "opengeode-${{ steps.package.outputs.version }}-python${{ matrix.config.python }}-win64.zip"
+        files: "opengeode-${{ steps.package.outputs.version }}-win64.zip"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Notify slack
