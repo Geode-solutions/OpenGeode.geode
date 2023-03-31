@@ -39,7 +39,6 @@ OpenGeode.geode provides Geode extension for [OpenGeode] models and meshes.
 
 To check out our live documentation, visit [docs.geode-solutions.com](https://docs.geode-solutions.com).
 
-
 ## Questions
 For questions and support please use the official [slack](https://slackin-opengeode.herokuapp.com) and go to the channel #opengeode. The issue list of this repo is exclusively for bug reports and feature requests. 
 
