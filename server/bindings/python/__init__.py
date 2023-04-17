@@ -20,4 +20,4 @@
 
 import opengeode
 from .opengeode_geode_py_model import *
-OpenGeodeGeodeModel.initialize()
+OpenGeodeGeodeModelLibrary.initialize()
