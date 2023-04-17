@@ -42,7 +42,6 @@ To check out our live documentation, visit [docs.geode-solutions.com](https://do
 ## Questions
 For questions and support please use the official [slack](https://slackin-opengeode.herokuapp.com) and go to the channel #opengeode. The issue list of this repo is exclusively for bug reports and feature requests. 
 
-
 ## Changelog
 
 Detailed changes for each release are documented in the [release notes](https://github.com/Geode-solutions/OpenGeode.geode/releases).
