@@ -21,7 +21,7 @@
 add_subdirectory(src)
 
 add_geode_python_wheel(
-    NAME "OpenGeode.geode"
+    NAME "OpenGeode-core.geode"
     DESCRIPTION 
         "Geode extension for OpenGeode"
     MODULES
