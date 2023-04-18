@@ -4,6 +4,10 @@ on:
   push:
 
 jobs:
+  pip:
+    uses: Geode-solutions/actions/.github/workflows/upgrade-pip.yml@master
+    secrets: inherit
+    
   format:
     uses: Geode-solutions/actions/.github/workflows/format.yml@master
     secrets:
