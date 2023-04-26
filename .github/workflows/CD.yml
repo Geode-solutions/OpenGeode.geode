@@ -38,7 +38,7 @@ jobs:
         npm config set cmake_CMAKE_PREFIX_PATH ${{ steps.opengeode.outputs.path }}
         version="${GITHUB_REF##*/*/v}"
         echo ::set-output name=version::$version
-        npm config set cmake_WELL_VERSION $version
+        npm config set cmake_WHEEL_VERSION $version
         npm install
         npm run package -- $version-python${{ matrix.config.python }} linux 
         npm run wheel
@@ -102,7 +102,7 @@ jobs:
         echo "::set-output name=version::$version-python${{ matrix.config.python }}"
         npm install
         npm run package -- $version-python${{ matrix.config.python }} win64
-        npx cmake-js compile -d server -O build --CDWELL_VERSION="$version" --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
+        npx cmake-js compile -d server -O build --CDWHEEL_VERSION="$version" --CDPYTHON_VERSION="${{ matrix.config.python }}" --CDCMAKE_PREFIX_PATH="${{ steps.opengeode.outputs.path }}"
         npx cmake-js compile -T install -d server -O build
         npx cmake-js compile -T wheel -d server -O build
         dir build
