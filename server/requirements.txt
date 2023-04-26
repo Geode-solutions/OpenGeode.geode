@@ -8,5 +8,5 @@ opengeode-core==14.*,>=14.0.3
     # via
     #   -r server/requirements.in
     #   opengeode-core-geode
-opengeode-core-geode==1.*,>=1.7.23
+opengeode-core-geode==1.*,>=1.7.24
     # via -r server/requirements.in
