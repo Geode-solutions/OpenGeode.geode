@@ -4,9 +4,9 @@
 #
 #    pip-compile server/requirements.in
 #
-opengeode-core==14.*,>=14.0.6
+opengeode-core==14.*,>=14.0.7
     # via
     #   -r server/requirements.in
     #   opengeode-core-geode
-opengeode-core-geode==1.*,>=1.7.25
+opengeode-core-geode==1.*,>=1.7.26
     # via -r server/requirements.in
