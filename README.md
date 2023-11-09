@@ -33,7 +33,6 @@ OpenGeode.geode provides Geode extension for [OpenGeode] models and meshes.
 
 [OpenGeode]: https://github.com/Geode-solutions/OpenGeode
 
-
 ## Documentation
 
 To check out our live documentation, visit [docs.geode-solutions.com](https://docs.geode-solutions.com).
